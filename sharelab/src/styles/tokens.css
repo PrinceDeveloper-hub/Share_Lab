@@ -1,0 +1,35 @@
+/* Tailwind design tokens for Warm Beige + Espresso Glassmorphism */
+
+:root {
+  /* Color palette */
+  --ivory: #F7F0E6;
+  --cream: #FFF9F1;
+  --soft-beige: #E9D9C6;
+  --sand: #D6BDA4;
+  --taupe: #A78B73;
+  --espresso: #4B2F1F;
+  --deep-brown: #302219;
+  --charcoal: #282522;
+  --muted: #82776D;
+  --success: #387653;
+  --warning: #B77932;
+  --error: #B44D42;
+
+  /* Glassmorphism */
+  --glass-light: rgba(255, 249, 241, 0.76);
+  --glass-border: rgba(255, 255, 255, 0.62);
+  --glass-shadow: 0 12px 36px rgba(75, 47, 31, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.68);
+  --glass-dark: rgba(48, 34, 25, 0.76);
+  --glass-dark-border: rgba(255, 255, 255, 0.4);
+
+  /* Sidebar */
+  --sidebar-bg: #302219;
+
+  /* Status badge backgrounds */
+  --badge-pending: rgba(183, 121, 50, 0.15);
+  --badge-approved: rgba(56, 118, 83, 0.15);
+  --badge-rejected: rgba(180, 77, 66, 0.15);
+  --badge-checked-in: rgba(75, 47, 31, 0.15);
+  --badge-returned: rgba(130, 119, 109, 0.1);
+  --badge-cancelled: rgba(130, 119, 109, 0.08);
+}

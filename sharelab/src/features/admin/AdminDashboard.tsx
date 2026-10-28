@@ -3,7 +3,7 @@ import { cn } from '../../lib/utils'
 import { useState } from 'react'
 
 export const AdminDashboard = () => {
-  const [section] = useState<'dashboard' | 'users' | 'resources' | 'bookings' | 'audit'>('dashboard')
+  const [section, setSection] = useState<'dashboard' | 'users' | 'resources' | 'bookings' | 'audit'>('dashboard')
 
   // Dashboard overview
   const overview = {

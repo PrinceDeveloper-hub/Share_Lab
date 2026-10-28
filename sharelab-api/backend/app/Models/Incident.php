@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\IncidentStatus;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -21,7 +22,7 @@ class Incident extends Model
 
     protected $casts = [
         'type' => 'string',
-        'status' => 'string',
+        'status' => IncidentStatus::class,
         'suggested_by_system' => 'boolean',
         'confirmed_by' => 'integer',
         'resolved_by' => 'integer',

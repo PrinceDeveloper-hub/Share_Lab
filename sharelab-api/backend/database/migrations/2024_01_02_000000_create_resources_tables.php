@@ -97,7 +97,7 @@ return new class extends Migration {
             $table->foreignId('actor_id')->nullable()->constrained('users');
             $table->string('action');
             $table->string('subject_type')->nullable();
-            $table->foreignId('subject_id')->nullable()->constrained();
+            $table->foreignId('subject_id')->nullable()->index();
             $table->foreignId('booking_id')->nullable()->constrained('bookings')->onDelete('cascade');
             $table->text('reason')->nullable();
             $table->json('meta')->nullable();
@@ -132,6 +132,5 @@ return new class extends Migration {
         Schema::dropIfExists('resource_requirements');
         Schema::dropIfExists('resource_managers');
         Schema::dropIfExists('resources');
-        Schema::dropIfExists('users');
     }
 };

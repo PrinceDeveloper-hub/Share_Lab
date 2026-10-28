@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Resource;
 use App\Models\ResourceRequirement;
 use App\Models\UserCredential;
+use App\Models\Booking;
 use App\Enums\CredentialStatus;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -18,7 +19,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Create accounts with password "password" for all
-        $roles = ['user', 'owner', 'manager', 'admin'];
+        $roles = ['user', 'user', 'manager', 'owner', 'admin'];
 
         foreach (['user1@sharelab.test', 'user2@sharelab.test', 'manager@sharelab.test', 'owner@sharelab.test', 'admin@sharelab.test'] as $i => $email) {
             User::create([

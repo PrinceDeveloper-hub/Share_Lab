@@ -21,89 +21,104 @@ export interface User {
   avatar?: string
 }
 
-export interface AuthResponse {
+export interface AuthSession {
   user: User
-  token: string
 }
 
+export interface ApiErrorBody {
+  message?: string
+  errors?: Record<string, string[]>
+}
+
+export const getApiErrorMessage = (
+  error: unknown,
+  fallback = 'Something went wrong. Please try again.',
+) => {
+  if (axios.isAxiosError<ApiErrorBody>(error)) {
+    const data = error.response?.data
+    if (data?.message) return data.message
+    if (error.message) return error.message
+  }
+
+  if (error instanceof Error && error.message) return error.message
+
+  return fallback
+}
+
+export const getApiFieldErrors = (error: unknown): Record<string, string> => {
+  if (!axios.isAxiosError<ApiErrorBody>(error)) return {}
+
+  const fieldErrors = error.response?.data.errors
+  if (!fieldErrors) return {}
+
+  return Object.fromEntries(
+    Object.entries(fieldErrors).map(([field, messages]) => [
+      field,
+      Array.isArray(messages) ? (messages[0] ?? '') : String(messages),
+    ]),
+  )
+}
+
+const defaultBaseURL = import.meta.env.VITE_API_BASE_URL || '/api'
+
 export class ApiClient {
-  private axiosInstance: AxiosInstance | null = null
+  private axiosInstance: AxiosInstance
 
-  private get instance(): AxiosInstance {
-    if (!this.axiosInstance) {
-      this.axiosInstance = axios.create({
-        baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-    }
-    return this.axiosInstance
-  }
-
-  constructor(baseURL?: string, token?: string) {
-    if (baseURL) {
-      this.axiosInstance = axios.create({
-        baseURL,
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token && { Authorization: `Bearer ${token}` }),
-        },
-      })
-    }
-  }
-
-  setAuthToken(token: string) {
-    const instance = this.instance
-    instance.defaults.headers.common['Authorization'] = `Bearer ${token}`
-  }
-
-  removeAuthToken() {
-    const instance = this.instance
-    delete instance.defaults.headers.common['Authorization']
+  constructor(baseURL = defaultBaseURL) {
+    this.axiosInstance = axios.create({
+      baseURL,
+      withCredentials: true,
+      timeout: 20_000,
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
   }
 
   async get<T>(url: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
-    const response: AxiosResponse<ApiResponse<T>> = await this.instance.get(url, config)
+    const response: AxiosResponse<ApiResponse<T>> = await this.axiosInstance.get(url, config)
     return response.data
   }
 
-  async post<T, R = any>(url: string, data?: T, config?: AxiosRequestConfig): Promise<ApiResponse<R>> {
-    const response: AxiosResponse<ApiResponse<R>> = await this.instance.post(url, data, config)
+  async post<TBody = unknown, TResponse = unknown>(
+    url: string,
+    data?: TBody,
+    config?: AxiosRequestConfig,
+  ): Promise<ApiResponse<TResponse>> {
+    const response: AxiosResponse<ApiResponse<TResponse>> = await this.axiosInstance.post(
+      url,
+      data,
+      config,
+    )
     return response.data
   }
 
-  async patch<T, R = any>(url: string, data?: T, config?: AxiosRequestConfig): Promise<ApiResponse<R>> {
-    const response: AxiosResponse<ApiResponse<R>> = await this.instance.patch(url, data, config)
+  async patch<TBody = unknown, TResponse = unknown>(
+    url: string,
+    data?: TBody,
+    config?: AxiosRequestConfig,
+  ): Promise<ApiResponse<TResponse>> {
+    const response: AxiosResponse<ApiResponse<TResponse>> = await this.axiosInstance.patch(
+      url,
+      data,
+      config,
+    )
     return response.data
   }
 
-  async delete<R = any>(url: string, config?: AxiosRequestConfig): Promise<ApiResponse<R>> {
-    const response: AxiosResponse<ApiResponse<R>> = await this.instance.delete(url, config)
+  async delete<TResponse = unknown>(
+    url: string,
+    config?: AxiosRequestConfig,
+  ): Promise<ApiResponse<TResponse>> {
+    const response: AxiosResponse<ApiResponse<TResponse>> = await this.axiosInstance.delete(
+      url,
+      config,
+    )
     return response.data
-  }
-
-  // Unwraps the API envelope and handles auth errors
-  protected async request<T>(fn: Promise<T>): Promise<T> {
-    try {
-      return await fn
-    } catch (error: any) {
-      if (error?.response?.status === 401) {
-        this.removeAuthToken()
-        // Trigger logout - would dispatch in real implementation
-        console.log('Session expired, logging out...')
-      }
-      throw error
-    }
   }
 }
 
-const apiInstance = new ApiClient()
+const api = new ApiClient()
 
-export const api = {
-  ...apiInstance,
-  setAuthToken: (token: string) => apiInstance.setAuthToken(token),
-  removeAuthToken: () => apiInstance.removeAuthToken(),
-}
-
-export { apiInstance }
+export { api }

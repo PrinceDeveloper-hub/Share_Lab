@@ -10,33 +10,180 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as HowItWorksRouteImport } from './routes/how-it-works'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as ManagerRouteImport } from './routes/manager'
+import { Route as OwnerRouteImport } from './routes/owner'
+import { Route as RegisterRouteImport } from './routes/register'
+import { Route as MyBookingsIndexRouteImport } from './routes/my-bookings.index'
+import { Route as MyBookingsBookingIdRouteImport } from './routes/my-bookings.$bookingId'
+import { Route as ResourcesIndexRouteImport } from './routes/resources.index'
+import { Route as ResourcesResourceIdRouteImport } from './routes/resources.$resourceId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HowItWorksRoute = HowItWorksRouteImport.update({
+  id: '/how-it-works',
+  path: '/how-it-works',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ManagerRoute = ManagerRouteImport.update({
+  id: '/manager',
+  path: '/manager',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OwnerRoute = OwnerRouteImport.update({
+  id: '/owner',
+  path: '/owner',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MyBookingsIndexRoute = MyBookingsIndexRouteImport.update({
+  id: '/my-bookings/',
+  path: '/my-bookings/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MyBookingsBookingIdRoute = MyBookingsBookingIdRouteImport.update({
+  id: '/my-bookings/$bookingId',
+  path: '/my-bookings/$bookingId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResourcesIndexRoute = ResourcesIndexRouteImport.update({
+  id: '/resources/',
+  path: '/resources/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResourcesResourceIdRoute = ResourcesResourceIdRouteImport.update({
+  id: '/resources/$resourceId',
+  path: '/resources/$resourceId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/dashboard': typeof DashboardRoute
+  '/how-it-works': typeof HowItWorksRoute
+  '/login': typeof LoginRoute
+  '/manager': typeof ManagerRoute
+  '/owner': typeof OwnerRoute
+  '/register': typeof RegisterRoute
+  '/my-bookings/$bookingId': typeof MyBookingsBookingIdRoute
+  '/resources/$resourceId': typeof ResourcesResourceIdRoute
+  '/my-bookings/': typeof MyBookingsIndexRoute
+  '/resources/': typeof ResourcesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/dashboard': typeof DashboardRoute
+  '/how-it-works': typeof HowItWorksRoute
+  '/login': typeof LoginRoute
+  '/manager': typeof ManagerRoute
+  '/owner': typeof OwnerRoute
+  '/register': typeof RegisterRoute
+  '/my-bookings/$bookingId': typeof MyBookingsBookingIdRoute
+  '/resources/$resourceId': typeof ResourcesResourceIdRoute
+  '/my-bookings': typeof MyBookingsIndexRoute
+  '/resources': typeof ResourcesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/dashboard': typeof DashboardRoute
+  '/how-it-works': typeof HowItWorksRoute
+  '/login': typeof LoginRoute
+  '/manager': typeof ManagerRoute
+  '/owner': typeof OwnerRoute
+  '/register': typeof RegisterRoute
+  '/my-bookings/$bookingId': typeof MyBookingsBookingIdRoute
+  '/resources/$resourceId': typeof ResourcesResourceIdRoute
+  '/my-bookings/': typeof MyBookingsIndexRoute
+  '/resources/': typeof ResourcesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/dashboard'
+    | '/how-it-works'
+    | '/login'
+    | '/manager'
+    | '/owner'
+    | '/register'
+    | '/my-bookings/$bookingId'
+    | '/resources/$resourceId'
+    | '/my-bookings/'
+    | '/resources/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/about'
+    | '/dashboard'
+    | '/how-it-works'
+    | '/login'
+    | '/manager'
+    | '/owner'
+    | '/register'
+    | '/my-bookings/$bookingId'
+    | '/resources/$resourceId'
+    | '/my-bookings'
+    | '/resources'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/dashboard'
+    | '/how-it-works'
+    | '/login'
+    | '/manager'
+    | '/owner'
+    | '/register'
+    | '/my-bookings/$bookingId'
+    | '/resources/$resourceId'
+    | '/my-bookings/'
+    | '/resources/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  DashboardRoute: typeof DashboardRoute
+  HowItWorksRoute: typeof HowItWorksRoute
+  LoginRoute: typeof LoginRoute
+  ManagerRoute: typeof ManagerRoute
+  OwnerRoute: typeof OwnerRoute
+  RegisterRoute: typeof RegisterRoute
+  MyBookingsBookingIdRoute: typeof MyBookingsBookingIdRoute
+  ResourcesResourceIdRoute: typeof ResourcesResourceIdRoute
+  MyBookingsIndexRoute: typeof MyBookingsIndexRoute
+  ResourcesIndexRoute: typeof ResourcesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +195,99 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/how-it-works': {
+      id: '/how-it-works'
+      path: '/how-it-works'
+      fullPath: '/how-it-works'
+      preLoaderRoute: typeof HowItWorksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/manager': {
+      id: '/manager'
+      path: '/manager'
+      fullPath: '/manager'
+      preLoaderRoute: typeof ManagerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/owner': {
+      id: '/owner'
+      path: '/owner'
+      fullPath: '/owner'
+      preLoaderRoute: typeof OwnerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/my-bookings/': {
+      id: '/my-bookings/'
+      path: '/my-bookings'
+      fullPath: '/my-bookings/'
+      preLoaderRoute: typeof MyBookingsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/my-bookings/$bookingId': {
+      id: '/my-bookings/$bookingId'
+      path: '/my-bookings/$bookingId'
+      fullPath: '/my-bookings/$bookingId'
+      preLoaderRoute: typeof MyBookingsBookingIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/resources/': {
+      id: '/resources/'
+      path: '/resources'
+      fullPath: '/resources/'
+      preLoaderRoute: typeof ResourcesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/resources/$resourceId': {
+      id: '/resources/$resourceId'
+      path: '/resources/$resourceId'
+      fullPath: '/resources/$resourceId'
+      preLoaderRoute: typeof ResourcesResourceIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  DashboardRoute: DashboardRoute,
+  HowItWorksRoute: HowItWorksRoute,
+  LoginRoute: LoginRoute,
+  ManagerRoute: ManagerRoute,
+  OwnerRoute: OwnerRoute,
+  RegisterRoute: RegisterRoute,
+  MyBookingsBookingIdRoute: MyBookingsBookingIdRoute,
+  ResourcesResourceIdRoute: ResourcesResourceIdRoute,
+  MyBookingsIndexRoute: MyBookingsIndexRoute,
+  ResourcesIndexRoute: ResourcesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

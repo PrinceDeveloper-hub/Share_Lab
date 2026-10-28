@@ -1,9 +1,8 @@
 import { GlassPanel } from '../../components/glass/GlassPanel'
 import { cn } from '../../lib/utils'
-import { useState } from 'react'
 
 export const OwnerDashboard = () => {
-  const [resources, setResources] = useState([
+  const resources = [
     {
       id: 1,
       name: 'Ultimaker S5 3D Printer',
@@ -43,7 +42,7 @@ export const OwnerDashboard = () => {
       weeklyCap: 10,
       requirements: 'Camera Orientation',
     },
-  ])
+  ]
 
   return (
     <GlassPanel className="p-6 md:p-12 max-w-7xl mx-auto">

@@ -1,9 +1,7 @@
-/**
- * Class name cn - conditional class joining
- * Similar to classnames but with TypeScript typing
- */
-export function cn(...classes: (string | undefined | boolean | null)[]): string {
-  return classes
-    .filter((c) => c && typeof c !== 'undefined')
-    .join(' ')
+import { clsx } from 'clsx'
+import type { ClassValue } from 'clsx'
+import { twMerge } from 'tailwind-merge'
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
 }

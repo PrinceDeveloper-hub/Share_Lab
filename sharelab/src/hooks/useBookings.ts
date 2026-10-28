@@ -1,7 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import type { ApiResponse } from '../lib/api-client'
-import type { Booking } from '../lib/api-client'
-
+import { useAuth } from './useAuth'
+import type { Booking, CreateBookingParams, EligibilityCheck } from '../lib/booking-service'
 import {
   checkEligibility,
   createBooking,
@@ -14,107 +13,68 @@ import {
   verifyCredential,
 } from '../lib/booking-service'
 
-export interface Booking {
-  id: number
-  resource_id: number
-  user_id: number
-  start_at: string
-  end_at: string
-  purpose: string | null
-  status: 'pending' | 'waitlisted' | 'approved' | 'rejected' | 'checked_in' | 'returned' | 'cancelled'
-  decision_reason: string | null
-  priority_score: number | null
-  priority_explanation: string | null
-  waitlist_position: number | null
-  confirm_by: string | null
-  is_late: boolean
-}
-
-export interface CreateBookingParams {
-  resource_id: number
-  start_at: string
-  end_at: string
-  purpose?: string
-}
-
-export interface EligibilityCheck {
-  qualifies: boolean
-  missing: string[]
-  checklist: { name: string; status: string }[]
-  message: string
-}
-
 export const useBookings = () => {
   const queryClient = useQueryClient()
+  const { status } = useAuth()
 
-  // Get user's bookings
-  const { data: bookings, isLoading, isError } = useQuery<ApiResponse<Booking[]>>({
+  const {
+    data: bookings,
+    isLoading,
+    isError,
+  } = useQuery<Booking[]>({
     queryKey: ['bookings'],
-    queryFn: async () => {
-      const response = await getBookings()
-      return response
-    },
-    enabled: !!api.getAuthToken(),
-    refetchInterval: 30000,
+    queryFn: async () => await getBookings(),
+    enabled: status === 'authenticated',
+    refetchInterval: 30_000,
   })
 
-  // Create booking mutation
   const createMutation = useMutation({
     mutationKey: ['create-booking'],
-    mutationFn: async (params: CreateBookingParams) => {
-      return await createBooking(params)
-    },
+    mutationFn: async (params: CreateBookingParams) => await createBooking(params),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['bookings'] })
+      void queryClient.invalidateQueries({ queryKey: ['bookings'] })
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       console.error('Booking creation error:', error)
     },
   })
 
-  // Check eligibility
-  const checkEligibility = async (
+  const checkEligibilityForResource = async (
     resourceId: number,
-    startAt: string,
-    endAt: string
   ): Promise<EligibilityCheck> => {
-    return await checkEligibility(resourceId, startAt, endAt)
+    return await checkEligibility(resourceId)
   }
 
-  // Cancel booking
   const cancelMutation = useMutation({
     mutationKey: ['cancel-booking'],
     mutationFn: async (bookingId: number) => {
       await cancelBooking(bookingId)
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['bookings'] })
+      void queryClient.invalidateQueries({ queryKey: ['bookings'] })
     },
   })
 
-  // Check in
   const checkInMutation = useMutation({
     mutationKey: ['check-in'],
     mutationFn: async (bookingId: number) => {
       await checkIn(bookingId)
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['bookings'] })
+      void queryClient.invalidateQueries({ queryKey: ['bookings'] })
     },
   })
 
-  // Return items
   const returnMutation = useMutation({
     mutationKey: ['return-items'],
     mutationFn: async (bookingId: number) => {
       await returnItems(bookingId)
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['bookings'] })
+      void queryClient.invalidateQueries({ queryKey: ['bookings'] })
     },
   })
 
-  // Report incident
   const reportIncidentMutation = useMutation({
     mutationKey: ['report-incident'],
     mutationFn: async ({
@@ -129,26 +89,17 @@ export const useBookings = () => {
       await reportIncident(bookingId, type, description)
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['bookings'] })
+      void queryClient.invalidateQueries({ queryKey: ['bookings'] })
     },
   })
 
-  // Get availability
-  const getAvailability = async (
-    resourceId: number,
-    date: string
-  ) => {
-    return await getAvailability(resourceId, date)
-  }
-
-  // Verify credential
   const verifyCredentialMutation = useMutation({
     mutationKey: ['verify-credential'],
     mutationFn: async (credentialId: number) => {
       await verifyCredential(credentialId)
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['bookings'] })
+      void queryClient.invalidateQueries({ queryKey: ['bookings'] })
     },
   })
 
@@ -157,7 +108,7 @@ export const useBookings = () => {
     isLoading,
     isError,
     createMutation,
-    checkEligibility,
+    checkEligibility: checkEligibilityForResource,
     cancelMutation,
     checkInMutation,
     returnMutation,

@@ -107,12 +107,13 @@ export const CheckInReturn = ({
             rows={3}
             className="w-full bg-softBeige dark:bg-[--deep-brown] border border-sand rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-espresso resize-none text-sm"
             placeholder="Enter any notes about the condition..."
+            value={notes}
             onChange={(e) => setNotes(e.target.value)}
           ></textarea>
         </div>
 
         {/* Photo upload (check-in only) */}
-        {!isCheckIn || (isCheckIn && photo) ? (
+        {!isCheckIn || photo ? (
           <div>
             <label className="block text-[--muted] text-sm mb-2">
               Photo (check-in)

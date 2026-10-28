@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\CredentialStatus;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -14,6 +15,10 @@ class UserCredential extends Model
         'file_path',
         'verified_by',
         'review_note',
+    ];
+
+    protected $casts = [
+        'status' => CredentialStatus::class,
     ];
 
     /**

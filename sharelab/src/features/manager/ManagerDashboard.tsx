@@ -5,8 +5,7 @@ import { useState } from 'react'
 export const ManagerDashboard = () => {
   const [tab, setTab] = useState<'pending' | 'approved' | 'waitlisted' | 'all'>('pending')
 
-  const requests = [
-    {
+  const requests = [    {
       id: 1,
       resource: 'Ultimaker S5 3D Printer',
       user: 'Student User',
@@ -25,12 +24,6 @@ export const ManagerDashboard = () => {
       priorityExplanation: '0 hours used in last 30 days - highest priority',
     },
   ]
-
-  const statusLabels: Record<'pending' | 'approved' | 'waitlisted', string> = {
-    pending: 'Pending',
-    approved: 'Approved',
-    waitlisted: 'Waitlisted',
-  }
 
   return (
     <GlassPanel className="p-6 md:p-12 max-w-7xl mx-auto">

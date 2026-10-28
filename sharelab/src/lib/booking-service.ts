@@ -1,7 +1,8 @@
-// API layer for booking-related operations.
-// These functions use the browser's fetch API to call the ShareLab backend.
+// API layer for booking-related operations. Requests go through the shared
+// ApiClient so the stored auth token is always attached.
 
-import type { ApiResponse } from './api-client'
+import { api } from './api-client'
+import { fetchResource } from './resources'
 
 export interface Booking {
   id: number
@@ -10,7 +11,14 @@ export interface Booking {
   start_at: string
   end_at: string
   purpose: string | null
-  status: 'pending' | 'waitlisted' | 'approved' | 'rejected' | 'checked_in' | 'returned' | 'cancelled'
+  status:
+    | 'pending'
+    | 'waitlisted'
+    | 'approved'
+    | 'rejected'
+    | 'checked_in'
+    | 'returned'
+    | 'cancelled'
   decision_reason: string | null
   priority_score: number | null
   priority_explanation: string | null
@@ -33,113 +41,82 @@ export interface EligibilityCheck {
   message: string
 }
 
-// Check eligibility endpoint
+interface BookingEnvelope {
+  data?: Booking[] | { data?: Booking[] }
+  meta?: Record<string, number>
+}
+
+const unwrapBookings = (payload: unknown): Booking[] => {
+  if (Array.isArray(payload)) return payload as Booking[]
+
+  if (typeof payload === 'object' && payload !== null && 'data' in payload) {
+    const outer = (payload as { data?: unknown }).data
+    if (Array.isArray(outer)) return outer as Booking[]
+    if (typeof outer === 'object' && outer !== null && 'data' in outer) {
+      const inner = (outer as { data?: unknown }).data
+      if (Array.isArray(inner)) return inner as Booking[]
+    }
+  }
+
+  return []
+}
+
+// Check eligibility through the resource endpoint. The API returns an
+// eligibility payload for signed-in users when the resource is loaded.
 export const checkEligibility = async (
   resourceId: number,
-  startAt: string,
-  endAt: string
 ): Promise<EligibilityCheck> => {
-  const response = await fetch(
-    `/api/resources/${resourceId}/eligibility?startAt=${startAt}&endAt=${endAt}`,
-    {
-      credentials: 'include', // For Sanctum cookie-based auth
-    }
-  )
-  if (!response.ok) throw new Error('Failed to check eligibility')
-  return response.json()
-}
+  const response = await fetchResource(resourceId)
 
-// Create booking endpoint
-export const createBooking = async (data: CreateBookingParams): Promise<Booking> => {
-  const response = await fetch('/api/bookings', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-    credentials: 'include', // For Sanctum
-  })
-  if (!response.ok) {
-    const error = await response.json()
-    throw new Error(error.message || 'Failed to create booking')
+  if (response.eligibility) {
+    return response.eligibility
   }
-  return response.json()
+
+  return {
+    qualifies: false,
+    missing: [],
+    checklist: [],
+    message: 'Eligibility is verified again when a booking request is submitted.',
+  }
 }
 
-// Get user's bookings
+export const createBooking = async (data: CreateBookingParams): Promise<Booking> => {
+  const response = await api.post<CreateBookingParams, Booking>('/bookings', data)
+  return response.data
+}
+
 export const getBookings = async (): Promise<Booking[]> => {
-  const response = await fetch('/api/bookings', {
-    credentials: 'include',
-  })
-  if (!response.ok) throw new Error('Failed to fetch bookings')
-  return response.json()
+  const response = await api.get<BookingEnvelope>('/bookings')
+  return unwrapBookings(response.data)
 }
 
-// Cancel booking
 export const cancelBooking = async (bookingId: number): Promise<void> => {
-  const response = await fetch(`/api/bookings/${bookingId}/cancel`, {
-    method: 'POST',
-    credentials: 'include',
-  })
-  if (!response.ok) throw new Error('Failed to cancel booking')
+  await api.post(`/bookings/${bookingId}/cancel`)
 }
 
-// Check in
 export const checkIn = async (bookingId: number): Promise<void> => {
-  const response = await fetch(`/api/bookings/${bookingId}/checkin`, {
-    method: 'POST',
-    credentials: 'include',
-  })
-  if (!response.ok) throw new Error('Failed to check in')
+  await api.post(`/bookings/${bookingId}/checkin`)
 }
 
-// Return items
 export const returnItems = async (bookingId: number): Promise<void> => {
-  const response = await fetch(`/api/bookings/${bookingId}/return`, {
-    method: 'POST',
-    credentials: 'include',
-  })
-  if (!response.ok) throw new Error('Failed to return items')
+  await api.post(`/bookings/${bookingId}/return`)
 }
 
-// Report incident
 export const reportIncident = async (
   bookingId: number,
   type: 'damage' | 'delay' | 'other',
-  description: string
+  description: string,
 ): Promise<void> => {
-  const response = await fetch(`/api/bookings/${bookingId}/incidents`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ type, description }),
-    credentials: 'include',
+  await api.post(`/bookings/${bookingId}/incidents`, { type, description })
+}
+
+export const getAvailability = async (resourceId: number, date: string): Promise<unknown> => {
+  const response = await api.get<unknown>(`/resources/${resourceId}/availability`, {
+    params: { date },
   })
-  if (!response.ok) throw new Error('Failed to report incident')
+  return response.data
 }
 
-// Get availability
-export const getAvailability = async (
-  resourceId: number,
-  date: string
-): Promise<any> => {
-  const response = await fetch(
-    `/api/resources/${resourceId}/availability?date=${date}`,
-    { credentials: 'include' }
-  )
-  if (!response.ok) throw new Error('Failed to fetch availability')
-  return response.json()
-}
-
-// Verify credential
 export const verifyCredential = async (credentialId: number): Promise<void> => {
-  const response = await fetch(`/api/credentials/${credentialId}/verify`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
-  })
-  if (!response.ok) throw new Error('Failed to verify credential')
+  await api.patch(`/credentials/${credentialId}/verify`)
 }

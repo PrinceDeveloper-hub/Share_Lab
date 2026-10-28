@@ -1,19 +1,59 @@
-/* Tailwind design tokens for Warm Beige + Espresso Glassmorphism */
+/* ShareLab design tokens — warm beige + espresso glassmorphism */
 
 :root {
-  /* Color palette */
-  --ivory: #F7F0E6;
-  --cream: #FFF9F1;
-  --soft-beige: #E9D9C6;
-  --sand: #D6BDA4;
-  --taupe: #A78B73;
-  --espresso: #4B2F1F;
+  /* Core palette */
+  --ivory: #f7f0e6;
+  --cream: #fff9f1;
+  --surface: #fffcf7;
+  --soft-beige: #e9d9c6;
+  --sand: #d6bda4;
+  --taupe: #a78b73;
+  --espresso: #4b2f1f;
   --deep-brown: #302219;
   --charcoal: #282522;
-  --muted: #82776D;
+  --muted: #82776d;
   --success: #387653;
-  --warning: #B77932;
-  --error: #B44D42;
+  --warning: #b77932;
+  --error: #b44d42;
+
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --font-display: 'Manrope', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-editorial: 'Fraunces', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+
+  /* Spacing + layout */
+  --container: 78rem;
+  --container-narrow: 58rem;
+  --header-height: 4.75rem;
+  --section-y: clamp(3.5rem, 7vw, 6.5rem);
+  --gutter: clamp(1.125rem, 4vw, 2rem);
+
+  /* Radii */
+  --radius-xs: 0.5rem;
+  --radius-sm: 0.75rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.5rem;
+  --radius-xl: 2rem;
+  --radius-pill: 9999px;
+
+  /* Borders + shadows */
+  --border-subtle: rgba(82, 59, 45, 0.12);
+  --border-strong: rgba(82, 59, 45, 0.22);
+  --shadow-xs: 0 1px 2px rgba(75, 47, 31, 0.05);
+  --shadow-sm: 0 8px 24px -16px rgba(75, 47, 31, 0.3);
+  --shadow-md: 0 18px 44px -28px rgba(75, 47, 31, 0.35);
+  --shadow-lg: 0 32px 80px -40px rgba(75, 47, 31, 0.45);
+  --ring: rgba(75, 47, 31, 0.4);
 
   /* Glassmorphism */
   --glass-light: rgba(255, 249, 241, 0.76);
@@ -32,4 +72,43 @@
   --badge-checked-in: rgba(75, 47, 31, 0.15);
   --badge-returned: rgba(130, 119, 109, 0.1);
   --badge-cancelled: rgba(130, 119, 109, 0.08);
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --transition-fast: 150ms var(--ease-out);
+  --transition-base: 250ms var(--ease-out);
+}
+
+/*
+ * Tailwind v4 theme bridge. The project previously relied on tailwind.config.js
+ * color names, but v4 only exposes the default theme unless tokens are declared
+ * with @theme. Keeping these here means existing utility names (bg-espresso,
+ * text-charcoal, ...) and the new components share one source of truth.
+ */
+@theme {
+  --color-ivory: #f7f0e6;
+  --color-cream: #fff9f1;
+  --color-surface: #fffcf7;
+  --color-soft-beige: #e9d9c6;
+  --color-sand: #d6bda4;
+  --color-taupe: #a78b73;
+  --color-espresso: #4b2f1f;
+  --color-deep-brown: #302219;
+  --color-charcoal: #282522;
+  --color-muted: #82776d;
+  --color-success: #387653;
+  --color-warning: #b77932;
+  --color-error: #b44d42;
+
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Manrope', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-editorial: 'Fraunces', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+
+  --radius-card: 1.25rem;
+  --radius-panel: 2rem;
+  --radius-pill: 9999px;
+
+  --shadow-soft: var(--shadow-sm);
+  --shadow-card: var(--shadow-md);
+  --shadow-float: var(--shadow-lg);
 }

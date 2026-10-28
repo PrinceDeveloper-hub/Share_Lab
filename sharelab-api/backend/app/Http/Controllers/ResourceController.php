@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ResourceCreateRequest;
+use App\Http\Resources\ResourceResource;
 use App\Models\Resource;
 use App\Models\UserCredential;
 use App\Enums\CredentialStatus;
+use App\Services\BookingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -58,8 +60,10 @@ class ResourceController extends Controller
         $resource->load(['owner', 'requirements', 'managers']);
 
         $eligibility = null;
-        if ($request->user() && $request->user()->role->isUser()) {
-            $eligibility = BookingService::checkEligibility($request->user(), $resource);
+        $currentUser = $request->user('sanctum');
+
+        if ($currentUser && $currentUser->role->isUser()) {
+            $eligibility = BookingService::checkEligibility($currentUser, $resource);
         }
 
         return response()->json([
@@ -104,7 +108,15 @@ class ResourceController extends Controller
      */
     public function update(ResourceCreateRequest $request, Resource $resource)
     {
-        $this->resourcePolicy()->update(auth()->user(), $resource);
+        $user = $request->user();
+
+        abort_unless(
+            $user->isAdmin() ||
+            $resource->owner_id === $user->id ||
+            $resource->managers()->whereKey($user->id)->exists(),
+            403,
+            'You do not have permission to update this resource.'
+        );
 
         $validated = $request->validated();
 

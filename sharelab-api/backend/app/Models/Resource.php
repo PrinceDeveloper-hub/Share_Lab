@@ -2,14 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Laravel\Sanctum\HasApiTokens;
 
-class Resource extends Authenticatable
+class Resource extends Model
 {
-    use HasApiTokens;
-
     protected $fillable = [
         'owner_id',
         'name',
@@ -38,9 +36,9 @@ class Resource extends Authenticatable
     /**
      * Get the managers assigned to this resource.
      */
-    public function managers(): HasMany
+    public function managers(): BelongsToMany
     {
-        return $this->hasMany(ResourceManager::class, 'resource_id');
+        return $this->belongsToMany(User::class, 'resource_managers');
     }
 
     /**

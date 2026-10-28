@@ -1,5 +1,4 @@
 import { GlassPanel } from '../../components/glass/GlassPanel'
-import { cn } from '../../lib/utils'
 import { useEffect } from 'react'
 import { useAuth } from '../../hooks/useAuth'
 

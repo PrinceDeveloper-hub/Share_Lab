@@ -1,14 +1,13 @@
 import { GlassPanel } from '../../components/glass/GlassPanel'
 import { cn } from '../../lib/utils'
-import { useBookings, useMutation } from '../../hooks/useBookings'
+import { useMutation } from '@tanstack/react-query'
 import { useState } from 'react'
 
 export const Incidents = () => {
-  const { bookings } = useBookings()
   const [open, setOpen] = useState(false)
   const [type, setType] = useState<'damage' | 'delay' | 'other'>('damage')
   const [description, setDescription] = useState<string>('')
-  const [selectedBooking, setSelectedBooking] = useState<string | null>(null)
+  const [selectedBooking] = useState<string | null>(null)
 
   // Create incident mutation
   const createMutation = useMutation({
@@ -105,18 +104,17 @@ export const Incidents = () => {
           required
         ></textarea>
       </div>
-      </GlassPanel>
 
       {selectedBookingReport}
 
       {/* Submit */}
-      <GlassPanel>
+      <GlassPanel className="mt-6">
         <button
-          onClick={() => handleSubmit()}
+          onClick={() => createMutation.mutate({ bookingId: selectedBooking || '', type, description })}
           className="w-full bg-espresso text-white px-6 py-3 rounded-full font-medium hover:bg-[--deep-brown] transition-colors"
-          disabled={!selectedBooking || createMutation.isLoading}
+          disabled={!selectedBooking || createMutation.isPending}
         >
-          {createMutation.isLoading ? 'Submitting...' : 'Report Incident'}
+          {createMutation.isPending ? 'Submitting...' : 'Report Incident'}
         </button>
       </GlassPanel>
 

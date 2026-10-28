@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ConditionType;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -17,7 +18,7 @@ class ConditionReport extends Model
     ];
 
     protected $casts = [
-        'type' => 'string',
+        'type' => ConditionType::class,
         'condition' => 'string',
         'checklist' => 'array',
     ];

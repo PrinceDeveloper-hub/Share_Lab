@@ -1,45 +1,36 @@
-import NavBar from '../navigation/NavBar'
-import Sidebar from '../layout/Sidebar'
-import { useState } from 'react'
+import { SiteFooter } from './SiteFooter'
+import { SiteHeader } from './SiteHeader'
 
 export interface MainLayoutProps {
   children: React.ReactNode
   sidebar?: React.ReactNode
 }
 
-export const MainLayout = ({
-  children,
-  sidebar,
-}: MainLayoutProps) => {
-  const [mobileNavOpen, setMobileNavOpen] = useState(false)
-
+/**
+ * Shared application shell. The public marketing pages use SiteLayout; this
+ * wrapper remains available for authenticated views that need an optional
+ * sidebar while reusing the same header and footer.
+ */
+export const MainLayout = ({ children, sidebar }: MainLayoutProps) => {
   return (
-    <div className="min-h-screen bg-ivory dark:bg-deepBrown">
-      <NavBar />
-
-      <div className="flex min-h-screen">
-        {sidebar || (
-          <Sidebar
-            onMobileToggle={() => setMobileNavOpen(true)}
-            onClose={() => setMobileNavOpen(false)}
-          />
-        )}
-
-        <div className="flex-1 overflow-y-auto">
-          {mobileNavOpen && (
-            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
-              <div className="bg-cream dark:bg-darkBrown rounded-lg p-6 w-80 transform translate-x-full md:translate-x-0 shadow-xl" onClick={setMobileNavOpen}>
-                <NavBar mobile={true} onClose={() => setMobileNavOpen(false)} />
-                {/* Mobile sidebar content would go here */}
-              </div>
-            </div>
-          )}
-
-          <div className="pt-6">
-            {children}
+    <div className="flex min-h-screen flex-col bg-[var(--ivory)]">
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
+      <SiteHeader />
+      <main id="main-content" className="flex-1">
+        {sidebar ? (
+          <div className="page-shell grid gap-8 py-8 lg:grid-cols-[16rem_1fr]">
+            <aside className="min-w-0">{sidebar}</aside>
+            <div className="min-w-0">{children}</div>
           </div>
-        </div>
-      </div>
+        ) : (
+          children
+        )}
+      </main>
+      <SiteFooter />
     </div>
   )
 }
+
+export default MainLayout

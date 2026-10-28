@@ -39,8 +39,8 @@ export const Incidents = () => {
       )
     : null
 
-  // Selected booking info for the report section
-  const selectedBookingInfo = selectedBooking
+  // Selected booking report info
+  const selectedBookingReport = selectedBooking
     ? (
         <GlassPanel className="mt-6 p-4 rounded-lg bg-[--soft-beige]">
           <p className="text-[--muted] text-sm mb-2">Booking:</p>
@@ -48,48 +48,6 @@ export const Incidents = () => {
         </GlassPanel>
       )
     : null
-
-  // Submit button content
-  const submitButton = (
-    <GlassPanel>
-      <button
-        onClick={handleSubmit}
-        className="w-full bg-espresso text-white px-6 py-3 rounded-full font-medium hover:bg-[--deep-brown] transition-colors"
-        disabled={!selectedBooking || createMutation.isLoading}
-      >
-        {createMutation.isLoading ? 'Submitting...' : 'Report Incident'}
-      </button>
-    </GlassPanel>
-  )
-
-  // Handle submit action
-  const handleSubmit = () => {
-    if (selectedBooking) {
-      createMutation.mutate({ bookingId: selectedBooking, type, description })
-    }
-  }
-
-  // Modal confirmation content
-  const modalConfirm = open ? (
-    <GlassPanel
-      className="p-8 text-center fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center"
-    >
-      <div className="bg-cream dark:bg-darkBrown rounded-[16px] p-8 max-w-sm">
-        <h3 className="text-2xl font-bold text-charcoal mb-4">
-          Incident Reported
-        </h3>
-        <p className="text-[--muted] text-sm mb-6">
-          Your incident has been reported and a manager will review it.
-        </p>
-        <button
-          onClick={() => setOpen(false)}
-          className="bg-espresso text-white px-6 py-3 rounded-full font-medium hover:bg-[--deep-brown] transition-colors"
-        >
-          OK
-        </button>
-      </div>
-    </GlassPanel>
-  ) : null
 
   return (
     <GlassPanel className="p-6 md:p-12 max-w-2xl mx-auto">
@@ -149,13 +107,40 @@ export const Incidents = () => {
       </div>
       </GlassPanel>
 
-      {selectedBookingInfo}
+      {selectedBookingReport}
 
       {/* Submit */}
-      {submitButton}
+      <GlassPanel>
+        <button
+          onClick={() => handleSubmit()}
+          className="w-full bg-espresso text-white px-6 py-3 rounded-full font-medium hover:bg-[--deep-brown] transition-colors"
+          disabled={!selectedBooking || createMutation.isLoading}
+        >
+          {createMutation.isLoading ? 'Submitting...' : 'Report Incident'}
+        </button>
+      </GlassPanel>
 
       {/* Modal confirmation */}
-      {modalConfirm}
+      {open ? (
+        <GlassPanel
+          className="p-8 text-center fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center"
+        >
+          <div className="bg-cream dark:bg-darkBrown rounded-[16px] p-8 max-w-sm">
+            <h3 className="text-2xl font-bold text-charcoal mb-4">
+              Incident Reported
+            </h3>
+            <p className="text-[--muted] text-sm mb-6">
+              Your incident has been reported and a manager will review it.
+            </p>
+            <button
+              onClick={() => setOpen(false)}
+              className="bg-espresso text-white px-6 py-3 rounded-full font-medium hover:bg-[--deep-brown] transition-colors"
+            >
+              OK
+            </button>
+          </div>
+        </GlassPanel>
+      ) : null}
     </GlassPanel>
   )
 }

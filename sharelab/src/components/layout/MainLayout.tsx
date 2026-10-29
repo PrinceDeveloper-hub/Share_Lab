@@ -13,7 +13,7 @@ export interface MainLayoutProps {
  */
 export const MainLayout = ({ children, sidebar }: MainLayoutProps) => {
   return (
-    <div className="flex min-h-screen flex-col bg-[var(--ivory)]">
+    <div className="flex min-h-screen flex-col bg-(--ivory)">
       <a href="#main-content" className="skip-link">
         Skip to main content
       </a>

@@ -9,7 +9,7 @@ const exploreLinks = [
 
 export const SiteFooter = () => {
   return (
-    <footer className="relative mt-auto overflow-hidden bg-[var(--deep-brown)] text-[var(--cream)]">
+    <footer className="relative mt-auto overflow-hidden bg-(--deep-brown) text-(--cream)">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -right-24 -top-32 h-80 w-80 rounded-full bg-[radial-gradient(circle,rgba(214,189,164,0.16),transparent_68%)] blur-2xl"
@@ -19,13 +19,13 @@ export const SiteFooter = () => {
           <div className="max-w-md">
             <Link
               to="/"
-              className="group inline-flex items-center gap-3 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(255,249,241,0.7)] focus-visible:ring-offset-4 focus-visible:ring-offset-[var(--deep-brown)]"
+              className="group inline-flex items-center gap-3 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(255,249,241,0.7)] focus-visible:ring-offset-4 focus-visible:ring-offset-(--deep-brown)"
             >
               <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[rgba(255,249,241,0.1)] ring-1 ring-[rgba(255,249,241,0.18)]">
-                <FlaskConical className="h-5 w-5 text-[var(--cream)]" aria-hidden="true" />
+                <FlaskConical className="h-5 w-5 text-(--cream)" aria-hidden="true" />
               </span>
               <span className="flex flex-col leading-none">
-                <span className="font-display text-lg font-bold tracking-tight text-[var(--cream)]">
+                <span className="font-display text-lg font-bold tracking-tight text-(--cream)">
                   ShareLab
                 </span>
                 <span className="mt-1 text-[0.6rem] font-semibold uppercase tracking-[0.24em] text-[rgba(255,249,241,0.55)]">

@@ -2,7 +2,7 @@ export const ResourceCardSkeleton = () => {
   return (
     <div
       aria-hidden="true"
-      className="overflow-hidden rounded-[1.35rem] border border-[var(--border-subtle)] bg-[rgba(255,252,247,0.6)]"
+      className="overflow-hidden rounded-[1.35rem] border border-(--border-subtle) bg-[rgba(255,252,247,0.6)]"
     >
       <div className="aspect-[4/3] animate-pulse bg-[rgba(214,189,164,0.38)]" />
       <div className="space-y-3 p-5">

@@ -38,8 +38,8 @@ export const CheckInReturn = ({
       >
         {/* Booking summary */}
         {booking && (
-          <GlassPanel className="p-4 mb-6 rounded-lg bg-[var(--soft-beige)]">
-            <p className="text-[var(--muted)] text-sm mb-2">
+          <GlassPanel className="p-4 mb-6 rounded-lg bg-(--soft-beige)">
+            <p className="text-(--muted) text-sm mb-2">
               Booking: {booking.resource_id} - {booking.start_at} to{' '}
               {booking.end_at}
             </p>
@@ -51,7 +51,7 @@ export const CheckInReturn = ({
 
         {/* Condition selection */}
         <GlassPanel>
-          <p className="text-[var(--muted)] text-sm mb-3">Condition</p>
+          <p className="text-(--muted) text-sm mb-3">Condition</p>
 
           <div className="grid grid-cols-4 gap-2">
             <button
@@ -59,9 +59,9 @@ export const CheckInReturn = ({
               className={cn(
                 'rounded-lg p-2 text-center',
                 condition === 'excellent'
-                  ? 'bg-[var(--success)] text-white'
+                  ? 'bg-(--success) text-white'
                   : 'bg-soft-beige text-espresso',
-                'hover:bg-[var(--taupe)] hover:text-white transition-colors',
+                'hover:bg-(--taupe) hover:text-white transition-colors',
               )}
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
@@ -73,9 +73,9 @@ export const CheckInReturn = ({
               className={cn(
                 'rounded-lg p-2 text-center',
                 condition === 'good'
-                  ? 'bg-[var(--success)] text-white'
+                  ? 'bg-(--success) text-white'
                   : 'bg-soft-beige text-espresso',
-                'hover:bg-[var(--taupe)] hover:text-white transition-colors',
+                'hover:bg-(--taupe) hover:text-white transition-colors',
               )}
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
@@ -87,9 +87,9 @@ export const CheckInReturn = ({
               className={cn(
                 'rounded-lg p-2 text-center',
                 condition === 'fair'
-                  ? 'bg-[var(--success)] text-white'
+                  ? 'bg-(--success) text-white'
                   : 'bg-soft-beige text-espresso',
-                'hover:bg-[var(--taupe)] hover:text-white transition-colors',
+                'hover:bg-(--taupe) hover:text-white transition-colors',
               )}
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
@@ -101,13 +101,13 @@ export const CheckInReturn = ({
               className={cn(
                 'rounded-lg p-2 text-center',
                 condition === 'damaged'
-                  ? 'bg-[var(--error)] text-white'
+                  ? 'bg-(--error) text-white'
                   : 'bg-soft-beige text-espresso',
-                'hover:bg-[var(--taupe)] hover:text-white transition-colors',
+                'hover:bg-(--taupe) hover:text-white transition-colors',
               )}
             >
               <svg
-                className="w-5 h-5 text-[var(--error)]"
+                className="w-5 h-5 text-(--error)"
                 viewBox="0 0 24 24"
                 fill="currentColor"
               >
@@ -119,12 +119,12 @@ export const CheckInReturn = ({
 
         {/* Notes */}
         <div>
-          <label className="block text-[var(--muted)] text-sm mb-2">
+          <label className="block text-(--muted) text-sm mb-2">
             Notes
           </label>
           <textarea
             rows={3}
-            className="w-full bg-soft-beige dark:bg-[var(--deep-brown)] border border-sand rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-espresso resize-none text-sm"
+            className="w-full bg-soft-beige dark:bg-(--deep-brown) border border-sand rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-espresso resize-none text-sm"
             placeholder="Enter any notes about the condition..."
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
@@ -134,19 +134,19 @@ export const CheckInReturn = ({
         {/* Photo upload (check-in only) */}
         {!isCheckIn || photo ? (
           <div>
-            <label className="block text-[var(--muted)] text-sm mb-2">
+            <label className="block text-(--muted) text-sm mb-2">
               Photo (check-in)
             </label>
             <input
               type="file"
               accept="image/*"
               onChange={(e) => setPhoto(e.target.files?.[0] || null)}
-              className="w-full bg-soft-beige dark:bg-[var(--deep-brown)] border border-sand rounded-md px-3 py-2 cursor-pointer font-medium text-sm"
+              className="w-full bg-soft-beige dark:bg-(--deep-brown) border border-sand rounded-md px-3 py-2 cursor-pointer font-medium text-sm"
             />
           </div>
         ) : (
           <div>
-            <p className="text-[var(--muted)] text-sm">
+            <p className="text-(--muted) text-sm">
               Photo upload available for check-in only.
             </p>
           </div>
@@ -156,7 +156,7 @@ export const CheckInReturn = ({
         <GlassPanel>
           <button
             type="submit"
-            className="w-full bg-espresso text-white px-6 py-3 rounded-full font-medium hover:bg-[var(--deep-brown)] transition-colors"
+            className="w-full bg-espresso text-white px-6 py-3 rounded-full font-medium hover:bg-(--deep-brown) transition-colors"
           >
             {submitLabel}
           </button>
@@ -170,12 +170,12 @@ export const CheckInReturn = ({
             <h3 className="text-2xl font-bold text-charcoal mb-4">
               {isCheckIn ? 'Check-in successful!' : 'Items returned!'}
             </h3>
-            <p className="text-[var(--muted)] text-sm mb-6">
+            <p className="text-(--muted) text-sm mb-6">
               Your {isCheckIn ? 'check-in' : 'return'} has been recorded.
             </p>
             <button
               onClick={() => setOpen(false)}
-              className="bg-espresso text-white px-6 py-3 rounded-full font-medium hover:bg-[var(--deep-brown)] transition-colors"
+              className="bg-espresso text-white px-6 py-3 rounded-full font-medium hover:bg-(--deep-brown) transition-colors"
             >
               OK
             </button>

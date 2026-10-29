@@ -130,16 +130,16 @@ export const AboutPage = () => {
         />
         <div className="page-shell relative py-10 sm:py-14 lg:py-20">
           <nav aria-label="Breadcrumb" className="mb-6">
-            <ol className="flex items-center gap-1.5 text-xs font-medium text-[var(--muted)]">
+            <ol className="flex items-center gap-1.5 text-xs font-medium text-(--muted)">
               <li>
-                <Link to="/" className="transition-colors hover:text-[var(--espresso)]">
+                <Link to="/" className="transition-colors hover:text-(--espresso)">
                   Home
                 </Link>
               </li>
               <li aria-hidden="true">
                 <CrumbChevron className="h-3.5 w-3.5" />
               </li>
-              <li aria-current="page" className="text-[var(--charcoal)]">
+              <li aria-current="page" className="text-(--charcoal)">
                 About
               </li>
             </ol>
@@ -148,15 +148,15 @@ export const AboutPage = () => {
           <div className="grid gap-12 lg:grid-cols-[1.02fr_0.98fr] lg:items-center lg:gap-16">
             <div>
               <span className="eyebrow">About ShareLab</span>
-              <h1 className="mt-3 max-w-2xl text-[clamp(2.3rem,5.2vw,3.9rem)] font-semibold leading-[1.01] tracking-[-0.04em] text-[var(--charcoal)]">
+              <h1 className="mt-3 max-w-2xl text-[clamp(2.3rem,5.2vw,3.9rem)] font-semibold leading-[1.01] tracking-[-0.04em] text-(--charcoal)">
                 Shared resources should be easy to find — and hard to lose track of.
               </h1>
-              <p className="mt-5 max-w-xl text-base leading-relaxed text-[var(--muted)] sm:text-lg">
+              <p className="mt-5 max-w-xl text-base leading-relaxed text-(--muted) sm:text-lg">
                 ShareLab is a campus resource commons: a single place to discover shared equipment
                 and facilities, understand what access requires, and follow a booking from request
                 to return.
               </p>
-              <p className="mt-3 max-w-xl text-sm leading-relaxed text-[var(--muted)]">
+              <p className="mt-3 max-w-xl text-sm leading-relaxed text-(--muted)">
                 It is designed for the everyday reality of campus sharing — where a lab, studio, or
                 department owns the resource, a manager protects it, and a student or researcher
                 needs to use it responsibly.
@@ -175,7 +175,7 @@ export const AboutPage = () => {
             </div>
 
             <div className="relative mx-auto w-full max-w-lg lg:max-w-none">
-              <div className="overflow-hidden rounded-[2rem] border border-[rgba(255,255,255,0.7)] bg-[rgba(255,252,247,0.6)] p-2.5 shadow-[var(--shadow-lg)]">
+              <div className="overflow-hidden rounded-[2rem] border border-[rgba(255,255,255,0.7)] bg-[rgba(255,252,247,0.6)] p-2.5 shadow-(--shadow-lg)">
                 <div className="relative overflow-hidden rounded-[1.55rem]">
                   <img
                     src="https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=1400&q=80"
@@ -186,8 +186,8 @@ export const AboutPage = () => {
                   />
                   <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_45%,rgba(24,17,13,0.58)_100%)]" />
                   <blockquote className="absolute inset-x-4 bottom-4 rounded-2xl border border-[rgba(255,255,255,0.55)] bg-[rgba(255,249,241,0.92)] p-4 backdrop-blur-xl sm:inset-x-5 sm:bottom-5 sm:p-5">
-                    <Quote className="h-4 w-4 text-[var(--taupe)]" aria-hidden="true" />
-                    <p className="mt-2 text-sm font-medium leading-relaxed text-[var(--charcoal)]">
+                    <Quote className="h-4 w-4 text-(--taupe)" aria-hidden="true" />
+                    <p className="mt-2 text-sm font-medium leading-relaxed text-(--charcoal)">
                       The goal is not more bookings. It is a clearer, fairer relationship between
                       the people who need a resource and the people who care for it.
                     </p>
@@ -201,7 +201,7 @@ export const AboutPage = () => {
 
       <section
         aria-labelledby="the-problem"
-        className="border-y border-[var(--border-subtle)] bg-[rgba(255,249,241,0.6)] py-16 sm:py-20"
+        className="border-y border-(--border-subtle) bg-[rgba(255,249,241,0.6)] py-16 sm:py-20"
       >
         <div className="page-shell grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
           <div>
@@ -213,20 +213,20 @@ export const AboutPage = () => {
             />
           </div>
 
-          <div className="divide-y divide-[var(--border-subtle)] border-y border-[var(--border-subtle)]">
+          <div className="divide-y divide-(--border-subtle) border-y border-(--border-subtle)">
             {problems.map((problem) => (
               <div key={problem.number} className="grid gap-4 py-6 sm:grid-cols-[3rem_1fr] sm:gap-5">
                 <div className="flex items-start gap-3 sm:flex-col sm:gap-2">
-                  <span className="font-display text-xs font-bold tracking-[0.16em] text-[var(--taupe)]">
+                  <span className="font-display text-xs font-bold tracking-[0.16em] text-(--taupe)">
                     {problem.number}
                   </span>
                   <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[rgba(75,47,31,0.07)]">
-                    <problem.icon className="h-4 w-4 text-[var(--espresso)]" aria-hidden="true" />
+                    <problem.icon className="h-4 w-4 text-(--espresso)" aria-hidden="true" />
                   </span>
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-[var(--charcoal)]">{problem.title}</h3>
-                  <p className="mt-1.5 text-sm leading-relaxed text-[var(--muted)]">
+                  <h3 className="text-lg font-semibold text-(--charcoal)">{problem.title}</h3>
+                  <p className="mt-1.5 text-sm leading-relaxed text-(--muted)">
                     {problem.description}
                   </p>
                 </div>
@@ -236,7 +236,7 @@ export const AboutPage = () => {
         </div>
       </section>
 
-      <section aria-labelledby="our-approach" className="relative overflow-hidden bg-[var(--deep-brown)] py-16 text-[var(--cream)] sm:py-20">
+      <section aria-labelledby="our-approach" className="relative overflow-hidden bg-(--deep-brown) py-16 text-(--cream) sm:py-20">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute -left-32 top-0 h-96 w-96 rounded-full bg-[radial-gradient(circle,rgba(214,189,164,0.16),transparent_70%)] blur-3xl"
@@ -247,7 +247,7 @@ export const AboutPage = () => {
               <span className="text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-[rgba(255,249,241,0.5)]">
                 Our approach
               </span>
-              <h2 className="mt-3 max-w-lg text-3xl font-semibold tracking-tight text-[var(--cream)] sm:text-4xl">
+              <h2 className="mt-3 max-w-lg text-3xl font-semibold tracking-tight text-(--cream) sm:text-4xl">
                 Make the rules legible, then make the handover visible.
               </h2>
               <p className="mt-4 max-w-lg text-base leading-relaxed text-[rgba(255,249,241,0.68)]">
@@ -264,10 +264,10 @@ export const AboutPage = () => {
                   className="flex gap-4 rounded-2xl border border-[rgba(255,249,241,0.14)] bg-[rgba(255,249,241,0.06)] p-5"
                 >
                   <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[rgba(255,249,241,0.09)]">
-                    <item.icon className="h-4 w-4 text-[var(--cream)]" aria-hidden="true" />
+                    <item.icon className="h-4 w-4 text-(--cream)" aria-hidden="true" />
                   </span>
                   <div>
-                    <h3 className="text-base font-semibold text-[var(--cream)]">{item.title}</h3>
+                    <h3 className="text-base font-semibold text-(--cream)">{item.title}</h3>
                     <p className="mt-1 text-sm leading-relaxed text-[rgba(255,249,241,0.64)]">
                       {item.description}
                     </p>
@@ -298,14 +298,14 @@ export const AboutPage = () => {
           {audiences.map((audience) => (
             <div
               key={audience.title}
-              className="flex h-full flex-col gap-4 rounded-[1.35rem] border border-[var(--border-subtle)] bg-[rgba(255,252,247,0.66)] p-6 transition-all duration-300 hover:-translate-y-1 hover:bg-[var(--cream)] hover:shadow-[var(--shadow-md)]"
+              className="flex h-full flex-col gap-4 rounded-[1.35rem] border border-(--border-subtle) bg-[rgba(255,252,247,0.66)] p-6 transition-all duration-300 hover:-translate-y-1 hover:bg-(--cream) hover:shadow-(--shadow-md)"
             >
               <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[rgba(75,47,31,0.075)]">
-                <audience.icon className="h-5 w-5 text-[var(--espresso)]" aria-hidden="true" />
+                <audience.icon className="h-5 w-5 text-(--espresso)" aria-hidden="true" />
               </span>
               <div>
-                <h3 className="text-lg font-semibold text-[var(--charcoal)]">{audience.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
+                <h3 className="text-lg font-semibold text-(--charcoal)">{audience.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-(--muted)">
                   {audience.description}
                 </p>
               </div>
@@ -313,15 +313,15 @@ export const AboutPage = () => {
           ))}
         </div>
 
-        <div className="mt-5 flex flex-col gap-4 rounded-2xl border border-[var(--border-subtle)] bg-[rgba(233,217,198,0.28)] px-5 py-4 text-sm text-[var(--muted)] sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-5 flex flex-col gap-4 rounded-2xl border border-(--border-subtle) bg-[rgba(233,217,198,0.28)] px-5 py-4 text-sm text-(--muted) sm:flex-row sm:items-center sm:justify-between">
           <span className="flex items-center gap-2">
-            <CheckCircle2 className="h-4 w-4 shrink-0 text-[var(--success)]" aria-hidden="true" />
+            <CheckCircle2 className="h-4 w-4 shrink-0 text-(--success)" aria-hidden="true" />
             ShareLab is a booking and accountability layer — not a marketplace, and not an
             automatic approval system.
           </span>
           <Link
             to="/how-it-works"
-            className="inline-flex shrink-0 items-center gap-1.5 font-semibold text-[var(--espresso)] transition-colors hover:text-[var(--deep-brown)]"
+            className="inline-flex shrink-0 items-center gap-1.5 font-semibold text-(--espresso) transition-colors hover:text-(--deep-brown)"
           >
             Read the process
             <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -331,7 +331,7 @@ export const AboutPage = () => {
 
       <section
         aria-labelledby="principles-heading"
-        className="border-t border-[var(--border-subtle)] bg-[rgba(255,249,241,0.6)] py-16 sm:py-20"
+        className="border-t border-(--border-subtle) bg-[rgba(255,249,241,0.6)] py-16 sm:py-20"
       >
         <div className="page-shell grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
           <div>
@@ -340,23 +340,23 @@ export const AboutPage = () => {
               eyebrow="Guiding principles"
               title="Four commitments that shape the product"
             />
-            <p className="mt-5 max-w-md text-sm leading-relaxed text-[var(--muted)]">
+            <p className="mt-5 max-w-md text-sm leading-relaxed text-(--muted)">
               These principles are deliberately practical. They guide what a listing exposes, how a
               request is decided, and what the platform remembers afterwards.
             </p>
           </div>
 
-          <ol className="divide-y divide-[var(--border-subtle)] border-y border-[var(--border-subtle)]">
+          <ol className="divide-y divide-(--border-subtle) border-y border-(--border-subtle)">
             {principles.map((principle, index) => (
               <li key={principle.title} className="grid grid-cols-[2.5rem_1fr] gap-4 py-5">
-                <span className="font-display text-sm font-bold tracking-[0.14em] text-[var(--taupe)]">
+                <span className="font-display text-sm font-bold tracking-[0.14em] text-(--taupe)">
                   {String(index + 1).padStart(2, '0')}
                 </span>
                 <div>
-                  <h3 className="text-base font-semibold text-[var(--charcoal)]">
+                  <h3 className="text-base font-semibold text-(--charcoal)">
                     {principle.title}
                   </h3>
-                  <p className="mt-1.5 text-sm leading-relaxed text-[var(--muted)]">
+                  <p className="mt-1.5 text-sm leading-relaxed text-(--muted)">
                     {principle.description}
                   </p>
                 </div>
@@ -367,12 +367,12 @@ export const AboutPage = () => {
       </section>
 
       <section className="page-shell py-16 sm:py-20">
-        <div className="flex flex-col items-start justify-between gap-6 rounded-[2rem] border border-[var(--border-subtle)] bg-[var(--cream)] px-6 py-8 shadow-[var(--shadow-sm)] sm:flex-row sm:items-center sm:px-8">
+        <div className="flex flex-col items-start justify-between gap-6 rounded-[2rem] border border-(--border-subtle) bg-(--cream) px-6 py-8 shadow-soft sm:flex-row sm:items-center sm:px-8">
           <div>
-            <h2 className="text-2xl font-semibold tracking-tight text-[var(--charcoal)] sm:text-3xl">
+            <h2 className="text-2xl font-semibold tracking-tight text-(--charcoal) sm:text-3xl">
               Start with what your work needs.
             </h2>
-            <p className="mt-2 max-w-xl text-sm leading-relaxed text-[var(--muted)]">
+            <p className="mt-2 max-w-xl text-sm leading-relaxed text-(--muted)">
               Browse the catalogue, open a listing, and review its requirements before you request
               a slot.
             </p>

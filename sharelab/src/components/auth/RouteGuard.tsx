@@ -16,9 +16,9 @@ const AuthLoading = () => (
     role="status"
     aria-live="polite"
   >
-    <div className="flex items-center gap-3 rounded-full border border-[var(--border-subtle)] bg-[rgba(255,252,247,0.72)] px-5 py-3 text-sm font-medium text-[var(--muted)] backdrop-blur">
+    <div className="flex items-center gap-3 rounded-full border border-(--border-subtle) bg-[rgba(255,252,247,0.72)] px-5 py-3 text-sm font-medium text-(--muted) backdrop-blur">
       <Loader2
-        className="h-4 w-4 animate-spin text-[var(--espresso)]"
+        className="h-4 w-4 animate-spin text-(--espresso)"
         aria-hidden="true"
       />
       Checking your session...
@@ -28,17 +28,17 @@ const AuthLoading = () => (
 
 const AccessDenied = () => (
   <div className="page-shell py-16 sm:py-20">
-    <div className="mx-auto max-w-lg rounded-[1.5rem] border border-[rgba(180,77,66,0.2)] bg-[rgba(255,252,247,0.72)] p-8 text-center shadow-[var(--shadow-sm)]">
+    <div className="mx-auto max-w-lg rounded-3xl border border-[rgba(180,77,66,0.2)] bg-[rgba(255,252,247,0.72)] p-8 text-center shadow-soft">
       <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[rgba(180,77,66,0.08)]">
         <ShieldAlert
-          className="h-5 w-5 text-[var(--error)]"
+          className="h-5 w-5 text-(--error)"
           aria-hidden="true"
         />
       </span>
-      <h1 className="mt-4 text-2xl font-semibold text-[var(--charcoal)]">
+      <h1 className="mt-4 text-2xl font-semibold text-(--charcoal)">
         Access not available
       </h1>
-      <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
+      <p className="mt-2 text-sm leading-relaxed text-(--muted)">
         Your account does not have the role required for this page.
       </p>
       <div className="mt-6 flex flex-wrap justify-center gap-2">

@@ -103,16 +103,16 @@ export const Home = () => {
 
         <section className="page-shell grid items-center gap-12 pb-16 pt-10 sm:pt-14 lg:grid-cols-[1.02fr_0.98fr] lg:gap-16 lg:pb-24 lg:pt-20">
           <div className="flex flex-col gap-7">
-            <span className="inline-flex w-fit items-center gap-2 rounded-full border border-[rgba(82,59,45,0.14)] bg-[rgba(255,252,247,0.78)] px-4 py-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-[var(--muted)] backdrop-blur">
-              <Sparkles className="h-3.5 w-3.5 text-[var(--warning)]" aria-hidden="true" />
+            <span className="inline-flex w-fit items-center gap-2 rounded-full border border-[rgba(82,59,45,0.14)] bg-[rgba(255,252,247,0.78)] px-4 py-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-(--muted) backdrop-blur">
+              <Sparkles className="h-3.5 w-3.5 text-(--warning)" aria-hidden="true" />
               Campus resource commons
             </span>
 
             <div className="flex flex-col gap-5">
-              <h1 className="max-w-2xl text-[clamp(2.6rem,6.2vw,4.6rem)] font-semibold leading-[0.98] tracking-[-0.04em] text-[var(--charcoal)]">
+              <h1 className="max-w-2xl text-[clamp(2.6rem,6.2vw,4.6rem)] font-semibold leading-[0.98] tracking-[-0.04em] text-(--charcoal)">
                 Discover resources. Unlock possibilities.
               </h1>
-              <p className="max-w-xl text-lg leading-relaxed text-[var(--muted)]">
+              <p className="max-w-xl text-lg leading-relaxed text-(--muted)">
                 Discover certified lab equipment, studios, and shared facilities across campus —
                 with clear requirements, transparent booking decisions, and a record that keeps
                 every handover accountable.
@@ -139,12 +139,12 @@ export const Home = () => {
               ].map((item) => (
                 <div
                   key={item.label}
-                  className="rounded-2xl border border-[var(--border-subtle)] bg-[rgba(255,252,247,0.55)] px-4 py-3 backdrop-blur-sm"
+                  className="rounded-2xl border border-(--border-subtle) bg-[rgba(255,252,247,0.55)] px-4 py-3 backdrop-blur-sm"
                 >
-                  <span className="block text-sm font-semibold text-[var(--charcoal)]">
+                  <span className="block text-sm font-semibold text-(--charcoal)">
                     {item.label}
                   </span>
-                  <span className="mt-0.5 block text-xs text-[var(--muted)]">{item.value}</span>
+                  <span className="mt-0.5 block text-xs text-(--muted)">{item.value}</span>
                 </div>
               ))}
             </div>
@@ -167,14 +167,14 @@ export const Home = () => {
             {features.map((feature) => (
               <div
                 key={feature.title}
-                className="flex h-full flex-col gap-4 rounded-[1.35rem] border border-[var(--border-subtle)] bg-[rgba(255,252,247,0.62)] p-6 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:bg-[rgba(255,252,247,0.85)] hover:shadow-[var(--shadow-md)]"
+                className="flex h-full flex-col gap-4 rounded-[1.35rem] border border-(--border-subtle) bg-[rgba(255,252,247,0.62)] p-6 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:bg-[rgba(255,252,247,0.85)] hover:shadow-(--shadow-md)"
               >
                 <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[rgba(75,47,31,0.075)]">
-                  <feature.icon className="h-5 w-5 text-[var(--espresso)]" aria-hidden="true" />
+                  <feature.icon className="h-5 w-5 text-(--espresso)" aria-hidden="true" />
                 </span>
                 <div>
-                  <h3 className="text-lg font-semibold text-[var(--charcoal)]">{feature.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
+                  <h3 className="text-lg font-semibold text-(--charcoal)">{feature.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-(--muted)">
                     {feature.description}
                   </p>
                 </div>
@@ -186,7 +186,7 @@ export const Home = () => {
 
       <section
         aria-labelledby="featured-resources"
-        className="border-y border-[var(--border-subtle)] bg-[rgba(255,249,241,0.62)] py-16 sm:py-20"
+        className="border-y border-(--border-subtle) bg-[rgba(255,249,241,0.62)] py-16 sm:py-20"
       >
         <div className="page-shell flex flex-col gap-8">
           <div className="flex flex-wrap items-end justify-between gap-5">
@@ -219,10 +219,10 @@ export const Home = () => {
           ) : featured.isError ? (
             <div className="flex flex-col items-start gap-4 rounded-[1.35rem] border border-[rgba(180,77,66,0.24)] bg-[rgba(180,77,66,0.05)] p-6 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <p className="font-semibold text-[var(--charcoal)]">
+                <p className="font-semibold text-(--charcoal)">
                   The live catalogue is unavailable right now.
                 </p>
-                <p className="mt-1 text-sm text-[var(--muted)]">
+                <p className="mt-1 text-sm text-(--muted)">
                   Featured listings could not be loaded from the ShareLab API. You can retry or
                   open the catalogue to see the current state.
                 </p>
@@ -237,12 +237,12 @@ export const Home = () => {
               </div>
             </div>
           ) : featuredResources.length === 0 ? (
-            <div className="rounded-[1.35rem] border border-dashed border-[var(--border-strong)] bg-[rgba(255,252,247,0.5)] p-8 text-center">
-              <FlaskConical className="mx-auto h-8 w-8 text-[var(--taupe)]" aria-hidden="true" />
-              <p className="mt-3 font-semibold text-[var(--charcoal)]">
+            <div className="rounded-[1.35rem] border border-dashed border-(--border-strong) bg-[rgba(255,252,247,0.5)] p-8 text-center">
+              <FlaskConical className="mx-auto h-8 w-8 text-(--taupe)" aria-hidden="true" />
+              <p className="mt-3 font-semibold text-(--charcoal)">
                 No resources are published yet
               </p>
-              <p className="mx-auto mt-1 max-w-md text-sm text-[var(--muted)]">
+              <p className="mx-auto mt-1 max-w-md text-sm text-(--muted)">
                 New listings will appear here as soon as they are added to the catalogue.
               </p>
             </div>
@@ -279,21 +279,21 @@ export const Home = () => {
                 {index < workflow.length - 1 ? (
                   <span
                     aria-hidden="true"
-                    className="absolute left-[calc(100%-0.5rem)] top-9 hidden h-px w-8 bg-[var(--border-strong)] lg:block"
+                    className="absolute left-[calc(100%-0.5rem)] top-9 hidden h-px w-8 bg-(--border-strong) lg:block"
                   />
                 ) : null}
-                <div className="flex h-full flex-col gap-4 rounded-[1.35rem] border border-[var(--border-subtle)] bg-[var(--cream)] p-5 shadow-[var(--shadow-xs)]">
+                <div className="flex h-full flex-col gap-4 rounded-[1.35rem] border border-(--border-subtle) bg-(--cream) p-5 shadow-(--shadow-xs)">
                   <div className="flex items-center justify-between">
-                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--espresso)] text-[var(--cream)]">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-(--espresso) text-(--cream)">
                       <item.icon className="h-4.5 w-4.5" aria-hidden="true" />
                     </span>
-                    <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
+                    <span className="text-xs font-semibold uppercase tracking-[0.18em] text-(--muted)">
                       {item.step}
                     </span>
                   </div>
                   <div>
-                    <h3 className="text-base font-semibold text-[var(--charcoal)]">{item.title}</h3>
-                    <p className="mt-1.5 text-sm leading-relaxed text-[var(--muted)]">
+                    <h3 className="text-base font-semibold text-(--charcoal)">{item.title}</h3>
+                    <p className="mt-1.5 text-sm leading-relaxed text-(--muted)">
                       {item.description}
                     </p>
                   </div>
@@ -302,17 +302,17 @@ export const Home = () => {
             ))}
           </ol>
 
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 rounded-2xl border border-[var(--border-subtle)] bg-[rgba(233,217,198,0.3)] px-5 py-4 text-sm text-[var(--muted)]">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 rounded-2xl border border-(--border-subtle) bg-[rgba(233,217,198,0.3)] px-5 py-4 text-sm text-(--muted)">
             <span className="inline-flex items-center gap-2">
-              <Clock3 className="h-4 w-4 text-[var(--espresso)]" aria-hidden="true" />
+              <Clock3 className="h-4 w-4 text-(--espresso)" aria-hidden="true" />
               Weekly caps and booking limits apply
             </span>
             <span className="inline-flex items-center gap-2">
-              <ShieldCheck className="h-4 w-4 text-[var(--espresso)]" aria-hidden="true" />
+              <ShieldCheck className="h-4 w-4 text-(--espresso)" aria-hidden="true" />
               Eligibility is verified by the server
             </span>
             <span className="inline-flex items-center gap-2">
-              <ClipboardCheck className="h-4 w-4 text-[var(--espresso)]" aria-hidden="true" />
+              <ClipboardCheck className="h-4 w-4 text-(--espresso)" aria-hidden="true" />
               Managers record a decision reason
             </span>
           </div>
@@ -320,7 +320,7 @@ export const Home = () => {
       </section>
 
       <section className="page-shell pb-20 pt-4 sm:pb-24">
-        <div className="relative overflow-hidden rounded-[2rem] bg-[var(--deep-brown)] px-6 py-12 text-center shadow-[var(--shadow-lg)] sm:px-12 lg:px-16 lg:py-16">
+        <div className="relative overflow-hidden rounded-[2rem] bg-(--deep-brown) px-6 py-12 text-center shadow-(--shadow-lg) sm:px-12 lg:px-16 lg:py-16">
           <div
             aria-hidden="true"
             className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(214,189,164,0.22),transparent_68%)] blur-2xl"
@@ -331,7 +331,7 @@ export const Home = () => {
           />
           <div className="relative mx-auto flex max-w-2xl flex-col items-center gap-5">
             <span className="eyebrow text-[rgba(255,249,241,0.56)]">Ready when you are</span>
-            <h2 className="text-3xl font-semibold tracking-tight text-[var(--cream)] sm:text-4xl lg:text-5xl">
+            <h2 className="text-3xl font-semibold tracking-tight text-(--cream) sm:text-4xl lg:text-5xl">
               Find the resource your work needs next.
             </h2>
             <p className="max-w-xl text-base leading-relaxed text-[rgba(255,249,241,0.7)] sm:text-lg">

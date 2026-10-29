@@ -143,23 +143,23 @@ export const HowItWorksPage = () => {
 
   return (
     <SiteLayout>
-      <section className="relative overflow-hidden border-b border-[var(--border-subtle)] bg-[rgba(255,252,247,0.46)]">
+      <section className="relative overflow-hidden border-b border-(--border-subtle) bg-[rgba(255,252,247,0.46)]">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute -left-40 -top-32 h-96 w-96 rounded-full bg-[radial-gradient(circle,rgba(198,165,138,0.22),transparent_70%)] blur-3xl"
         />
         <div className="page-shell relative py-10 sm:py-14 lg:py-20">
           <nav aria-label="Breadcrumb" className="mb-6">
-            <ol className="flex items-center gap-1.5 text-xs font-medium text-[var(--muted)]">
+            <ol className="flex items-center gap-1.5 text-xs font-medium text-(--muted)">
               <li>
-                <Link to="/" className="transition-colors hover:text-[var(--espresso)]">
+                <Link to="/" className="transition-colors hover:text-(--espresso)">
                   Home
                 </Link>
               </li>
               <li aria-hidden="true">
                 <CrumbChevron className="h-3.5 w-3.5" />
               </li>
-              <li aria-current="page" className="text-[var(--charcoal)]">
+              <li aria-current="page" className="text-(--charcoal)">
                 How It Works
               </li>
             </ol>
@@ -168,10 +168,10 @@ export const HowItWorksPage = () => {
           <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:gap-16">
             <div>
               <span className="eyebrow">The ShareLab process</span>
-              <h1 className="mt-3 max-w-2xl text-[clamp(2.3rem,5vw,3.8rem)] font-semibold leading-[1.02] tracking-[-0.038em] text-[var(--charcoal)]">
+              <h1 className="mt-3 max-w-2xl text-[clamp(2.3rem,5vw,3.8rem)] font-semibold leading-[1.02] tracking-[-0.038em] text-(--charcoal)">
                 From first search to a clean return.
               </h1>
-              <p className="mt-5 max-w-xl text-base leading-relaxed text-[var(--muted)] sm:text-lg">
+              <p className="mt-5 max-w-xl text-base leading-relaxed text-(--muted) sm:text-lg">
                 ShareLab is built around a six-step resource lifecycle. Every step has a visible
                 owner, a clear checkpoint, and a reason — so access stays fair and the handover
                 stays accountable.
@@ -183,23 +183,23 @@ export const HowItWorksPage = () => {
                     <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </Link>
                 </Button>
-                <span className="text-sm text-[var(--muted)]">
+                <span className="text-sm text-(--muted)">
                   Requirements are verified, not assumed.
                 </span>
               </div>
             </div>
 
-            <div className="relative overflow-hidden rounded-[2rem] border border-[var(--border-subtle)] bg-[var(--cream)] p-6 shadow-[var(--shadow-md)] sm:p-8">
+            <div className="relative overflow-hidden rounded-[2rem] border border-(--border-subtle) bg-(--cream) p-6 shadow-(--shadow-md) sm:p-8">
               <div className="flex items-center justify-between gap-4">
                 <div>
-                  <p className="text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-[var(--muted)]">
+                  <p className="text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-(--muted)">
                     Process at a glance
                   </p>
-                  <p className="mt-2 text-2xl font-semibold tracking-tight text-[var(--charcoal)]">
+                  <p className="mt-2 text-2xl font-semibold tracking-tight text-(--charcoal)">
                     Six checkpoints
                   </p>
                 </div>
-                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--espresso)] text-[var(--cream)]">
+                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-(--espresso) text-(--cream)">
                   <CheckCircle2 className="h-5 w-5" aria-hidden="true" />
                 </span>
               </div>
@@ -208,13 +208,13 @@ export const HowItWorksPage = () => {
                 {steps.map((step) => (
                   <li
                     key={step.number}
-                    className="flex items-center gap-3 border-b border-[var(--border-subtle)] pb-3 last:border-0 last:pb-0"
+                    className="flex items-center gap-3 border-b border-(--border-subtle) pb-3 last:border-0 last:pb-0"
                   >
-                    <span className="font-display text-xs font-bold tracking-[0.14em] text-[var(--taupe)]">
+                    <span className="font-display text-xs font-bold tracking-[0.14em] text-(--taupe)">
                       {step.number}
                     </span>
-                    <step.icon className="h-4 w-4 text-[var(--espresso)]" aria-hidden="true" />
-                    <span className="text-sm font-medium text-[var(--charcoal)]">{step.phase}</span>
+                    <step.icon className="h-4 w-4 text-(--espresso)" aria-hidden="true" />
+                    <span className="text-sm font-medium text-(--charcoal)">{step.phase}</span>
                   </li>
                 ))}
               </ol>
@@ -238,7 +238,7 @@ export const HowItWorksPage = () => {
               className="grid grid-cols-[2.75rem_minmax(0,1fr)] gap-4 sm:grid-cols-[4rem_minmax(0,1fr)] sm:gap-6"
             >
               <div className="relative flex justify-center">
-                <span className="relative z-10 flex h-11 w-11 items-center justify-center rounded-full border border-[rgba(75,47,31,0.16)] bg-[var(--cream)] font-display text-sm font-bold text-[var(--espresso)] shadow-[var(--shadow-xs)] sm:h-14 sm:w-14 sm:text-base">
+                <span className="relative z-10 flex h-11 w-11 items-center justify-center rounded-full border border-[rgba(75,47,31,0.16)] bg-(--cream) font-display text-sm font-bold text-(--espresso) shadow-(--shadow-xs) sm:h-14 sm:w-14 sm:text-base">
                   {step.number}
                 </span>
                 {index < steps.length - 1 ? (
@@ -249,22 +249,22 @@ export const HowItWorksPage = () => {
                 ) : null}
               </div>
 
-              <div className="rounded-[1.35rem] border border-[var(--border-subtle)] bg-[rgba(255,252,247,0.66)] p-5 shadow-[var(--shadow-xs)] sm:p-6">
+              <div className="rounded-[1.35rem] border border-(--border-subtle) bg-[rgba(255,252,247,0.66)] p-5 shadow-(--shadow-xs) sm:p-6">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[rgba(75,47,31,0.075)]">
-                    <step.icon className="h-4 w-4 text-[var(--espresso)]" aria-hidden="true" />
+                    <step.icon className="h-4 w-4 text-(--espresso)" aria-hidden="true" />
                   </span>
-                  <span className="text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
+                  <span className="text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-(--muted)">
                     {step.phase}
                   </span>
                 </div>
-                <h3 className="mt-3 text-lg font-semibold text-[var(--charcoal)] sm:text-xl">
+                <h3 className="mt-3 text-lg font-semibold text-(--charcoal) sm:text-xl">
                   {step.title}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-[var(--muted)] sm:text-base">
+                <p className="mt-2 text-sm leading-relaxed text-(--muted) sm:text-base">
                   {step.description}
                 </p>
-                <p className="mt-3 rounded-xl bg-[rgba(233,217,198,0.32)] px-3.5 py-2.5 text-xs leading-relaxed text-[var(--muted)] sm:text-sm">
+                <p className="mt-3 rounded-xl bg-[rgba(233,217,198,0.32)] px-3.5 py-2.5 text-xs leading-relaxed text-(--muted) sm:text-sm">
                   {step.detail}
                 </p>
               </div>
@@ -275,7 +275,7 @@ export const HowItWorksPage = () => {
 
       <section
         aria-labelledby="important-notes"
-        className="border-y border-[var(--border-subtle)] bg-[rgba(255,249,241,0.62)] py-16 sm:py-20"
+        className="border-y border-(--border-subtle) bg-[rgba(255,249,241,0.62)] py-16 sm:py-20"
       >
         <div className="page-shell">
           <SectionHeading
@@ -289,14 +289,14 @@ export const HowItWorksPage = () => {
             {notes.map((note) => (
               <div
                 key={note.title}
-                className="flex h-full flex-col gap-4 rounded-[1.35rem] border border-[var(--border-subtle)] bg-[var(--cream)] p-6"
+                className="flex h-full flex-col gap-4 rounded-[1.35rem] border border-(--border-subtle) bg-(--cream) p-6"
               >
                 <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[rgba(75,47,31,0.075)]">
-                  <note.icon className="h-5 w-5 text-[var(--espresso)]" aria-hidden="true" />
+                  <note.icon className="h-5 w-5 text-(--espresso)" aria-hidden="true" />
                 </span>
                 <div>
-                  <h3 className="text-lg font-semibold text-[var(--charcoal)]">{note.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
+                  <h3 className="text-lg font-semibold text-(--charcoal)">{note.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-(--muted)">
                     {note.description}
                   </p>
                 </div>
@@ -304,8 +304,8 @@ export const HowItWorksPage = () => {
             ))}
           </div>
 
-          <div className="mt-5 rounded-[1.35rem] border border-[rgba(183,121,50,0.22)] bg-[rgba(183,121,50,0.06)] p-5 text-sm leading-relaxed text-[var(--muted)]">
-            <strong className="font-semibold text-[var(--charcoal)]">A note on availability:</strong>{' '}
+          <div className="mt-5 rounded-[1.35rem] border border-[rgba(183,121,50,0.22)] bg-[rgba(183,121,50,0.06)] p-5 text-sm leading-relaxed text-(--muted)">
+            <strong className="font-semibold text-(--charcoal)">A note on availability:</strong>{' '}
             a listing’s “Active” status means it is published — it does not guarantee an open slot.
             The server evaluates conflicts, eligibility, duration, and weekly caps when a request is
             submitted.
@@ -322,7 +322,7 @@ export const HowItWorksPage = () => {
               title="Answers to the practical ones"
               description="Based on the behaviour implemented in the ShareLab booking flow."
             />
-            <p className="mt-6 text-sm leading-relaxed text-[var(--muted)]">
+            <p className="mt-6 text-sm leading-relaxed text-(--muted)">
               Still deciding whether a resource fits? Start with its catalogue listing — the rules
               and limits are shown before you request a time.
             </p>
@@ -335,19 +335,19 @@ export const HowItWorksPage = () => {
             {faqs.map((faq) => (
               <details
                 key={faq.question}
-                className="group rounded-2xl border border-[var(--border-subtle)] bg-[rgba(255,252,247,0.66)] open:bg-[var(--cream)]"
+                className="group rounded-2xl border border-(--border-subtle) bg-[rgba(255,252,247,0.66)] open:bg-(--cream)"
               >
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 [&::-webkit-details-marker]:hidden">
-                  <span className="text-sm font-semibold text-[var(--charcoal)] sm:text-base">
+                  <span className="text-sm font-semibold text-(--charcoal) sm:text-base">
                     {faq.question}
                   </span>
                   <Plus
-                    className="h-4 w-4 shrink-0 text-[var(--espresso)] transition-transform duration-200 group-open:rotate-45"
+                    className="h-4 w-4 shrink-0 text-(--espresso) transition-transform duration-200 group-open:rotate-45"
                     aria-hidden="true"
                   />
                 </summary>
                 <div className="px-5 pb-5">
-                  <p className="text-sm leading-relaxed text-[var(--muted)]">{faq.answer}</p>
+                  <p className="text-sm leading-relaxed text-(--muted)">{faq.answer}</p>
                 </div>
               </details>
             ))}
@@ -356,12 +356,12 @@ export const HowItWorksPage = () => {
       </section>
 
       <section className="page-shell pb-20">
-        <div className="flex flex-col items-start justify-between gap-6 rounded-[2rem] border border-[var(--border-subtle)] bg-[rgba(233,217,198,0.34)] px-6 py-8 sm:flex-row sm:items-center sm:px-8">
+        <div className="flex flex-col items-start justify-between gap-6 rounded-[2rem] border border-(--border-subtle) bg-[rgba(233,217,198,0.34)] px-6 py-8 sm:flex-row sm:items-center sm:px-8">
           <div>
-            <h2 className="text-2xl font-semibold tracking-tight text-[var(--charcoal)] sm:text-3xl">
+            <h2 className="text-2xl font-semibold tracking-tight text-(--charcoal) sm:text-3xl">
               Ready to start with a real listing?
             </h2>
-            <p className="mt-2 max-w-xl text-sm leading-relaxed text-[var(--muted)]">
+            <p className="mt-2 max-w-xl text-sm leading-relaxed text-(--muted)">
               Search the catalogue, review the requirements, and submit a request for a time that
               works for you.
             </p>

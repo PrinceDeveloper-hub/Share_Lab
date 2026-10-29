@@ -33,14 +33,14 @@ export const AuthField = ({
     <div>
       <label
         htmlFor={id}
-        className="block text-sm font-semibold text-[var(--charcoal)]"
+        className="block text-sm font-semibold text-(--charcoal)"
       >
         {label}
       </label>
       <div className="relative mt-2">
         {Icon ? (
           <Icon
-            className="pointer-events-none absolute left-3.5 top-1/2 h-[1.05rem] w-[1.05rem] -translate-y-1/2 text-[var(--taupe)]"
+            className="pointer-events-none absolute left-3.5 top-1/2 h-[1.05rem] w-[1.05rem] -translate-y-1/2 text-(--taupe)"
             aria-hidden="true"
           />
         ) : null}
@@ -49,7 +49,7 @@ export const AuthField = ({
           aria-invalid={error ? 'true' : undefined}
           aria-describedby={describedBy || undefined}
           className={cn(
-            'h-11 w-full rounded-xl border bg-[rgba(255,252,247,0.88)] px-3.5 text-sm text-[var(--charcoal)] shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] outline-none transition placeholder:text-[var(--muted)] focus:border-[rgba(75,47,31,0.45)] focus:ring-4 focus:ring-[rgba(75,47,31,0.1)]',
+            'h-11 w-full rounded-xl border bg-[rgba(255,252,247,0.88)] px-3.5 text-sm text-(--charcoal) shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] outline-none transition placeholder:text-(--muted) focus:border-[rgba(75,47,31,0.45)] focus:ring-4 focus:ring-[rgba(75,47,31,0.1)]',
             Icon ? 'pl-11' : '',
             trailing ? 'pr-12' : '',
             error
@@ -68,7 +68,7 @@ export const AuthField = ({
       {hint ? (
         <p
           id={`${id}-hint`}
-          className="mt-1.5 text-xs leading-relaxed text-[var(--muted)]"
+          className="mt-1.5 text-xs leading-relaxed text-(--muted)"
         >
           {hint}
         </p>
@@ -76,7 +76,7 @@ export const AuthField = ({
       {error ? (
         <p
           id={`${id}-error`}
-          className="mt-1.5 flex items-start gap-1.5 text-xs font-medium leading-relaxed text-[var(--error)]"
+          className="mt-1.5 flex items-start gap-1.5 text-xs font-medium leading-relaxed text-(--error)"
         >
           <AlertCircle
             className="mt-0.5 h-3.5 w-3.5 shrink-0"

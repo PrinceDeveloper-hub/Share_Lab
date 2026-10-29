@@ -44,10 +44,10 @@ const passwordStrength = (value: string) => {
 
 const strengthTone = [
   'bg-[rgba(130,119,109,0.22)]',
-  'bg-[var(--error)]',
-  'bg-[var(--warning)]',
+  'bg-(--error)',
+  'bg-(--warning)',
   'bg-[rgba(56,118,83,0.7)]',
-  'bg-[var(--success)]',
+  'bg-(--success)',
 ] as const
 
 export const Register = ({ redirect }: RegisterProps) => {
@@ -150,10 +150,10 @@ export const Register = ({ redirect }: RegisterProps) => {
   return (
     <AuthLayout mode="register">
       <div>
-        <h1 className="font-editorial text-[clamp(2rem,4.6vw,2.65rem)] font-semibold leading-[1.04] tracking-[-0.035em] text-[var(--charcoal)]">
+        <h1 className="font-editorial text-[clamp(2rem,4.6vw,2.65rem)] font-semibold leading-[1.04] tracking-[-0.035em] text-(--charcoal)">
           Create your account.
         </h1>
-        <p className="mt-3 max-w-[25rem] text-sm leading-relaxed text-[var(--muted)]">
+        <p className="mt-3 max-w-100 text-sm leading-relaxed text-(--muted)">
           One account for the equipment, studios, and shared facilities your
           work needs.
         </p>
@@ -163,9 +163,9 @@ export const Register = ({ redirect }: RegisterProps) => {
         {accountBenefits.map((benefit) => (
           <li
             key={benefit}
-            className="flex items-start gap-2 text-[0.76rem] leading-relaxed text-[var(--muted)]"
+            className="flex items-start gap-2 text-[0.76rem] leading-relaxed text-(--muted)"
           >
-            <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[rgba(56,118,83,0.12)] text-[var(--success)]">
+            <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[rgba(56,118,83,0.12)] text-(--success)">
               <Check
                 className="h-2.5 w-2.5"
                 strokeWidth={3}
@@ -257,7 +257,7 @@ export const Register = ({ redirect }: RegisterProps) => {
               ))}
             </div>
             <span
-              className="min-w-[4.75rem] text-right text-[0.66rem] font-semibold text-[var(--muted)]"
+              className="min-w-19 text-right text-[0.66rem] font-semibold text-(--muted)"
               aria-live="polite"
             >
               {password ? strengthLabels[strength] : '8+ characters'}
@@ -300,17 +300,17 @@ export const Register = ({ redirect }: RegisterProps) => {
         </Button>
       </form>
 
-      <p className="mt-4 text-center text-[0.68rem] leading-relaxed text-[var(--muted)]">
+      <p className="mt-4 text-center text-[0.68rem] leading-relaxed text-(--muted)">
         By creating an account you agree to the campus resource-use policy.
       </p>
 
       <div className="mt-5 border-t border-[rgba(82,59,45,0.1)] pt-5">
-        <p className="text-center text-sm text-[var(--muted)]">
+        <p className="text-center text-sm text-(--muted)">
           Already have an account?{' '}
           <Link
             to="/login"
             search={{ redirect }}
-            className="inline-flex min-h-11 items-center rounded-sm px-1 font-semibold text-[var(--espresso)] underline decoration-[rgba(75,47,31,0.28)] underline-offset-4 transition-colors hover:text-[var(--deep-brown)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
+            className="inline-flex min-h-11 items-center rounded-sm px-1 font-semibold text-(--espresso) underline decoration-[rgba(75,47,31,0.28)] underline-offset-4 transition-colors hover:text-(--deep-brown) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring)"
           >
             Sign in
           </Link>

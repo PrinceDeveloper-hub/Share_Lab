@@ -19,7 +19,20 @@ pnpm build
 
 ## Styling
 
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
+This project uses [Tailwind CSS](https://tailwindcss.com/) (v4) for styling.
+
+### Tailwind conventions
+
+- Reference CSS variables with the shorthand syntax: `text-(--muted)`,
+  `border-(--border-subtle)`, `bg-(--cream)` — not `text-[var(--muted)]`.
+- Prefer the spacing, radius and shadow scale (`h-144`, `rounded-3xl`,
+  `shadow-soft`) over arbitrary values such as `h-[36rem]` or
+  `rounded-[1.5rem]`.
+- Define values that repeat across components as `@theme` tokens in
+  `src/styles/tokens.css` (shadow, radius, colour) and use the generated
+  utility, rather than repeating the arbitrary value.
+- Keep the `@theme` names stable; components rely on them for light/dark
+  theming.
 
 ### Removing Tailwind CSS
 

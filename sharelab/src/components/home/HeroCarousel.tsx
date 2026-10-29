@@ -102,14 +102,14 @@ export const HeroCarousel = ({ slides, className }: HeroCarouselProps) => {
         role="region"
         aria-label="Featured campus resources"
         className={cn(
-          'flex min-h-[420px] items-center justify-center rounded-[2rem] border border-[var(--border-subtle)] bg-[var(--cream)] p-8 text-center shadow-[var(--shadow-md)]',
+          'flex min-h-[420px] items-center justify-center rounded-[2rem] border border-(--border-subtle) bg-(--cream) p-8 text-center shadow-(--shadow-md)',
           className,
         )}
       >
         <div>
-          <FlaskConical className="mx-auto h-9 w-9 text-[var(--taupe)]" aria-hidden="true" />
-          <p className="mt-4 font-semibold text-[var(--charcoal)]">Hero images are being prepared</p>
-          <p className="mt-2 max-w-xs text-sm text-[var(--muted)]">
+          <FlaskConical className="mx-auto h-9 w-9 text-(--taupe)" aria-hidden="true" />
+          <p className="mt-4 font-semibold text-(--charcoal)">Hero images are being prepared</p>
+          <p className="mt-2 max-w-xs text-sm text-(--muted)">
             Add a slide to <code>src/config/heroSlides.ts</code> to populate this gallery.
           </p>
         </div>
@@ -146,8 +146,8 @@ export const HeroCarousel = ({ slides, className }: HeroCarouselProps) => {
         className="absolute -left-8 top-10 h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(198,165,138,0.3),transparent_70%)] blur-2xl"
       />
 
-      <div className="relative overflow-hidden rounded-[2rem] border border-[rgba(255,255,255,0.65)] bg-[rgba(255,252,247,0.6)] p-2.5 shadow-[var(--shadow-lg)] backdrop-blur-xl">
-        <div className="relative aspect-[4/5] overflow-hidden rounded-[1.55rem] bg-[var(--deep-brown)] sm:aspect-[4/3] lg:aspect-[4/5]">
+      <div className="relative overflow-hidden rounded-[2rem] border border-[rgba(255,255,255,0.65)] bg-[rgba(255,252,247,0.6)] p-2.5 shadow-(--shadow-lg) backdrop-blur-xl">
+        <div className="relative aspect-[4/5] overflow-hidden rounded-[1.55rem] bg-(--deep-brown) sm:aspect-[4/3] lg:aspect-[4/5]">
           {configuredSlides.map((slide, index) => {
             const isActive = index === activeIndex
             const imageFailed = failedImages[slide.id]
@@ -167,7 +167,7 @@ export const HeroCarousel = ({ slides, className }: HeroCarouselProps) => {
                 {imageFailed ? (
                   <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-[linear-gradient(145deg,#4b2f1f,#241a16)] px-6 text-center">
                     <FlaskConical className="h-9 w-9 text-[rgba(255,249,241,0.6)]" aria-hidden="true" />
-                    <p className="text-sm font-semibold text-[var(--cream)]">Image unavailable</p>
+                    <p className="text-sm font-semibold text-(--cream)">Image unavailable</p>
                     <p className="max-w-xs text-xs leading-relaxed text-[rgba(255,249,241,0.58)]">
                       Add or replace the file at{' '}
                       <code className="break-all text-[rgba(255,249,241,0.78)]">{slide.src}</code>.
@@ -222,7 +222,7 @@ export const HeroCarousel = ({ slides, className }: HeroCarouselProps) => {
                       className={cn(
                         'block h-1.5 rounded-full transition-all duration-300',
                         isActive
-                          ? 'w-6 bg-[var(--cream)]'
+                          ? 'w-6 bg-(--cream)'
                           : 'w-1.5 bg-[rgba(255,249,241,0.55)] hover:bg-[rgba(255,249,241,0.85)]',
                       )}
                     />
@@ -236,7 +236,7 @@ export const HeroCarousel = ({ slides, className }: HeroCarouselProps) => {
                 type="button"
                 onClick={showPrevious}
                 aria-label="Previous slide"
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-[rgba(255,255,255,0.28)] bg-[rgba(24,17,13,0.28)] text-[var(--cream)] backdrop-blur-md transition-colors hover:bg-[rgba(24,17,13,0.48)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-[rgba(255,255,255,0.28)] bg-[rgba(24,17,13,0.28)] text-(--cream) backdrop-blur-md transition-colors hover:bg-[rgba(24,17,13,0.48)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80"
               >
                 <ChevronLeft className="h-5 w-5" aria-hidden="true" />
               </button>
@@ -244,7 +244,7 @@ export const HeroCarousel = ({ slides, className }: HeroCarouselProps) => {
                 type="button"
                 onClick={showNext}
                 aria-label="Next slide"
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-[rgba(255,255,255,0.28)] bg-[rgba(24,17,13,0.28)] text-[var(--cream)] backdrop-blur-md transition-colors hover:bg-[rgba(24,17,13,0.48)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-[rgba(255,255,255,0.28)] bg-[rgba(24,17,13,0.28)] text-(--cream) backdrop-blur-md transition-colors hover:bg-[rgba(24,17,13,0.48)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80"
               >
                 <ChevronRight className="h-5 w-5" aria-hidden="true" />
               </button>
@@ -258,22 +258,22 @@ export const HeroCarousel = ({ slides, className }: HeroCarouselProps) => {
                 initial={shouldReduceMotion ? false : { opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={contentTransition}
-                className="rounded-2xl border border-[rgba(255,255,255,0.52)] bg-[rgba(255,249,241,0.9)] p-4 shadow-[var(--shadow-md)] backdrop-blur-xl sm:p-5"
+                className="rounded-2xl border border-[rgba(255,255,255,0.52)] bg-[rgba(255,249,241,0.9)] p-4 shadow-(--shadow-md) backdrop-blur-xl sm:p-5"
               >
                 {activeSlide.badge ? (
-                  <span className="inline-flex items-center rounded-full bg-[rgba(75,47,31,0.08)] px-2.5 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-[var(--espresso)]">
+                  <span className="inline-flex items-center rounded-full bg-[rgba(75,47,31,0.08)] px-2.5 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-(--espresso)">
                     {activeSlide.badge}
                   </span>
                 ) : null}
 
                 {activeSlide.title ? (
-                  <h2 className="mt-2 text-lg font-semibold leading-tight text-[var(--charcoal)] sm:text-xl">
+                  <h2 className="mt-2 text-lg font-semibold leading-tight text-(--charcoal) sm:text-xl">
                     {activeSlide.title}
                   </h2>
                 ) : null}
 
                 {activeSlide.description ? (
-                  <p className="mt-1.5 text-sm leading-relaxed text-[var(--muted)]">
+                  <p className="mt-1.5 text-sm leading-relaxed text-(--muted)">
                     {activeSlide.description}
                   </p>
                 ) : null}
@@ -281,7 +281,7 @@ export const HeroCarousel = ({ slides, className }: HeroCarouselProps) => {
                 {activeSlide.href ? (
                   <a
                     href={activeSlide.href}
-                    className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--espresso)] underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2"
+                    className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-(--espresso) underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring) focus-visible:ring-offset-2"
                   >
                     Learn more
                     <ArrowUpRight className="h-4 w-4" aria-hidden="true" />

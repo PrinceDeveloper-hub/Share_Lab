@@ -15,8 +15,8 @@ Statuses:
 | Symptom | Cause | Location |
 | --- | --- | --- |
 | Guest sees “This resource could not be loaded” on `/resources/1` | The API was not running (`:8000` closed before this audit) while the frontend collapsed **every** failure (network, 404, 401, 403, 5xx) into one generic error, so an unreachable API was indistinguishable from a deleted listing | `sharelab/src/features/resources/ResourceDetail.tsx` error branch (old lines 182–205) |
-| Guests received owner/manager **email addresses** in the public payload | `ResourceResource` returned full `UserResource` for nested people | `sharelab-api/backend/app/Http/Resources/ResourceResource.php` |
-| 404 responses leaked the Eloquent model name (`No query results for model [App\Models\Resource] 999`) | Generic `HttpExceptionInterface` renderer echoed the framework message | `sharelab-api/backend/bootstrap/app.php` |
+| Guests received owner/manager **email addresses** in the public payload | `ResourceResource` returned full `UserResource` for nested people | `sharelab-api/app/Http/Resources/ResourceResource.php` |
+| 404 responses leaked the Eloquent model name (`No query results for model [App\Models\Resource] 999`) | Generic `HttpExceptionInterface` renderer echoed the framework message | `sharelab-api/bootstrap/app.php` |
 
 ## Public / guest
 
@@ -92,9 +92,9 @@ reasons, audit trail, policy denials, owner scoping.
 ## Commands used
 
 ```bash
-cd sharelab-api/backend && php artisan db:show
-cd sharelab-api/backend && php artisan db:seed --force
-cd sharelab-api/backend && php artisan test
+cd sharelab-api && php artisan db:show
+cd sharelab-api && php artisan db:seed --force
+cd sharelab-api && php artisan test
 cd sharelab && pnpm tsc --noEmit && pnpm lint && pnpm build
 cd sharelab && pnpm smoke
 ```

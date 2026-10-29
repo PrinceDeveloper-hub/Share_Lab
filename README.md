@@ -373,69 +373,42 @@ cd <YOUR_REPOSITORY_DIRECTORY>
 Replace the placeholders with your Git repository URL and directory
 name.
 
-### 2. Configure the backend
+### 2. Configure the API
 
-Navigate to the Laravel application directory and install its
-dependencies:
+`sharelab-api/` is a Laravel 11 JSON API and nothing else: no Blade views, no
+Vite, no npm, no Inertia. All routes live under `/api`.
 
-``` bash
+```bash
+cd sharelab-api
 composer install
-```
-
-Create the local environment file if it does not already exist:
-
-``` bash
-cp .env.example .env
-```
-
-On Windows Command Prompt, you can use:
-
-``` bat
-copy .env.example .env
-```
-
-Configure the database connection and other required environment
-variables in `.env`. Create the database using the project's configured
-database name.
-
-Generate the Laravel application key if the project requires it:
-
-``` bash
+cp .env.example .env        # fill APP_KEY, JWT_SECRET and the DB_* values
 php artisan key:generate
+php artisan migrate --seed  # creates the five demo accounts
+php artisan serve           # http://127.0.0.1:8000
 ```
 
-Run migrations and seeders only after reviewing the repository's
-migration and seeder configuration:
+Or run the same API in Docker together with MariaDB:
 
-``` bash
-php artisan migrate --seed
-```
-
-Start the backend using the existing project setup. A typical local
-command is:
-
-``` bash
-php artisan serve
+```bash
+cp .env.example .env        # repository root: APP_KEY, JWT_SECRET, DB_PASSWORD
+docker compose up -d --build
+curl http://localhost:8000/api/health
 ```
 
 ### 3. Configure the frontend
 
-Open the frontend directory and install dependencies using the package
-manager indicated by its lockfile. For a pnpm project:
-
-``` bash
+```bash
+cd sharelab
 pnpm install
+pnpm dev                    # http://localhost:3000
 ```
 
-Start the development server using the script defined in `package.json`,
-commonly:
+Vite proxies `/api` and `/storage` to `http://localhost:8000`, so the SPA calls
+relative URLs and the auth cookies stay first-party. No API URL needs to be
+configured for local work.
 
-``` bash
-pnpm dev
-```
-
-Configure the frontend API base URL or development proxy according to
-the current project setup.
+Deployment (Vercel + the API container) is documented in
+[DEPLOYMENT.md](DEPLOYMENT.md).
 
 ### 4. Verify the application
 

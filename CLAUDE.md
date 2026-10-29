@@ -31,10 +31,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Frontend routes**: `sharelab/src/routes/` (TanStack file-based routes)
 - **Database migrations**: `sharelab-api/database/migrations/`
 - **Seeders**: `sharelab-api/database/seeders/`
-- **API Resources**: `sharelab-api/backend/app/Http/Resources/`
-- **Service classes**: `sharelab-api/backend/app/Services/`
-- **Enums**: `sharelab-api/backend/app/Enums/`
-- **Models**: `sharelab-api/backend/app/Models/`
+- **API Resources**: `sharelab-api/app/Http/Resources/`
+- **Service classes**: `sharelab-api/app/Services/`
+- **Enums**: `sharelab-api/app/Enums/`
+- **Models**: `sharelab-api/app/Models/`
 
 ## Architecture
 

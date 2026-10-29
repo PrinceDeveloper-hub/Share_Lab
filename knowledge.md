@@ -20,11 +20,10 @@ decision records a reason.
   - `src/hooks/` — TanStack Query hooks; **`useAuth.ts` is the real one**,
     `use-auth.ts` is only a re-export shim
   - `src/styles/` — `tokens.css` (design tokens), `base.css`, `fonts.css`
-- `sharelab-api/backend/` — **the actual API**. Laravel 11, custom JWT
-  guard (`app/Auth/JwtGuard.php`), guards on `api`, no Sanctum tokens.
-- `sharelab-api/` (root) — a Laravel 13 + Inertia + Fortify/teams/wayfinder
-  starter-kit scaffold. It is *not* the ShareLab API (no `routes/api.php`,
-  no ShareLab controllers). Do not edit it for product work.
+- `sharelab-api/` — **the API**. Laravel 11, custom JWT guard
+  (`app/Auth/JwtGuard.php`), guards on `api`, no Sanctum tokens. API-only:
+  no Blade, npm, Vite, Inertia or Wayfinder; the old starter-kit scaffold and
+  the nested `backend/` directory are gone.
 
 ## Commands
 
@@ -36,7 +35,7 @@ Frontend (`cd sharelab`), pnpm only:
 - `pnpm generate-routes` (`tsr generate`); dev/build also regenerate
 - There is no frontend test runner configured.
 
-Backend (`cd sharelab-api/backend`):
+Backend (`cd sharelab-api`):
 - `composer install`, then `cp .env.example .env && php artisan key:generate`
 - `php artisan migrate --seed` (MariaDB database `sharelab`, utf8mb4)
 - `php artisan serve` → API at `http://127.0.0.1:8000/api`
@@ -117,7 +116,7 @@ Backend (`cd sharelab-api/backend`):
 ## Deployment
 
 Docker Compose stack at the project root: `web` (nginx serving the built SPA
-and proxying `/api`), `api` (PHP 8.3-FPM Laravel image, `sharelab-api/backend/Dockerfile`)
+and proxying `/api`), `api` (PHP 8.3-FPM Laravel image, `sharelab-api/Dockerfile`)
 and `db` (MariaDB 11). Same-origin, so the JWT cookies stay first-party.
 
 - `cp .env.example .env` and set `APP_KEY`, `JWT_SECRET`, DB passwords, `APP_URL`
@@ -127,7 +126,7 @@ and `db` (MariaDB 11). Same-origin, so the JWT cookies stay first-party.
 
 ## Environment notes
 
-- Backend env file is `sharelab-api/backend/.env` (gitignored); DB config
+- Backend env file is `sharelab-api/.env` (gitignored); DB config
   belongs only there. Ship `DB_PASSWORD=` blank in `.env.example`.
 - Needs MariaDB running with `sharelab` (and `sharelab_test` for tests).
 - JWT signing uses `JWT_SECRET`, falling back to `APP_KEY`

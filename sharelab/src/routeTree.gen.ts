@@ -22,8 +22,6 @@ import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as OwnerRouteImport } from './routes/owner'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as RegisterRouteImport } from './routes/register'
-import { Route as AdminIndexRouteImport } from './routes/admin.index'
-import { Route as AdminAuditRouteImport } from './routes/admin.audit'
 import { Route as MyBookingsIndexRouteImport } from './routes/my-bookings.index'
 import { Route as MyBookingsBookingIdRouteImport } from './routes/my-bookings.$bookingId'
 import { Route as ResourcesIndexRouteImport } from './routes/resources.index'
@@ -94,16 +92,6 @@ const RegisterRoute = RegisterRouteImport.update({
   path: '/register',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminIndexRoute = AdminIndexRouteImport.update({
-  id: '/admin/',
-  path: '/admin/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminAuditRoute = AdminAuditRouteImport.update({
-  id: '/admin/audit',
-  path: '/admin/audit',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const MyBookingsIndexRoute = MyBookingsIndexRouteImport.update({
   id: '/my-bookings/',
   path: '/my-bookings/',
@@ -139,10 +127,8 @@ export interface FileRoutesByFullPath {
   '/owner': typeof OwnerRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
-  '/admin/audit': typeof AdminAuditRoute
   '/my-bookings/$bookingId': typeof MyBookingsBookingIdRoute
   '/resources/$resourceId': typeof ResourcesResourceIdRoute
-  '/admin/': typeof AdminIndexRoute
   '/my-bookings/': typeof MyBookingsIndexRoute
   '/resources/': typeof ResourcesIndexRoute
 }
@@ -160,10 +146,8 @@ export interface FileRoutesByTo {
   '/owner': typeof OwnerRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
-  '/admin/audit': typeof AdminAuditRoute
   '/my-bookings/$bookingId': typeof MyBookingsBookingIdRoute
   '/resources/$resourceId': typeof ResourcesResourceIdRoute
-  '/admin': typeof AdminIndexRoute
   '/my-bookings': typeof MyBookingsIndexRoute
   '/resources': typeof ResourcesIndexRoute
 }
@@ -182,10 +166,8 @@ export interface FileRoutesById {
   '/owner': typeof OwnerRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
-  '/admin/audit': typeof AdminAuditRoute
   '/my-bookings/$bookingId': typeof MyBookingsBookingIdRoute
   '/resources/$resourceId': typeof ResourcesResourceIdRoute
-  '/admin/': typeof AdminIndexRoute
   '/my-bookings/': typeof MyBookingsIndexRoute
   '/resources/': typeof ResourcesIndexRoute
 }
@@ -205,10 +187,8 @@ export interface FileRouteTypes {
     | '/owner'
     | '/profile'
     | '/register'
-    | '/admin/audit'
     | '/my-bookings/$bookingId'
     | '/resources/$resourceId'
-    | '/admin/'
     | '/my-bookings/'
     | '/resources/'
   fileRoutesByTo: FileRoutesByTo
@@ -226,10 +206,8 @@ export interface FileRouteTypes {
     | '/owner'
     | '/profile'
     | '/register'
-    | '/admin/audit'
     | '/my-bookings/$bookingId'
     | '/resources/$resourceId'
-    | '/admin'
     | '/my-bookings'
     | '/resources'
   id:
@@ -247,10 +225,8 @@ export interface FileRouteTypes {
     | '/owner'
     | '/profile'
     | '/register'
-    | '/admin/audit'
     | '/my-bookings/$bookingId'
     | '/resources/$resourceId'
-    | '/admin/'
     | '/my-bookings/'
     | '/resources/'
   fileRoutesById: FileRoutesById
@@ -269,10 +245,8 @@ export interface RootRouteChildren {
   OwnerRoute: typeof OwnerRoute
   ProfileRoute: typeof ProfileRoute
   RegisterRoute: typeof RegisterRoute
-  AdminAuditRoute: typeof AdminAuditRoute
   MyBookingsBookingIdRoute: typeof MyBookingsBookingIdRoute
   ResourcesResourceIdRoute: typeof ResourcesResourceIdRoute
-  AdminIndexRoute: typeof AdminIndexRoute
   MyBookingsIndexRoute: typeof MyBookingsIndexRoute
   ResourcesIndexRoute: typeof ResourcesIndexRoute
 }
@@ -370,20 +344,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/': {
-      id: '/admin/'
-      path: '/admin'
-      fullPath: '/admin/'
-      preLoaderRoute: typeof AdminIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/audit': {
-      id: '/admin/audit'
-      path: '/admin/audit'
-      fullPath: '/admin/audit'
-      preLoaderRoute: typeof AdminAuditRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/my-bookings/': {
       id: '/my-bookings/'
       path: '/my-bookings'
@@ -429,10 +389,8 @@ const rootRouteChildren: RootRouteChildren = {
   OwnerRoute: OwnerRoute,
   ProfileRoute: ProfileRoute,
   RegisterRoute: RegisterRoute,
-  AdminAuditRoute: AdminAuditRoute,
   MyBookingsBookingIdRoute: MyBookingsBookingIdRoute,
   ResourcesResourceIdRoute: ResourcesResourceIdRoute,
-  AdminIndexRoute: AdminIndexRoute,
   MyBookingsIndexRoute: MyBookingsIndexRoute,
   ResourcesIndexRoute: ResourcesIndexRoute,
 }

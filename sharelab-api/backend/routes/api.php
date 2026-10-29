@@ -57,12 +57,6 @@ Route::middleware('jwt.auth')->group(function () {
 
     Route::get('/resources/{resource}/eligibility', [ResourceController::class, 'eligibility']);
 
-<<<<<<< HEAD
-    // Bookings
-    Route::get('/manager/bookings', [BookingController::class, 'queue'])
-        ->middleware('role:manager,admin');
-=======
->>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
     Route::post('/bookings', [BookingController::class, 'store']);
     Route::get('/bookings', [BookingController::class, 'index']);
     Route::get('/bookings/{booking}', [BookingController::class, 'show']);

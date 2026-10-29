@@ -2,7 +2,6 @@ import { motion, useReducedMotion } from 'framer-motion'
 import { useRouterState } from '@tanstack/react-router'
 import { SiteFooter } from './SiteFooter'
 import { SiteHeader } from './SiteHeader'
-import { PageFade } from '../ui/Reveal'
 
 export interface SiteLayoutProps {
   children: React.ReactNode
@@ -20,7 +19,6 @@ export const SiteLayout = ({ children }: SiteLayoutProps) => {
         Skip to main content
       </a>
       <SiteHeader />
-<<<<<<< HEAD
       <motion.main
         id="main-content"
         key={pathname}
@@ -35,11 +33,6 @@ export const SiteLayout = ({ children }: SiteLayoutProps) => {
       >
         {children}
       </motion.main>
-=======
-      <main id="main-content" className="flex-1">
-        <PageFade>{children}</PageFade>
-      </main>
->>>>>>> fcfa9474b26cbba7edc4b7c28053baa745d93073
       <SiteFooter />
     </div>
   )

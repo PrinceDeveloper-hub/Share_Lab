@@ -108,18 +108,6 @@ class DatabaseSeeder extends Seeder
 
     public function run(): void
     {
-<<<<<<< HEAD
-        // Create accounts with password "password" for all
-        $roles = ['user', 'user', 'manager', 'owner', 'admin', 'admin'];
-
-        foreach (['user1@sharelab.test', 'user2@sharelab.test', 'manager@sharelab.test', 'owner@sharelab.test', 'admin@sharelab.test', 'admin@admin.com'] as $i => $email) {
-            User::create([
-                'name' => str_replace(['@sharelab.test', '@admin.com'], '', $email),
-                'email' => $email,
-                'password' => Hash::make('password'),
-                'role' => $roles[$i],
-            ]);
-=======
         $this->purgeLegacyAccounts();
 
         $users = [];
@@ -133,7 +121,6 @@ class DatabaseSeeder extends Seeder
                     'email_verified_at' => now(),
                 ],
             );
->>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
         }
 
         $owner = $users['owner@sharelab.test'];

@@ -2,25 +2,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from './useAuth'
 import type {
   Booking,
-<<<<<<< HEAD
-  ConditionLevel,
-  CreateBookingParams,
-  EligibilityCheck,
-} from '../lib/booking-service'
-import {
-  checkEligibility,
-  createBooking,
-  getBookings,
-  cancelBooking,
-  checkIn,
-  returnItems,
-  reportIncident,
-  getAvailability,
-  verifyCredential,
-=======
   BookingDecisionPayload,
   ConditionReportPayload,
->>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
 } from '../lib/booking-service'
 import {
   cancelBooking,
@@ -63,27 +46,6 @@ export const useBookings = () => {
     refetchInterval: 30_000,
   })
 
-<<<<<<< HEAD
-  const createMutation = useMutation({
-    mutationKey: ['create-booking'],
-    mutationFn: async (params: CreateBookingParams) =>
-      await createBooking(params),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['bookings'] })
-    },
-    onError: (error: unknown) => {
-      console.error('Booking creation error:', error)
-    },
-  })
-
-  const checkEligibilityForResource = async (
-    resourceId: number,
-  ): Promise<EligibilityCheck> => {
-    return await checkEligibility(resourceId)
-  }
-
-=======
->>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
   const cancelMutation = useMutation({
     mutationFn: ({
       bookingId,
@@ -97,40 +59,6 @@ export const useBookings = () => {
   })
 
   const checkInMutation = useMutation({
-<<<<<<< HEAD
-    mutationKey: ['check-in'],
-    mutationFn: async ({
-      bookingId,
-      condition,
-      notes,
-    }: {
-      bookingId: number
-      condition: ConditionLevel
-      notes?: string
-    }) => await checkIn(bookingId, { condition, notes }),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['bookings'] })
-      void queryClient.invalidateQueries({ queryKey: ['booking-queue'] })
-    },
-  })
-
-  const returnMutation = useMutation({
-    mutationKey: ['return-items'],
-    mutationFn: async ({
-      bookingId,
-      condition,
-      notes,
-    }: {
-      bookingId: number
-      condition: ConditionLevel
-      notes?: string
-    }) => await returnItems(bookingId, { condition, notes }),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['bookings'] })
-      void queryClient.invalidateQueries({ queryKey: ['booking-queue'] })
-      void queryClient.invalidateQueries({ queryKey: ['incidents'] })
-    },
-=======
     mutationFn: ({
       bookingId,
       payload,
@@ -150,13 +78,8 @@ export const useBookings = () => {
       bookingId: number
       payload: ConditionReportPayload
     }) => returnBooking(bookingId, payload),
-<<<<<<< HEAD
     onSuccess: (_, variables) =>
       invalidateBookingViews(queryClient, variables.bookingId),
-=======
-    onSuccess: (_, variables) => invalidateBookingViews(queryClient, variables.bookingId),
->>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
->>>>>>> fcfa9474b26cbba7edc4b7c28053baa745d93073
   })
 
   const reportIncidentMutation = useMutation({

@@ -1,14 +1,16 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { RouteGuard } from '../components/auth/RouteGuard'
-import { AppShell } from '../components/layout/AppShell'
+import { SiteLayout } from '../components/layout/SiteLayout'
 import { Dashboard } from '../features/dashboard/Dashboard'
 
 const DashboardRoute = () => (
-  <RouteGuard>
-    <AppShell>
-      <Dashboard />
-    </AppShell>
-  </RouteGuard>
+  <SiteLayout>
+    <RouteGuard>
+      <div className="page-shell py-10 sm:py-14">
+        <Dashboard />
+      </div>
+    </RouteGuard>
+  </SiteLayout>
 )
 
 export const Route = createFileRoute('/dashboard')({

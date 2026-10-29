@@ -2,20 +2,12 @@
   :root {
     --background: var(--ivory);
     --foreground: var(--charcoal);
-<<<<<<< HEAD
-    --card: var(--cream);
-=======
     --card: var(--surface);
->>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
     --card-foreground: var(--charcoal);
     --primary: var(--espresso);
     --primary-foreground: #ffffff;
     --secondary: var(--soft-beige);
-<<<<<<< HEAD
-    --secondary-foreground: var(--deep-brown);
-=======
     --secondary-foreground: var(--espresso);
->>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
     --muted-surface: var(--soft-beige);
     --muted-foreground: var(--muted);
     --accent: var(--bronze);
@@ -30,7 +22,6 @@
 
   html {
     min-height: 100%;
-    scroll-padding-top: calc(var(--header-height) + 1.5rem);
     -webkit-text-size-adjust: 100%;
     scrollbar-color: var(--border-strong) transparent;
     text-rendering: optimizeLegibility;
@@ -49,13 +40,9 @@
     font-family: var(--font-sans);
     font-size: 1rem;
     line-height: 1.6;
-<<<<<<< HEAD
-    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
-=======
     font-feature-settings: 'cv11', 'ss01';
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
->>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
   }
 
   h1,
@@ -67,11 +54,7 @@
     color: var(--charcoal);
     font-family: var(--font-display);
     font-weight: 600;
-<<<<<<< HEAD
-    line-height: 1.14;
-=======
     line-height: 1.12;
->>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
     letter-spacing: -0.022em;
     text-wrap: balance;
   }
@@ -93,19 +76,10 @@
     font: inherit;
   }
 
-<<<<<<< HEAD
-  button {
-    cursor: pointer;
-  }
-
-  button:disabled {
-    cursor: not-allowed;
-=======
   input,
   select,
   textarea {
     caret-color: var(--espresso);
->>>>>>> b141025564dd3364106212a52ca5484ec458a43d
   }
 
   code,
@@ -122,39 +96,18 @@
     max-width: 100%;
   }
 
-<<<<<<< HEAD
-  code,
-  kbd,
-  samp,
-  pre {
-    font-family: var(--font-mono);
-  }
-
-  ::selection {
-<<<<<<< HEAD
-    background: rgba(81, 53, 34, 0.16);
-=======
-    background: rgba(75, 47, 31, 0.18);
-=======
   img {
     background-color: var(--surface-sunken);
   }
 
   ::selection {
-<<<<<<< HEAD
     background: var(--tint-3);
     color: var(--charcoal);
-=======
-    background: rgba(81, 53, 34, 0.16);
->>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
-    color: var(--deep-brown);
->>>>>>> b141025564dd3364106212a52ca5484ec458a43d
->>>>>>> fcfa9474b26cbba7edc4b7c28053baa745d93073
   }
 
   :focus-visible {
     outline: 2px solid var(--ring);
-    outline-offset: 2px;
+    outline-offset: 3px;
   }
 
   [hidden] {
@@ -183,16 +136,12 @@
     top: 0.75rem;
     left: 0.75rem;
     z-index: 100;
-<<<<<<< HEAD
-    transform: translateY(-200%);
-=======
     transform: translateY(-150%);
->>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
     border-radius: var(--radius-sm);
     background: var(--espresso);
     color: #fff;
-    padding: 0.6rem 1rem;
-    font-size: 0.8125rem;
+    padding: 0.65rem 1.1rem;
+    font-size: 0.875rem;
     font-weight: 600;
     transition: transform var(--transition-fast);
   }
@@ -208,13 +157,6 @@
     padding-inline: var(--gutter);
   }
 
-  .page-shell-wide {
-    width: 100%;
-    max-width: var(--container-wide);
-    margin-inline: auto;
-    padding-inline: var(--gutter);
-  }
-
   .page-shell-narrow {
     width: 100%;
     max-width: var(--container-narrow);
@@ -222,14 +164,7 @@
     padding-inline: var(--gutter);
   }
 
-<<<<<<< HEAD
-  .section {
-    padding-block: var(--section-y);
-  }
-
-=======
   /* Micro label used above section and page titles. */
->>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
   .eyebrow {
     display: inline-flex;
     align-items: center;
@@ -238,47 +173,11 @@
     font-size: 0.6875rem;
     font-weight: 600;
     letter-spacing: 0.16em;
-<<<<<<< HEAD
-    line-height: 1;
-=======
     line-height: 1.2;
->>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
     text-transform: uppercase;
     color: var(--bronze-deep);
   }
 
-<<<<<<< HEAD
-  .display-1 {
-    font-family: var(--font-display);
-    font-size: clamp(2.5rem, 5.6vw, 4.15rem);
-    font-weight: 600;
-    line-height: 1.02;
-    letter-spacing: -0.038em;
-    color: var(--charcoal);
-  }
-
-  .display-2 {
-    font-family: var(--font-display);
-    font-size: clamp(1.9rem, 3.6vw, 2.75rem);
-    font-weight: 600;
-    line-height: 1.08;
-    letter-spacing: -0.032em;
-    color: var(--charcoal);
-  }
-
-  .h-section {
-    font-family: var(--font-display);
-    font-size: clamp(1.5rem, 2.4vw, 1.95rem);
-    font-weight: 600;
-    line-height: 1.16;
-    letter-spacing: -0.026em;
-    color: var(--charcoal);
-  }
-
-  .lead {
-    font-size: clamp(1.0125rem, 1.5vw, 1.125rem);
-    line-height: 1.65;
-=======
   .display-xl {
     font-family: var(--font-display);
     font-size: clamp(2.4rem, 5.2vw, 4rem);
@@ -322,24 +221,7 @@
     font-size: 0.72rem;
     letter-spacing: 0.02em;
     font-variant-numeric: tabular-nums;
->>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
     color: var(--muted);
-    max-width: 38rem;
-  }
-
-  .label {
-    font-size: 0.6875rem;
-    font-weight: 600;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-
-  .mono {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    letter-spacing: -0.01em;
-    font-variant-numeric: tabular-nums;
   }
 
   .hairline {
@@ -348,30 +230,6 @@
     background: var(--border-subtle);
   }
 
-<<<<<<< HEAD
-  .surface-card {
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-lg);
-    background: var(--cream);
-    box-shadow: var(--shadow-xs);
-  }
-
-  .prose-editorial p {
-    color: var(--muted);
-    line-height: 1.75;
-  }
-
-  .prose-editorial p + p {
-    margin-top: 1rem;
-  }
-
-  .no-scrollbar {
-    scrollbar-width: none;
-  }
-
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-=======
   .card-surface {
     background: var(--surface);
     border: 1px solid var(--border-subtle);
@@ -389,6 +247,5 @@
 
   .link-quiet:hover {
     text-decoration-color: var(--bronze);
->>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
   }
 }

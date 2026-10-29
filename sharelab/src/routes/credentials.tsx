@@ -1,21 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { RouteGuard } from '../components/auth/RouteGuard'
-<<<<<<< HEAD
-import { AppShell } from '../components/layout/AppShell'
-import { Credentials } from '../features/credentials/Credentials'
-
-const CredentialsRoute = () => (
-  <RouteGuard>
-    <AppShell>
-      <Credentials />
-    </AppShell>
-  </RouteGuard>
-)
-
-export const Route = createFileRoute('/credentials')({
-  component: CredentialsRoute,
-})
-=======
 import { SiteLayout } from '../components/layout/SiteLayout'
 import { CredentialsPage } from '../features/credentials/CredentialsPage'
 
@@ -43,4 +27,3 @@ function CredentialsRoute() {
     </SiteLayout>
   )
 }
->>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec

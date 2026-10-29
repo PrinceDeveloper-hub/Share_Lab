@@ -6,11 +6,11 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://YOUR-API-HOST/api/$1"
+      "destination": "https://sharelab-api.vercel.app/api/$1"
     },
     {
       "source": "/storage/(.*)",
-      "destination": "https://YOUR-API-HOST/storage/$1"
+      "destination": "https://sharelab-api.vercel.app/storage/$1"
     },
     {
       "source": "/((?!api/|storage/).*)",

@@ -60,7 +60,7 @@ class ResourceController extends Controller
         $resource->load(['owner', 'requirements', 'managers']);
 
         $eligibility = null;
-        $currentUser = $request->user('sanctum');
+        $currentUser = $request->user('api');
 
         if ($currentUser && $currentUser->role->isUser()) {
             $eligibility = BookingService::checkEligibility($currentUser, $resource);
@@ -135,4 +135,4 @@ class ResourceController extends Controller
             'data' => new ResourceResource($resource),
             'message' => 'Resource updated successfully.',
         ], 200);
-    }
+    }}

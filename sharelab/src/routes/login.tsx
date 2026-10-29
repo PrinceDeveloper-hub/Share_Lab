@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { GuestGuard } from '../components/auth/GuestGuard'
 import { Login } from '../features/auth/Login'
 
 export interface LoginSearch {
@@ -12,7 +13,11 @@ const parseLoginSearch = (search: Record<string, unknown>): LoginSearch => ({
 const LoginRoute = () => {
   const { redirect } = Route.useSearch()
 
-  return <Login redirect={redirect} />
+  return (
+    <GuestGuard redirect={redirect}>
+      <Login redirect={redirect} />
+    </GuestGuard>
+  )
 }
 
 export const Route = createFileRoute('/login')({

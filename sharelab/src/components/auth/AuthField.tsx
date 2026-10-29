@@ -3,7 +3,10 @@ import { AlertCircle } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { cn } from '../../lib/utils'
 
-export interface AuthFieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'id'> {
+export interface AuthFieldProps extends Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  'id'
+> {
   id: string
   label: string
   error?: string
@@ -22,16 +25,16 @@ export const AuthField = ({
   className,
   ...props
 }: AuthFieldProps) => {
-  const describedBy = [
-    hint ? `${id}-hint` : null,
-    error ? `${id}-error` : null,
-  ]
+  const describedBy = [hint ? `${id}-hint` : null, error ? `${id}-error` : null]
     .filter(Boolean)
     .join(' ')
 
   return (
     <div>
-      <label htmlFor={id} className="block text-sm font-semibold text-[var(--charcoal)]">
+      <label
+        htmlFor={id}
+        className="block text-sm font-semibold text-[var(--charcoal)]"
+      >
         {label}
       </label>
       <div className="relative mt-2">
@@ -46,7 +49,7 @@ export const AuthField = ({
           aria-invalid={error ? 'true' : undefined}
           aria-describedby={describedBy || undefined}
           className={cn(
-            'h-11 w-full rounded-xl border bg-[rgba(255,252,247,0.88)] px-3.5 text-sm text-[var(--charcoal)] shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] outline-none transition placeholder:text-[rgba(117,103,94,0.7)] focus:border-[rgba(75,47,31,0.45)] focus:ring-4 focus:ring-[rgba(75,47,31,0.1)]',
+            'h-11 w-full rounded-xl border bg-[rgba(255,252,247,0.88)] px-3.5 text-sm text-[var(--charcoal)] shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] outline-none transition placeholder:text-[var(--muted)] focus:border-[rgba(75,47,31,0.45)] focus:ring-4 focus:ring-[rgba(75,47,31,0.1)]',
             Icon ? 'pl-11' : '',
             trailing ? 'pr-12' : '',
             error
@@ -57,11 +60,16 @@ export const AuthField = ({
           {...props}
         />
         {trailing ? (
-          <div className="absolute inset-y-0 right-1.5 flex items-center">{trailing}</div>
+          <div className="absolute inset-y-0 right-1.5 flex items-center">
+            {trailing}
+          </div>
         ) : null}
       </div>
       {hint ? (
-        <p id={`${id}-hint`} className="mt-1.5 text-xs leading-relaxed text-[var(--muted)]">
+        <p
+          id={`${id}-hint`}
+          className="mt-1.5 text-xs leading-relaxed text-[var(--muted)]"
+        >
           {hint}
         </p>
       ) : null}
@@ -70,7 +78,10 @@ export const AuthField = ({
           id={`${id}-error`}
           className="mt-1.5 flex items-start gap-1.5 text-xs font-medium leading-relaxed text-[var(--error)]"
         >
-          <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+          <AlertCircle
+            className="mt-0.5 h-3.5 w-3.5 shrink-0"
+            aria-hidden="true"
+          />
           {error}
         </p>
       ) : null}

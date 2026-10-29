@@ -23,6 +23,8 @@
   html {
     min-height: 100%;
     -webkit-text-size-adjust: 100%;
+    color-scheme: light;
+    scrollbar-color: rgba(75, 47, 31, 0.28) transparent;
     text-rendering: optimizeLegibility;
   }
 
@@ -71,6 +73,12 @@
     font: inherit;
   }
 
+  input,
+  select,
+  textarea {
+    caret-color: var(--espresso);
+  }
+
   img,
   svg {
     display: block;
@@ -78,7 +86,8 @@
   }
 
   ::selection {
-    background: rgba(75, 47, 31, 0.16);
+    background: rgba(75, 47, 31, 0.18);
+    color: var(--deep-brown);
   }
 
   :focus-visible {

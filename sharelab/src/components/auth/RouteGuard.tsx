@@ -11,9 +11,16 @@ export interface RouteGuardProps {
 }
 
 const AuthLoading = () => (
-  <div className="flex min-h-[55vh] items-center justify-center px-4" role="status" aria-live="polite">
+  <div
+    className="flex min-h-[55vh] items-center justify-center px-4"
+    role="status"
+    aria-live="polite"
+  >
     <div className="flex items-center gap-3 rounded-full border border-[var(--border-subtle)] bg-[rgba(255,252,247,0.72)] px-5 py-3 text-sm font-medium text-[var(--muted)] backdrop-blur">
-      <Loader2 className="h-4 w-4 animate-spin text-[var(--espresso)]" aria-hidden="true" />
+      <Loader2
+        className="h-4 w-4 animate-spin text-[var(--espresso)]"
+        aria-hidden="true"
+      />
       Checking your session...
     </div>
   </div>
@@ -23,9 +30,14 @@ const AccessDenied = () => (
   <div className="page-shell py-16 sm:py-20">
     <div className="mx-auto max-w-lg rounded-[1.5rem] border border-[rgba(180,77,66,0.2)] bg-[rgba(255,252,247,0.72)] p-8 text-center shadow-[var(--shadow-sm)]">
       <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[rgba(180,77,66,0.08)]">
-        <ShieldAlert className="h-5 w-5 text-[var(--error)]" aria-hidden="true" />
+        <ShieldAlert
+          className="h-5 w-5 text-[var(--error)]"
+          aria-hidden="true"
+        />
       </span>
-      <h1 className="mt-4 text-2xl font-semibold text-[var(--charcoal)]">Access not available</h1>
+      <h1 className="mt-4 text-2xl font-semibold text-[var(--charcoal)]">
+        Access not available
+      </h1>
       <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
         Your account does not have the role required for this page.
       </p>
@@ -44,7 +56,9 @@ const AccessDenied = () => (
 export const RouteGuard = ({ children, roles }: RouteGuardProps) => {
   const { user, status } = useAuth()
   const router = useRouter()
-  const pathname = useRouterState({ select: (state) => state.location.pathname })
+  const pathname = useRouterState({
+    select: (state) => state.location.pathname,
+  })
 
   useEffect(() => {
     if (status === 'anonymous') {

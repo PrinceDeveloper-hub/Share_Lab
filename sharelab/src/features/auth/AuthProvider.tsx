@@ -6,22 +6,22 @@ import {
   useMemo,
   useState,
 } from 'react'
-import { api, getApiErrorMessage, getApiFieldErrors } from '../../lib/api-client'
-import type { AuthSession, User } from '../../lib/api-client'
+import {
+  api,
+  AUTH_EXPIRED_EVENT,
+  getApiErrorMessage,
+  getApiFieldErrors,
+} from '../../lib/api-client'
+import type {
+  AuthSession,
+  LoginPayload,
+  RegisterPayload,
+  User,
+} from '../../lib/api-client'
+
+export type { LoginPayload, RegisterPayload }
 
 export type AuthStatus = 'loading' | 'authenticated' | 'anonymous'
-
-export interface LoginPayload {
-  email: string
-  password: string
-}
-
-export interface RegisterPayload {
-  name: string
-  email: string
-  password: string
-  password_confirmation: string
-}
 
 export type AuthActionResult =
   | { success: true; user: User }
@@ -43,6 +43,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null)
   const [status, setStatus] = useState<AuthStatus>('loading')
 
+  const clearSession = useCallback(() => {
+    setUser(null)
+    setStatus('anonymous')
+  }, [])
+
+  const loadSession = useCallback(async () => {
+    try {
+      const response = await api.get<User>('/me')
+      setUser(response.data)
+      setStatus('authenticated')
+    } catch {
+      clearSession()
+    }
+  }, [clearSession])
+
   useEffect(() => {
     let active = true
 
@@ -54,79 +69,94 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setStatus('authenticated')
       } catch {
         if (!active) return
-        setUser(null)
-        setStatus('anonymous')
+        clearSession()
       }
     }
 
     void restoreSession()
 
+    const onExpired = () => {
+      if (active) clearSession()
+    }
+
+    window.addEventListener(AUTH_EXPIRED_EVENT, onExpired)
+
     return () => {
       active = false
+      window.removeEventListener(AUTH_EXPIRED_EVENT, onExpired)
     }
-  }, [])
+  }, [clearSession])
 
-  const login = useCallback(async (email: string, password: string): Promise<AuthActionResult> => {
-    try {
-      const response = await api.post<LoginPayload, AuthSession>('/login', {
-        email,
-        password,
-      })
+  const login = useCallback(
+    async (email: string, password: string): Promise<AuthActionResult> => {
+      try {
+        const response = await api.post<LoginPayload, AuthSession>('/login', {
+          email: email.trim().toLowerCase(),
+          password,
+        })
 
-      setUser(response.data.user)
-      setStatus('authenticated')
+        setUser(response.data.user)
+        setStatus('authenticated')
 
-      return { success: true, user: response.data.user }
-    } catch (error) {
-      return {
-        success: false,
-        error: getApiErrorMessage(error, 'Sign in failed. Please check your details and try again.'),
-        fieldErrors: getApiFieldErrors(error),
+        return { success: true, user: response.data.user }
+      } catch (error) {
+        return {
+          success: false,
+          error: getApiErrorMessage(
+            error,
+            'Sign in failed. Check your details and try again.',
+          ),
+          fieldErrors: getApiFieldErrors(error),
+        }
       }
-    }
-  }, [])
+    },
+    [],
+  )
 
-  const register = useCallback(async (payload: RegisterPayload): Promise<AuthActionResult> => {
-    try {
-      const response = await api.post<RegisterPayload, AuthSession>('/register', payload)
+  const register = useCallback(
+    async (payload: RegisterPayload): Promise<AuthActionResult> => {
+      try {
+        const response = await api.post<RegisterPayload, AuthSession>(
+          '/register',
+          {
+            ...payload,
+            email: payload.email.trim().toLowerCase(),
+            name: payload.name.trim(),
+          },
+        )
 
-      setUser(response.data.user)
-      setStatus('authenticated')
+        setUser(response.data.user)
+        setStatus('authenticated')
 
-      return { success: true, user: response.data.user }
-    } catch (error) {
-      return {
-        success: false,
-        error: getApiErrorMessage(error, 'Account creation failed. Please try again.'),
-        fieldErrors: getApiFieldErrors(error),
+        return { success: true, user: response.data.user }
+      } catch (error) {
+        return {
+          success: false,
+          error: getApiErrorMessage(
+            error,
+            'Account creation failed. Please try again.',
+          ),
+          fieldErrors: getApiFieldErrors(error),
+        }
       }
-    }
-  }, [])
+    },
+    [],
+  )
 
   const logout = useCallback(async () => {
     try {
       await api.post('/logout')
     } catch {
-      // The local UI still needs to end the session; the cookie will expire or
-      // be cleared by the server on the next successful request.
+      // Clearing the local session is still the right outcome if the network
+      // or the already-expired cookie prevents a clean server logout.
     } finally {
-      setUser(null)
-      setStatus('anonymous')
+      clearSession()
     }
-  }, [])
+  }, [clearSession])
 
   const refreshSession = useCallback(async () => {
-    setStatus('loading')
-
-    try {
-      const response = await api.get<User>('/me')
-      setUser(response.data)
-      setStatus('authenticated')
-    } catch {
-      setUser(null)
-      setStatus('anonymous')
-    }
-  }, [])
+    await loadSession()
+  }, [loadSession])
 
   const value = useMemo<AuthContextValue>(
     () => ({
@@ -138,7 +168,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       logout,
       refreshSession,
     }),
-    [login, logout, refreshSession, status, user],
+    [login, logout, refreshSession, register, status, user],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

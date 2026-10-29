@@ -49,35 +49,45 @@ export const OwnerDashboard = () => {
       <h1 className="text-3xl font-bold text-charcoal mb-4">My Resources</h1>
 
       <GlassPanel className="mb-6">
-        <h2 className="text-xl font-semibold text-charcoal mb-4">Add New Resource</h2>
+        <h2 className="text-xl font-semibold text-charcoal mb-4">
+          Add New Resource
+        </h2>
 
         <form className="space-y-4">
           <div>
-            <label className="block text-[--muted] text-sm mb-2">Resource Name</label>
+            <label className="block text-[var(--muted)] text-sm mb-2">
+              Resource Name
+            </label>
             <input
               type="text"
-              className="w-full bg-softBeige dark:bg-[--deep-brown] border border-sand rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-espresso"
+              className="w-full bg-soft-beige dark:bg-[var(--deep-brown)] border border-sand rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-espresso"
               placeholder="e.g. Ultimaker S5 3D Printer"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-[--muted] text-sm mb-2">Category</label>
-              <select className="w-full bg-softBeige dark:bg-[--deep-brown] border border-sand rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-espresso">
+              <label className="block text-[var(--muted)] text-sm mb-2">
+                Category
+              </label>
+              <select className="w-full bg-soft-beige dark:bg-[var(--deep-brown)] border border-sand rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-espresso">
                 <option value="3D Printing & Fab">3D Printing & Fab</option>
                 <option value="Electronics & Test">Electronics & Test</option>
                 <option value="Photography">Photography</option>
                 <option value="Bio & Chemistry">Bio & Chemistry</option>
                 <option value="Fabrication">Fabrication</option>
-                <option value="Collaborative Spaces">Collaborative Spaces</option>
+                <option value="Collaborative Spaces">
+                  Collaborative Spaces
+                </option>
               </select>
             </div>
             <div>
-              <label className="block text-[--muted] text-sm mb-2">Location</label>
+              <label className="block text-[var(--muted)] text-sm mb-2">
+                Location
+              </label>
               <input
                 type="text"
-                className="w-full bg-softBeige dark:bg-[--deep-brown] border border-sand rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-espresso"
+                className="w-full bg-soft-beige dark:bg-[var(--deep-brown)] border border-sand rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-espresso"
                 placeholder="e.g. Lab A"
               />
             </div>
@@ -85,35 +95,41 @@ export const OwnerDashboard = () => {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-[--muted] text-sm mb-2">Max Hours per Booking</label>
+              <label className="block text-[var(--muted)] text-sm mb-2">
+                Max Hours per Booking
+              </label>
               <input
                 type="number"
-                className="w-full bg-softBeige dark:bg-[--deep-brown] border border-sand rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-espresso"
+                className="w-full bg-soft-beige dark:bg-[var(--deep-brown)] border border-sand rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-espresso"
                 min="1"
               />
             </div>
             <div>
-              <label className="block text-[--muted] text-sm mb-2">Weekly Cap (hours)</label>
+              <label className="block text-[var(--muted)] text-sm mb-2">
+                Weekly Cap (hours)
+              </label>
               <input
                 type="number"
-                className="w-full bg-softBeige dark:bg-[--deep-brown] border border-sand rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-espresso"
+                className="w-full bg-soft-beige dark:bg-[var(--deep-brown)] border border-sand rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-espresso"
                 min="1"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-[--muted] text-sm mb-2">Rules/Requirements</label>
+            <label className="block text-[var(--muted)] text-sm mb-2">
+              Rules/Requirements
+            </label>
             <textarea
               rows={3}
-              className="w-full bg-softBeige dark:bg-[--deep-brown] border border-sand rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-espresso resize-none text-sm"
+              className="w-full bg-soft-beige dark:bg-[var(--deep-brown)] border border-sand rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-espresso resize-none text-sm"
               placeholder="e.g. Must have completed 3D Printer Training"
             ></textarea>
           </div>
 
           <button
             type="submit"
-            className="w-full bg-espresso text-white px-6 py-3 rounded-full font-medium hover:bg-[--deep-brown] transition-colors"
+            className="w-full bg-espresso text-white px-6 py-3 rounded-full font-medium hover:bg-[var(--deep-brown)] transition-colors"
           >
             Create Resource
           </button>
@@ -122,17 +138,29 @@ export const OwnerDashboard = () => {
 
       {/* Resources table */}
       <GlassPanel>
-        <h2 className="text-xl font-semibold text-charcoal mb-4">My Resources</h2>
+        <h2 className="text-xl font-semibold text-charcoal mb-4">
+          My Resources
+        </h2>
 
         <div className="overflow-x-auto">
           <table className="min-w-full">
             <thead>
               <tr className="border-b border-sand">
-                <th className="p-3 text-left text-sm font-medium text-charcoal">Resource</th>
-                <th className="p-3 text-left text-sm font-medium text-charcoal">Category</th>
-                <th className="p-3 text-left text-sm font-medium text-charcoal">Location</th>
-                <th className="p-3 text-left text-sm font-medium text-charcoal">Status</th>
-                <th className="p-3 text-right text-sm font-medium text-charcoal">Actions</th>
+                <th className="p-3 text-left text-sm font-medium text-charcoal">
+                  Resource
+                </th>
+                <th className="p-3 text-left text-sm font-medium text-charcoal">
+                  Category
+                </th>
+                <th className="p-3 text-left text-sm font-medium text-charcoal">
+                  Location
+                </th>
+                <th className="p-3 text-left text-sm font-medium text-charcoal">
+                  Status
+                </th>
+                <th className="p-3 text-right text-sm font-medium text-charcoal">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -146,27 +174,29 @@ export const OwnerDashboard = () => {
                     />
                     <span>{resource.name}</span>
                   </td>
-                  <td className="p-3 text-[--taupe] text-sm">{resource.category}</td>
-                  <td className="p-3 text-[--taupe] text-sm">{resource.location}</td>
+                  <td className="p-3 text-[var(--taupe)] text-sm">
+                    {resource.category}
+                  </td>
+                  <td className="p-3 text-[var(--taupe)] text-sm">
+                    {resource.location}
+                  </td>
                   <td className="p-3">
                     <span
                       className={cn(
                         'px-2 py-1 rounded text-xs',
-                        resource.status === 'active' ? 'bg-[--success] text-[--charcoal]' : 'bg-[--muted] text-[--charcoal]'
+                        resource.status === 'active'
+                          ? 'bg-[var(--success)] text-[var(--charcoal)]'
+                          : 'bg-[var(--muted)] text-[var(--charcoal)]',
                       )}
                     >
                       {resource.status}
                     </span>
                   </td>
                   <td className="p-3 text-right">
-                    <button
-                      className="text-[--taupe] text-sm hover:text-espresso transition-colors"
-                    >
+                    <button className="text-[var(--taupe)] text-sm hover:text-espresso transition-colors">
                       Edit
                     </button>
-                    <button
-                      className="text-[--error] text-sm hover:text-red-400 transition-colors"
-                    >
+                    <button className="text-[var(--error)] text-sm hover:text-red-400 transition-colors">
                       Delete
                     </button>
                   </td>

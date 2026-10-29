@@ -7,8 +7,17 @@ export interface FormAlertProps {
   className?: string
 }
 
-export const FormAlert = ({ children, variant = 'error', className }: FormAlertProps) => {
-  const Icon = variant === 'success' ? CheckCircle2 : variant === 'info' ? Info : AlertCircle
+export const FormAlert = ({
+  children,
+  variant = 'error',
+  className,
+}: FormAlertProps) => {
+  const Icon =
+    variant === 'success'
+      ? CheckCircle2
+      : variant === 'info'
+        ? Info
+        : AlertCircle
 
   return (
     <div

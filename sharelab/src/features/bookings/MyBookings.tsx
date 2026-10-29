@@ -1,124 +1,368 @@
-import { GlassPanel } from '../../components/glass/GlassPanel'
-import { cn } from '../../lib/utils'
-import { useBookings } from '../../hooks/useBookings'
 import { useState } from 'react'
+import { Link } from '@tanstack/react-router'
+import {
+  ArrowUpRight,
+  CalendarDays,
+  FlaskConical,
+  Loader2,
+  MessageSquareText,
+  ShieldAlert,
+} from 'lucide-react'
+import { Button } from '../../components/ui/button'
+import { useBookings } from '../../hooks/useBookings'
+import { usePageMeta } from '../../hooks/usePageMeta'
+import { useResources } from '../../hooks/useResources'
+import { getApiErrorMessage } from '../../lib/api-client'
+import {
+  bookingStatusDetails,
+  formatBookingWindow,
+  historyBookingStatuses,
+  openBookingStatuses,
+} from '../../lib/booking-display'
+import { cn } from '../../lib/utils'
+
+type BookingView = 'all' | 'open' | 'history'
+
+const statusSets = {
+  open: openBookingStatuses,
+  history: historyBookingStatuses,
+} as const
+
+const filterLabels: Record<BookingView, string> = {
+  all: 'All',
+  open: 'Open',
+  history: 'History',
+}
 
 export const MyBookings = () => {
-  const { bookings } = useBookings()
-  const [view, setView] = useState<'active' | 'history' | 'all'>('all')
-
-  const filteredBookings = bookings?.filter((booking) => {
-    if (view === 'active') {
-      return ['approved', 'checked_in', 'waitlisted'].includes(booking.status)
-    }
-    if (view === 'history') {
-      return ['returned', 'cancelled', 'rejected'].includes(booking.status)
-    }
-    return true
+  usePageMeta({
+    title: 'Your requests — ShareLab',
+    description:
+      'Track your ShareLab requests, approvals, waitlist positions, and the full handover record.',
   })
 
-  const statusLabels: Record<string, string> = {
-    pending: 'Pending',
-    approved: 'Approved',
-    waitlisted: 'Waitlisted',
-    checked_in: 'Checked In',
-    returned: 'Returned',
-    rejected: 'Rejected',
-    cancelled: 'Cancelled',
+  const { bookings, isLoading, isError, cancelMutation } = useBookings()
+  const { data: resourceResponse, isLoading: resourcesLoading } = useResources({
+    perPage: 100,
+  })
+  const [view, setView] = useState<BookingView>('all')
+
+  const bookingsList = bookings ?? []
+  const resources = resourceResponse?.data ?? []
+  const resourcesById = new Map(
+    resources.map((resource) => [resource.id, resource]),
+  )
+
+  const filteredBookings = bookingsList.filter((booking) => {
+    if (view === 'all') return true
+    return statusSets[view].includes(booking.status)
+  })
+
+  const counts: Record<BookingView, number> = {
+    all: bookingsList.length,
+    open: bookingsList.filter((booking) =>
+      openBookingStatuses.includes(booking.status),
+    ).length,
+    history: bookingsList.filter((booking) =>
+      historyBookingStatuses.includes(booking.status),
+    ).length,
   }
 
   return (
-    <GlassPanel className="p-6 md:p-12 max-w-7xl mx-auto">
-      <h1 className="text-3xl font-bold text-charcoal mb-4">My Bookings</h1>
-
-      {/* Tab navigation */}
-      <div className="grid grid-cols-3 mb-6">
-        <button
-          onClick={() => setView('all')}
-          className={cn(
-            'flex-1 rounded-md border px-3 py-2 text-sm font-medium ',
-            view === 'all' ? 'bg-espresso text-white' : 'bg-softBeige text-espresso hover:bg-[--taupe] hover:text-white transition-colors'
-          )}
-        >
-          All ({bookings?.length || 0})
-        </button>
-        <button
-          onClick={() => setView('active')}
-          className={cn(
-            'flex-1 rounded-md border px-3 py-2 text-sm font-medium ',
-            view === 'active' ? 'bg-espresso text-white' : 'bg-softBeige text-espresso hover:bg-[--taupe] hover:text-white transition-colors'
-          )}
-        >
-          Active ({filteredBookings?.filter((b) => ['approved', 'checked_in', 'waitlisted'].includes(b.status)).length || 0})
-        </button>
-        <button
-          onClick={() => setView('history')}
-          className={cn(
-            'flex-1 rounded-md border px-3 py-2 text-sm font-medium ',
-            view === 'history' ? 'bg-espresso text-white' : 'bg-softBeige text-espresso hover:bg-[--taupe] hover:text-white transition-colors'
-          )}
-        >
-          History
-        </button>
+    <div className="mx-auto max-w-5xl">
+      <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h1 className="font-editorial text-[2.4rem] font-semibold leading-[1.03] tracking-[-0.035em] text-[var(--charcoal)] sm:text-[3rem]">
+            Your requests
+          </h1>
+          <p className="mt-2 max-w-xl text-sm leading-relaxed text-[var(--muted)] sm:text-base">
+            Track decisions, waitlist positions, and every handover — from the
+            first request to the final return.
+          </p>
+        </div>
+        <Button asChild>
+          <Link to="/resources">
+            Book a resource
+            <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
+        </Button>
       </div>
 
-      {/* Bookings list */}
-      <GlassPanel>
-        {bookings?.length === 0 && (
-          <p className="p-6 text-center text-[--muted]">
-            No bookings found.
-          </p>
-        )}
+      {cancelMutation.isError ? (
+        <p
+          role="alert"
+          className="mt-5 rounded-xl border border-[rgba(180,77,66,0.18)] bg-[rgba(180,77,66,0.06)] px-4 py-3 text-sm text-[var(--error)]"
+        >
+          {getApiErrorMessage(
+            cancelMutation.error,
+            'We could not cancel that request. Please try again.',
+          )}
+        </p>
+      ) : null}
 
-        {filteredBookings?.map((booking) => (
-          <GlassPanel
-            key={booking.id}
-            className="p-4 rounded-[12px] mb-3 border-t border-sand"
-          >
-            <div className="flex justify-between items-start">
-              <div className="flex-1">
-                <h3 className="text-sm font-medium text-charcoal mb-1">
-                  {booking.resource_id}
-                </h3>
-                <p className="text-[--muted] text-sm">
-                  {booking.start_at} - {booking.end_at}
-                </p>
-              </div>
-              <span
+      <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-b border-[var(--border-subtle)] pb-3">
+        <div
+          role="group"
+          aria-label="Filter requests"
+          className="flex flex-wrap gap-1"
+        >
+          {(Object.keys(filterLabels) as BookingView[]).map((filter) => {
+            const active = view === filter
+
+            return (
+              <button
+                key={filter}
+                type="button"
+                aria-pressed={active}
+                onClick={() => setView(filter)}
                 className={cn(
-                  'px-2 py-1 rounded text-xs',
-                  statusLabels[booking.status as keyof typeof statusLabels]
-                    ? `bg-[${statusLabels[booking.status as keyof typeof statusLabels]
-                          .replace(' ', '-')
-                          .toLowerCase()
-                          .replace('In', 'checked-in')
-                          .replace(' ', '-')
-                          .toLowerCase()
-                }] text-white` : 'bg-[--muted] text-[--charcoal]'
+                  'inline-flex min-h-11 items-center gap-2 rounded-full px-4 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--ivory)]',
+                  active
+                    ? 'bg-[var(--espresso)] text-white shadow-[0_10px_24px_-16px_rgba(75,47,31,0.8)]'
+                    : 'text-[var(--muted)] hover:bg-[rgba(75,47,31,0.06)] hover:text-[var(--espresso)]',
                 )}
               >
-                {statusLabels[booking.status as keyof typeof statusLabels]}
-              </span>
-            </div>
-
-            <div className="mt-2 text-right">
-              <button
-                className="text-[--taupe] text-sm hover:text-espresso transition-colors mr-2"
-              >
-                View
-              </button>
-              {booking.status === 'approved' && (
-                <button
-                  className="text-[--warning] text-sm hover:text-amber-400 transition-colors"
+                {filterLabels[filter]}
+                <span
+                  className={cn(
+                    'rounded-full px-2 py-0.5 text-[0.65rem] font-semibold',
+                    active
+                      ? 'bg-white/15 text-white'
+                      : 'bg-[rgba(75,47,31,0.07)]',
+                  )}
                 >
-                  Cancel
-                </button>
-              )}
+                  {counts[filter]}
+                </span>
+              </button>
+            )
+          })}
+        </div>
+        <p
+          className="text-xs font-medium text-[var(--muted)]"
+          aria-live="polite"
+        >
+          {filteredBookings.length}{' '}
+          {filteredBookings.length === 1 ? 'request' : 'requests'}
+        </p>
+      </div>
+
+      {isLoading ? (
+        <div className="mt-5 space-y-3" role="status" aria-live="polite">
+          <span className="sr-only">Loading your requests</span>
+          {[0, 1, 2].map((item) => (
+            <div
+              key={item}
+              className="flex animate-pulse gap-4 rounded-[1.35rem] border border-[var(--border-subtle)] bg-[rgba(255,252,247,0.7)] p-5"
+            >
+              <span className="h-11 w-11 shrink-0 rounded-full bg-[rgba(75,47,31,0.08)]" />
+              <div className="flex-1 space-y-3">
+                <span className="block h-3 w-1/2 rounded-full bg-[rgba(75,47,31,0.08)]" />
+                <span className="block h-2.5 w-2/3 rounded-full bg-[rgba(75,47,31,0.06)]" />
+                <span className="block h-2.5 w-1/3 rounded-full bg-[rgba(75,47,31,0.06)]" />
+              </div>
             </div>
-          </GlassPanel>
-        ))}
-      </GlassPanel>
-    </GlassPanel>
+          ))}
+        </div>
+      ) : isError ? (
+        <div className="mt-5 rounded-[1.35rem] border border-[rgba(180,77,66,0.18)] bg-[rgba(180,77,66,0.06)] p-6">
+          <div className="flex items-start gap-3">
+            <ShieldAlert
+              className="mt-0.5 h-5 w-5 shrink-0 text-[var(--error)]"
+              aria-hidden="true"
+            />
+            <div>
+              <h2 className="font-semibold text-[var(--charcoal)]">
+                Your requests could not be loaded
+              </h2>
+              <p className="mt-1 text-sm text-[var(--muted)]">
+                Refresh the page to try again. If the problem continues, contact
+                your lab manager.
+              </p>
+            </div>
+          </div>
+        </div>
+      ) : bookingsList.length === 0 ? (
+        <div className="mt-5 rounded-[1.5rem] border border-dashed border-[rgba(82,59,45,0.2)] bg-[rgba(233,217,198,0.16)] px-6 py-12 text-center">
+          <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[rgba(75,47,31,0.07)]">
+            <FlaskConical
+              className="h-5 w-5 text-[var(--espresso)]"
+              aria-hidden="true"
+            />
+          </span>
+          <h2 className="mt-4 font-editorial text-[1.55rem] font-semibold text-[var(--charcoal)]">
+            Nothing booked yet.
+          </h2>
+          <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-[var(--muted)]">
+            Browse the catalogue, check the requirements, and request a window
+            that fits your work.
+          </p>
+          <Button asChild className="mt-6">
+            <Link to="/resources">Browse resources</Link>
+          </Button>
+        </div>
+      ) : filteredBookings.length === 0 ? (
+        <div className="mt-5 rounded-[1.35rem] border border-dashed border-[rgba(82,59,45,0.2)] bg-[rgba(255,252,247,0.55)] px-6 py-10 text-center">
+          <h2 className="font-editorial text-xl font-semibold text-[var(--charcoal)]">
+            No requests in this view.
+          </h2>
+          <p className="mt-2 text-sm text-[var(--muted)]">
+            {view === 'history'
+              ? 'Completed and cancelled requests will appear here.'
+              : 'You have no open requests right now.'}
+          </p>
+          <Button
+            variant="secondary"
+            className="mt-5"
+            onClick={() => setView('all')}
+          >
+            Show all requests
+          </Button>
+        </div>
+      ) : (
+        <ul className="mt-5 space-y-3">
+          {filteredBookings.map((booking) => {
+            const resource = resourcesById.get(booking.resource_id)
+            const status = bookingStatusDetails[booking.status]
+            const StatusIcon = status.icon
+            const canCancel = ['pending', 'approved', 'waitlisted'].includes(
+              booking.status,
+            )
+            const cancelling =
+              cancelMutation.isPending &&
+              cancelMutation.variables === booking.id
+
+            const handleCancel = () => {
+              if (
+                window.confirm(
+                  'Cancel this request? This cannot be undone, and the time will be released.',
+                )
+              ) {
+                cancelMutation.mutate(booking.id)
+              }
+            }
+
+            return (
+              <li
+                key={booking.id}
+                className="rounded-[1.35rem] border border-[var(--border-subtle)] bg-[rgba(255,252,247,0.82)] p-5 shadow-[var(--shadow-sm)] backdrop-blur-sm sm:p-6"
+              >
+                <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="flex min-w-0 gap-4">
+                    <span
+                      className={cn(
+                        'mt-0.5 hidden h-11 w-11 shrink-0 items-center justify-center rounded-full sm:flex',
+                        status.tone,
+                      )}
+                    >
+                      <StatusIcon className="h-4 w-4" aria-hidden="true" />
+                    </span>
+
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                        {resource ? (
+                          <Link
+                            to="/resources/$resourceId"
+                            params={{ resourceId: String(resource.id) }}
+                            className="rounded-sm text-lg font-semibold text-[var(--charcoal)] transition-colors hover:text-[var(--espresso)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
+                          >
+                            {resource.name}
+                          </Link>
+                        ) : (
+                          <h2 className="text-lg font-semibold text-[var(--charcoal)]">
+                            Request #{booking.id}
+                          </h2>
+                        )}
+                        <span
+                          className={cn(
+                            'inline-flex items-center rounded-full px-2.5 py-1 text-[0.68rem] font-semibold',
+                            status.tone,
+                          )}
+                        >
+                          {status.label}
+                          {booking.status === 'waitlisted' &&
+                          booking.waitlist_position
+                            ? ` · #${booking.waitlist_position}`
+                            : ''}
+                        </span>
+                      </div>
+
+                      {resourcesLoading && !resource ? (
+                        <span className="mt-1 block h-2.5 w-40 animate-pulse rounded-full bg-[rgba(75,47,31,0.07)]" />
+                      ) : resource ? (
+                        <p className="mt-1 text-xs font-medium text-[var(--muted)]">
+                          {resource.category} · {resource.location}
+                        </p>
+                      ) : null}
+
+                      <p className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-[var(--charcoal)]">
+                        <CalendarDays
+                          className="h-4 w-4 text-[var(--taupe)]"
+                          aria-hidden="true"
+                        />
+                        {formatBookingWindow(booking)}
+                      </p>
+
+                      {booking.purpose ? (
+                        <p className="mt-2 flex items-start gap-1.5 text-sm leading-relaxed text-[var(--muted)]">
+                          <MessageSquareText
+                            className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[var(--taupe)]"
+                            aria-hidden="true"
+                          />
+                          {booking.purpose}
+                        </p>
+                      ) : null}
+
+                      {booking.decision_reason ? (
+                        <p className="mt-3 rounded-xl bg-[rgba(75,47,31,0.045)] px-3 py-2 text-xs leading-relaxed text-[var(--muted)]">
+                          <span className="font-semibold text-[var(--charcoal)]">
+                            Manager note:
+                          </span>{' '}
+                          {booking.decision_reason}
+                        </p>
+                      ) : null}
+                    </div>
+                  </div>
+
+                  <div className="flex shrink-0 flex-wrap items-center gap-2 sm:flex-col sm:items-stretch">
+                    {resource ? (
+                      <Button asChild variant="outline">
+                        <Link
+                          to="/resources/$resourceId"
+                          params={{ resourceId: String(resource.id) }}
+                        >
+                          View resource
+                          <ArrowUpRight
+                            className="h-3.5 w-3.5"
+                            aria-hidden="true"
+                          />
+                        </Link>
+                      </Button>
+                    ) : null}
+                    {canCancel ? (
+                      <Button
+                        variant="ghost"
+                        className="text-[var(--error)] hover:bg-[rgba(180,77,66,0.07)] hover:text-[var(--error)]"
+                        onClick={handleCancel}
+                        disabled={cancelMutation.isPending}
+                      >
+                        {cancelling ? (
+                          <Loader2
+                            className="h-4 w-4 animate-spin"
+                            aria-hidden="true"
+                          />
+                        ) : null}
+                        {cancelling ? 'Cancelling...' : 'Cancel request'}
+                      </Button>
+                    ) : null}
+                  </div>
+                </div>
+              </li>
+            )
+          })}
+        </ul>
+      )}
+    </div>
   )
 }
+
 export default MyBookings

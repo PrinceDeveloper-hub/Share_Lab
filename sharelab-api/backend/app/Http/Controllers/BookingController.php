@@ -269,7 +269,7 @@ class BookingController extends Controller
         ]);
 
         try {
-            $booking = BookingService::extend($booking, $validated['new_end_at'], $request->user();
+            $booking = BookingService::extend($booking, $validated['new_end_at'], $request->user());
 
             return response()->json([
                 'data' => new \App\Http\Resources\BookingResource($booking),

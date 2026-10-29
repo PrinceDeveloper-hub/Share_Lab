@@ -37,7 +37,7 @@ export default defineConfig({
   webServer: [
     {
       command: 'php artisan serve --host=127.0.0.1 --port=8000',
-      cwd: path.resolve(here, '../sharelab-api/backend'),
+      cwd: path.resolve(here, '../sharelab-api'),
       url: `${API_URL}/api/resources`,
       reuseExistingServer: true,
       timeout: 90_000,

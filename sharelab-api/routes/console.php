@@ -1,11 +1,17 @@
 <?php
 
-use App\Models\TeamInvitation;
+use App\Services\Booking\WaitlistService;
+use Illuminate\Foundation\Inspiring;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
 
-Schedule::call(function () {
-    TeamInvitation::query()
-        ->whereNotNull('expires_at')
-        ->where('expires_at', '<', now())
-        ->delete();
-})->daily()->description('Delete expired team invitations');
+Artisan::command('inspire', function () {
+    $this->comment(Inspiring::quote());
+})->purpose('Display an inspiring quote');
+
+Artisan::command('sharelab:expire-waitlist-offers', function (WaitlistService $waitlist) {
+    $expired = $waitlist->expireOffers();
+    $this->info("Expired {$expired} waitlist offer(s).");
+})->purpose('Expire 24-hour waitlist offers and promote the next eligible request');
+
+Schedule::command('sharelab:expire-waitlist-offers')->everyMinute()->withoutOverlapping();

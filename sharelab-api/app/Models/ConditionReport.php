@@ -1,0 +1,41 @@
+<?php
+
+namespace App\Models;
+
+use App\Enums\ConditionType;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class ConditionReport extends Model
+{
+    protected $fillable = [
+        'booking_id',
+        'type',
+        'condition',
+        'notes',
+        'checklist',
+        'file_path',
+        'reported_by',
+    ];
+
+    protected $casts = [
+        'type' => ConditionType::class,
+        'condition' => 'string',
+        'checklist' => 'array',
+    ];
+
+    /**
+     * Get the booking this report belongs to.
+     */
+    public function booking(): BelongsTo
+    {
+        return $this->belongsTo(Booking::class, 'booking_id');
+    }
+
+    /**
+     * Get the user who reported this.
+     */
+    public function reporter(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'reported_by');
+    }
+}

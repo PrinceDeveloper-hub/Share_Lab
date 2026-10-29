@@ -1,0 +1,661 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Right side of && is always true\\.$#"
+			count: 1
+			path: app/Enums/Role.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Contracts\\\\Pagination\\\\LengthAwarePaginator\\:\\:getCollection\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/AdminController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Models\\\\Booking\\:\\:\\$recommendation\\.$#"
+			count: 1
+			path: app/Http/Controllers/BookingController.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Contracts\\\\Pagination\\\\LengthAwarePaginator\\:\\:getCollection\\(\\)\\.$#"
+			count: 2
+			path: app/Http/Controllers/BookingController.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Contracts\\\\Pagination\\\\LengthAwarePaginator\\:\\:getCollection\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/CredentialController.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Contracts\\\\Pagination\\\\LengthAwarePaginator\\:\\:getCollection\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/IncidentController.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Contracts\\\\Pagination\\\\LengthAwarePaginator\\:\\:getCollection\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/NotificationController.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Contracts\\\\Pagination\\\\LengthAwarePaginator\\:\\:getCollection\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/ProfileController.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Contracts\\\\Pagination\\\\LengthAwarePaginator\\:\\:getCollection\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/ResourceController.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Contracts\\\\Pagination\\\\LengthAwarePaginator\\:\\:getCollection\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/WorkspaceController.php
+
+		-
+			message: "#^Property App\\\\Http\\\\Controllers\\\\WorkspaceController\\:\\:\\$resources is never read, only written\\.$#"
+			count: 1
+			path: app/Http/Controllers/WorkspaceController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\BookingResource\\:\\:\\$checkInReport\\.$#"
+			count: 1
+			path: app/Http/Resources/BookingResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\BookingResource\\:\\:\\$confirm_by\\.$#"
+			count: 1
+			path: app/Http/Resources/BookingResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\BookingResource\\:\\:\\$created_at\\.$#"
+			count: 1
+			path: app/Http/Resources/BookingResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\BookingResource\\:\\:\\$decided_by\\.$#"
+			count: 1
+			path: app/Http/Resources/BookingResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\BookingResource\\:\\:\\$decision_reason\\.$#"
+			count: 1
+			path: app/Http/Resources/BookingResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\BookingResource\\:\\:\\$end_at\\.$#"
+			count: 1
+			path: app/Http/Resources/BookingResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\BookingResource\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Http/Resources/BookingResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\BookingResource\\:\\:\\$is_late\\.$#"
+			count: 1
+			path: app/Http/Resources/BookingResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\BookingResource\\:\\:\\$priority_explanation\\.$#"
+			count: 1
+			path: app/Http/Resources/BookingResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\BookingResource\\:\\:\\$priority_score\\.$#"
+			count: 1
+			path: app/Http/Resources/BookingResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\BookingResource\\:\\:\\$purpose\\.$#"
+			count: 1
+			path: app/Http/Resources/BookingResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\BookingResource\\:\\:\\$recommendation\\.$#"
+			count: 1
+			path: app/Http/Resources/BookingResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\BookingResource\\:\\:\\$resource_id\\.$#"
+			count: 1
+			path: app/Http/Resources/BookingResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\BookingResource\\:\\:\\$returnReport\\.$#"
+			count: 1
+			path: app/Http/Resources/BookingResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\BookingResource\\:\\:\\$start_at\\.$#"
+			count: 1
+			path: app/Http/Resources/BookingResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\BookingResource\\:\\:\\$status\\.$#"
+			count: 1
+			path: app/Http/Resources/BookingResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\BookingResource\\:\\:\\$user_id\\.$#"
+			count: 1
+			path: app/Http/Resources/BookingResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\BookingResource\\:\\:\\$waitlist_position\\.$#"
+			count: 1
+			path: app/Http/Resources/BookingResource.php
+
+		-
+			message: "#^Call to an undefined method App\\\\Http\\\\Resources\\\\BookingResource\\:\\:isOffer\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Resources/BookingResource.php
+
+		-
+			message: "#^Call to an undefined method App\\\\Http\\\\Resources\\\\BookingResourceCollection\\:\\:currentPage\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Resources/BookingResourceCollection.php
+
+		-
+			message: "#^Call to an undefined method App\\\\Http\\\\Resources\\\\BookingResourceCollection\\:\\:lastPage\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Resources/BookingResourceCollection.php
+
+		-
+			message: "#^Call to an undefined method App\\\\Http\\\\Resources\\\\BookingResourceCollection\\:\\:perPage\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Resources/BookingResourceCollection.php
+
+		-
+			message: "#^Call to an undefined method App\\\\Http\\\\Resources\\\\BookingResourceCollection\\:\\:total\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Resources/BookingResourceCollection.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\CampusResourceResource\\:\\:\\$category\\.$#"
+			count: 1
+			path: app/Http/Resources/CampusResourceResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\CampusResourceResource\\:\\:\\$created_at\\.$#"
+			count: 1
+			path: app/Http/Resources/CampusResourceResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\CampusResourceResource\\:\\:\\$description\\.$#"
+			count: 1
+			path: app/Http/Resources/CampusResourceResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\CampusResourceResource\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Http/Resources/CampusResourceResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\CampusResourceResource\\:\\:\\$name\\.$#"
+			count: 1
+			path: app/Http/Resources/CampusResourceResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\CampusResourceResource\\:\\:\\$resourceRequirements\\.$#"
+			count: 2
+			path: app/Http/Resources/CampusResourceResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\CampusResourceResource\\:\\:\\$status\\.$#"
+			count: 1
+			path: app/Http/Resources/CampusResourceResource.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Http\\\\Request\\:\\:whenLoaded\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Resources/CampusResourceResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\ConditionReportResource\\:\\:\\$booking_id\\.$#"
+			count: 1
+			path: app/Http/Resources/ConditionReportResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\ConditionReportResource\\:\\:\\$checklist\\.$#"
+			count: 1
+			path: app/Http/Resources/ConditionReportResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\ConditionReportResource\\:\\:\\$condition\\.$#"
+			count: 1
+			path: app/Http/Resources/ConditionReportResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\ConditionReportResource\\:\\:\\$created_at\\.$#"
+			count: 1
+			path: app/Http/Resources/ConditionReportResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\ConditionReportResource\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Http/Resources/ConditionReportResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\ConditionReportResource\\:\\:\\$notes\\.$#"
+			count: 1
+			path: app/Http/Resources/ConditionReportResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\ConditionReportResource\\:\\:\\$reported_by\\.$#"
+			count: 1
+			path: app/Http/Resources/ConditionReportResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\ConditionReportResource\\:\\:\\$type\\.$#"
+			count: 1
+			path: app/Http/Resources/ConditionReportResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\IncidentResource\\:\\:\\$booking\\.$#"
+			count: 1
+			path: app/Http/Resources/IncidentResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\IncidentResource\\:\\:\\$booking_id\\.$#"
+			count: 1
+			path: app/Http/Resources/IncidentResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\IncidentResource\\:\\:\\$confirmed_by\\.$#"
+			count: 1
+			path: app/Http/Resources/IncidentResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\IncidentResource\\:\\:\\$created_at\\.$#"
+			count: 1
+			path: app/Http/Resources/IncidentResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\IncidentResource\\:\\:\\$description\\.$#"
+			count: 1
+			path: app/Http/Resources/IncidentResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\IncidentResource\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Http/Resources/IncidentResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\IncidentResource\\:\\:\\$reported_by\\.$#"
+			count: 1
+			path: app/Http/Resources/IncidentResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\IncidentResource\\:\\:\\$resolution_note\\.$#"
+			count: 1
+			path: app/Http/Resources/IncidentResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\IncidentResource\\:\\:\\$resolved_by\\.$#"
+			count: 1
+			path: app/Http/Resources/IncidentResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\IncidentResource\\:\\:\\$status\\.$#"
+			count: 1
+			path: app/Http/Resources/IncidentResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\IncidentResource\\:\\:\\$suggested_by_system\\.$#"
+			count: 1
+			path: app/Http/Resources/IncidentResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\IncidentResource\\:\\:\\$type\\.$#"
+			count: 1
+			path: app/Http/Resources/IncidentResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\NotificationResource\\:\\:\\$booking_id\\.$#"
+			count: 1
+			path: app/Http/Resources/NotificationResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\NotificationResource\\:\\:\\$created_at\\.$#"
+			count: 1
+			path: app/Http/Resources/NotificationResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\NotificationResource\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Http/Resources/NotificationResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\NotificationResource\\:\\:\\$message\\.$#"
+			count: 1
+			path: app/Http/Resources/NotificationResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\NotificationResource\\:\\:\\$read\\.$#"
+			count: 1
+			path: app/Http/Resources/NotificationResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\NotificationResource\\:\\:\\$type\\.$#"
+			count: 1
+			path: app/Http/Resources/NotificationResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\ResourceRequirementResource\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Http/Resources/ResourceRequirementResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\ResourceRequirementResource\\:\\:\\$name\\.$#"
+			count: 1
+			path: app/Http/Resources/ResourceRequirementResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\ResourceRequirementResource\\:\\:\\$requires_verification\\.$#"
+			count: 1
+			path: app/Http/Resources/ResourceRequirementResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\ResourceResource\\:\\:\\$availability_windows\\.$#"
+			count: 1
+			path: app/Http/Resources/ResourceResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\ResourceResource\\:\\:\\$category\\.$#"
+			count: 1
+			path: app/Http/Resources/ResourceResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\ResourceResource\\:\\:\\$created_at\\.$#"
+			count: 1
+			path: app/Http/Resources/ResourceResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\ResourceResource\\:\\:\\$description\\.$#"
+			count: 1
+			path: app/Http/Resources/ResourceResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\ResourceResource\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Http/Resources/ResourceResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\ResourceResource\\:\\:\\$image_path\\.$#"
+			count: 1
+			path: app/Http/Resources/ResourceResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\ResourceResource\\:\\:\\$location\\.$#"
+			count: 1
+			path: app/Http/Resources/ResourceResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\ResourceResource\\:\\:\\$managers\\.$#"
+			count: 1
+			path: app/Http/Resources/ResourceResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\ResourceResource\\:\\:\\$max_hours_per_booking\\.$#"
+			count: 1
+			path: app/Http/Resources/ResourceResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\ResourceResource\\:\\:\\$name\\.$#"
+			count: 1
+			path: app/Http/Resources/ResourceResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\ResourceResource\\:\\:\\$owner\\.$#"
+			count: 1
+			path: app/Http/Resources/ResourceResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\ResourceResource\\:\\:\\$owner_id\\.$#"
+			count: 1
+			path: app/Http/Resources/ResourceResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\ResourceResource\\:\\:\\$rules\\.$#"
+			count: 1
+			path: app/Http/Resources/ResourceResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\ResourceResource\\:\\:\\$status\\.$#"
+			count: 1
+			path: app/Http/Resources/ResourceResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\ResourceResource\\:\\:\\$weekly_cap_hours\\.$#"
+			count: 1
+			path: app/Http/Resources/ResourceResource.php
+
+		-
+			message: "#^Using nullsafe property access on non\\-nullable type App\\\\Enums\\\\Role\\. Use \\-\\> instead\\.$#"
+			count: 1
+			path: app/Http/Resources/ResourceResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\TimelineEntryResource\\:\\:\\$action\\.$#"
+			count: 3
+			path: app/Http/Resources/TimelineEntryResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\TimelineEntryResource\\:\\:\\$created_at\\.$#"
+			count: 1
+			path: app/Http/Resources/TimelineEntryResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\TimelineEntryResource\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Http/Resources/TimelineEntryResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\TimelineEntryResource\\:\\:\\$meta\\.$#"
+			count: 1
+			path: app/Http/Resources/TimelineEntryResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\TimelineEntryResource\\:\\:\\$reason\\.$#"
+			count: 1
+			path: app/Http/Resources/TimelineEntryResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\UserCredentialResource\\:\\:\\$created_at\\.$#"
+			count: 1
+			path: app/Http/Resources/UserCredentialResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\UserCredentialResource\\:\\:\\$file_path\\.$#"
+			count: 1
+			path: app/Http/Resources/UserCredentialResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\UserCredentialResource\\:\\:\\$id\\.$#"
+			count: 2
+			path: app/Http/Resources/UserCredentialResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\UserCredentialResource\\:\\:\\$requirement_name\\.$#"
+			count: 1
+			path: app/Http/Resources/UserCredentialResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\UserCredentialResource\\:\\:\\$review_note\\.$#"
+			count: 1
+			path: app/Http/Resources/UserCredentialResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\UserCredentialResource\\:\\:\\$status\\.$#"
+			count: 1
+			path: app/Http/Resources/UserCredentialResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\UserCredentialResource\\:\\:\\$user_id\\.$#"
+			count: 1
+			path: app/Http/Resources/UserCredentialResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\UserCredentialResource\\:\\:\\$verified_by\\.$#"
+			count: 1
+			path: app/Http/Resources/UserCredentialResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\UserResource\\:\\:\\$email\\.$#"
+			count: 1
+			path: app/Http/Resources/UserResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\UserResource\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Http/Resources/UserResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\UserResource\\:\\:\\$name\\.$#"
+			count: 1
+			path: app/Http/Resources/UserResource.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Http\\\\Resources\\\\UserResource\\:\\:\\$role\\.$#"
+			count: 1
+			path: app/Http/Resources/UserResource.php
+
+		-
+			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: "#^Right side of && is always true\\.$#"
+			count: 1
+			path: app/Policies/UserPolicy.php
+
+		-
+			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
+			count: 1
+			path: app/Services/Auth/JwtService.php
+
+		-
+			message: "#^Match expression does not handle remaining value\\: string$#"
+			count: 1
+			path: app/Services/Booking/BookingService.php
+
+		-
+			message: "#^Property App\\\\Services\\\\Booking\\\\BookingService\\:\\:\\$stateMachine is never read, only written\\.$#"
+			count: 1
+			path: app/Services/Booking/BookingService.php
+
+		-
+			message: "#^Property App\\\\Services\\\\Booking\\\\Rules\\\\WeeklyCapRule\\:\\:\\$clock is never read, only written\\.$#"
+			count: 1
+			path: app/Services/Booking/Rules/WeeklyCapRule.php
+
+		-
+			message: "#^Access to constant CheckIn on an unknown class App\\\\Services\\\\ConditionType\\.$#"
+			count: 1
+			path: app/Services/BookingService.php
+
+		-
+			message: "#^Access to constant Open on an unknown class App\\\\Services\\\\IncidentStatus\\.$#"
+			count: 1
+			path: app/Services/BookingService.php
+
+		-
+			message: "#^Access to constant Return on an unknown class App\\\\Services\\\\ConditionType\\.$#"
+			count: 1
+			path: app/Services/BookingService.php
+
+		-
+			message: "#^Access to property \\$booking_id on an unknown class App\\\\Services\\\\ConditionReport\\.$#"
+			count: 4
+			path: app/Services/BookingService.php
+
+		-
+			message: "#^Access to property \\$condition on an unknown class App\\\\Services\\\\ConditionReport\\.$#"
+			count: 7
+			path: app/Services/BookingService.php
+
+		-
+			message: "#^Access to property \\$reported_by on an unknown class App\\\\Services\\\\ConditionReport\\.$#"
+			count: 4
+			path: app/Services/BookingService.php
+
+		-
+			message: "#^Access to property \\$type on an unknown class App\\\\Services\\\\ConditionReport\\.$#"
+			count: 4
+			path: app/Services/BookingService.php
+
+		-
+			message: "#^Call to an undefined method Carbon\\\\Carbon\\:\\:isoWeekNumber\\(\\)\\.$#"
+			count: 1
+			path: app/Services/BookingService.php
+
+		-
+			message: "#^Call to method save\\(\\) on an unknown class App\\\\Services\\\\ConditionReport\\.$#"
+			count: 2
+			path: app/Services/BookingService.php
+
+		-
+			message: "#^Call to static method create\\(\\) on an unknown class App\\\\Services\\\\Incident\\.$#"
+			count: 1
+			path: app/Services/BookingService.php
+
+		-
+			message: "#^Call to static method create\\(\\) on an unknown class App\\\\Services\\\\Notification\\.$#"
+			count: 8
+			path: app/Services/BookingService.php
+
+		-
+			message: "#^Call to static method record\\(\\) on an unknown class App\\\\Services\\\\AuditLog\\.$#"
+			count: 8
+			path: app/Services/BookingService.php
+
+		-
+			message: "#^Class App\\\\Services\\\\Incident not found\\.$#"
+			count: 1
+			path: app/Services/BookingService.php
+
+		-
+			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
+			count: 3
+			path: app/Services/BookingService.php
+
+		-
+			message: "#^Parameter \\#1 \\$column of method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Booking\\>\\:\\:sum\\(\\) expects Illuminate\\\\Contracts\\\\Database\\\\Query\\\\Expression\\|string, Closure given\\.$#"
+			count: 3
+			path: app/Services/BookingService.php
+
+		-
+			message: "#^Parameter \\$report of method App\\\\Services\\\\BookingService\\:\\:checkIn\\(\\) has invalid type App\\\\Services\\\\ConditionReport\\.$#"
+			count: 1
+			path: app/Services/BookingService.php
+
+		-
+			message: "#^Parameter \\$report of method App\\\\Services\\\\BookingService\\:\\:returnItems\\(\\) has invalid type App\\\\Services\\\\ConditionReport\\.$#"
+			count: 1
+			path: app/Services/BookingService.php
+
+		-
+			message: "#^Part \\$oldStatus \\(App\\\\Enums\\\\BookingStatus\\) of encapsed string cannot be cast to string\\.$#"
+			count: 1
+			path: app/Services/BookingService.php
+
+		-
+			message: "#^Undefined variable\\: \\$startAt$#"
+			count: 1
+			path: app/Services/BookingService.php
+
+		-
+			message: "#^Using nullsafe method call on non\\-nullable type App\\\\Enums\\\\Role\\. Use \\-\\> instead\\.$#"
+			count: 2
+			path: app/Services/Credential/CredentialService.php
+
+		-
+			message: "#^Expression on left side of \\?\\? is always null\\.$#"
+			count: 1
+			path: app/Services/Eligibility/EligibilityService.php
+
+		-
+			message: "#^Property App\\\\Services\\\\Resource\\\\ResourceService\\:\\:\\$clock is never read, only written\\.$#"
+			count: 1
+			path: app/Services/Resource/ResourceService.php

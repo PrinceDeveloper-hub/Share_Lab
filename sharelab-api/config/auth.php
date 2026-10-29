@@ -16,9 +16,23 @@ return [
     */
 
     'defaults' => [
-        'guard' => env('AUTH_GUARD', 'web'),
+        'guard' => env('AUTH_GUARD', 'api'),
         'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Login throttling
+    |--------------------------------------------------------------------------
+    |
+    | "attempts,minutes" used by the login and registration routes. The default
+    | stays strict in production; automated end-to-end suites can raise it for a
+    | local or CI database without weakening the shipped configuration.
+    |
+    */
+
+    'login_throttle' => env('LOGIN_THROTTLE', '10,1'),
+    'register_throttle' => env('REGISTER_THROTTLE', '10,1'),
 
     /*
     |--------------------------------------------------------------------------
@@ -40,6 +54,11 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
+            'provider' => 'users',
+        ],
+
+        'api' => [
+            'driver' => 'jwt',
             'provider' => 'users',
         ],
     ],
@@ -106,7 +125,7 @@ return [
     | Password Confirmation Timeout
     |--------------------------------------------------------------------------
     |
-    | Here you may define the number of seconds before a password confirmation
+    | Here you may define the amount of seconds before a password confirmation
     | window expires and users are asked to re-enter their password via the
     | confirmation screen. By default, the timeout lasts for three hours.
     |

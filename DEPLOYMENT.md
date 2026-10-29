@@ -164,6 +164,55 @@ followed by the absent paths, rather than letting it surface as unresolved
 generated output out of `vp check` / `vp fmt`, since the `fmt.ignorePatterns`
 block does not match those directories.
 
+### Deploying the API for a Vercel-hosted SPA
+
+Once the SPA lives on Vercel and the API does not, every `/api/...` request
+from the SPA hits Vercel, which answers with its own 404. Reachability check:
+
+| Request | API is live when | API is missing when |
+| --- | --- | --- |
+| `GET https://<api-host>/up` | `200` | `404` or an HTML page |
+| `GET https://<api-host>/api/resources` | JSON `401` envelope (no cookie yet) | `404` or an HTML page |
+
+The API image (`sharelab-api/backend/Dockerfile`) runs PHP-FPM on port 9000,
+so it needs a web server in front of it — either the nginx service from
+`docker-compose.yml` or your own reverse proxy. The compose stack already
+routes `/api` and `/up` to FPM, so a VPS deployment exposes the API at
+`https://<host>/api` with nothing else to configure:
+
+```bash
+docker compose up -d --build
+curl -fsS https://<host>/up
+```
+
+API environment (container or platform variables — never committed):
+
+| Variable | Value |
+| --- | --- |
+| `APP_NAME` | `ShareLab` |
+| `APP_ENV` | `production` |
+| `APP_DEBUG` | `false` |
+| `APP_KEY` | `php artisan key:generate --show` |
+| `APP_URL` | `https://<api-host>` |
+| `DB_CONNECTION` | `mysql` |
+| `DB_HOST` / `DB_PORT` | database host / `3306` |
+| `DB_DATABASE` / `DB_USERNAME` / `DB_PASSWORD` | database credentials |
+| `JWT_SECRET` | `openssl rand -base64 48` |
+| `CORS_ALLOWED_ORIGINS` | the SPA origin, e.g. `https://share-lab.vercel.app` |
+| `RUN_MIGRATIONS` | `1` (the entrypoint runs `php artisan migrate --force`) |
+| `JWT_COOKIE_SAME_SITE` | `none` |
+| `JWT_COOKIE_SECURE` | `true` |
+
+`CORS_ALLOWED_ORIGINS` takes a comma-separated list of exact origins: scheme
+plus host, no trailing slash, no wildcard (wildcards are incompatible with
+`supports_credentials`, which the cookies need).
+
+Cross-site cookies: both sides must be HTTPS, and `JWT_COOKIE_SAME_SITE=none`
+requires `JWT_COOKIE_SECURE=true`, otherwise the browser drops the cookie and
+every request after a successful login returns 401. Keep the `lax` default for
+same-origin deployments. Uploaded files live in `storage/app`, so mount a
+persistent volume there or uploads disappear on redeploy.
+
 ## 7. Local development
 
 ```bash

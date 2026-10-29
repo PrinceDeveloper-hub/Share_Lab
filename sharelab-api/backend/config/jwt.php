@@ -43,4 +43,21 @@ return [
 
     'refresh_cookie_path' => '/api',
 
+    /*
+    |--------------------------------------------------------------------------
+    | Cookie flags
+    |--------------------------------------------------------------------------
+    |
+    | A same-origin deployment (nginx serving the SPA and proxying /api) works
+    | with the "lax" default. When the SPA is hosted on a different origin, both
+    | cookies must be SameSite=None and Secure, which browsers only accept over
+    | HTTPS. Leave cookie_secure empty to follow the (proxy-aware) request
+    | scheme, or set JWT_COOKIE_SECURE=true to force it.
+    |
+    */
+
+    'cookie_same_site' => env('JWT_COOKIE_SAME_SITE', 'lax'),
+
+    'cookie_secure' => env('JWT_COOKIE_SECURE'),
+
 ];

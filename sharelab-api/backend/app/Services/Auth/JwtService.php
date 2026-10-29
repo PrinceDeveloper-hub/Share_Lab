@@ -119,7 +119,7 @@ class JwtService
     }
 
     /**
-     * @param array<string, mixed> $payload
+     * @param  array<string, mixed>  $payload
      */
     private function encode(array $payload): string
     {
@@ -161,16 +161,42 @@ class JwtService
             time() + ($minutes * 60),
             $path,
             null,
-            request()->isSecure(),
+            $this->secure(),
             true,
             false,
-            'lax',
+            (string) config('jwt.cookie_same_site', 'lax'),
         );
     }
 
     private function expiredCookie(string $name, string $path): Cookie
     {
-        return new Cookie($name, '', time() - 3600, $path, null, request()->isSecure(), true, false, 'lax');
+        return new Cookie(
+            $name,
+            '',
+            time() - 3600,
+            $path,
+            null,
+            $this->secure(),
+            true,
+            false,
+            (string) config('jwt.cookie_same_site', 'lax'),
+        );
+    }
+
+    /**
+     * Browsers reject a SameSite=None cookie that is not Secure, so an explicit
+     * JWT_COOKIE_SECURE wins and otherwise the (trusted-proxy aware) request
+     * scheme decides.
+     */
+    private function secure(): bool
+    {
+        $configured = config('jwt.cookie_secure');
+
+        if ($configured === null || $configured === '') {
+            return request()->isSecure();
+        }
+
+        return filter_var($configured, FILTER_VALIDATE_BOOLEAN);
     }
 
     private function base64UrlEncode(string $value): string

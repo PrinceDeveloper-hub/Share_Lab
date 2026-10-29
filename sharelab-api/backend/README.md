@@ -52,6 +52,7 @@ php artisan migrate --seed
 ```
 
 This will create:
+
 - 5 accounts: `user1@sharelab.test`, `user2@sharelab.test`, `manager@sharelab.test`, `owner@sharelab.test`, `admin@sharelab.test`
 - 6 resources with requirements, caps and the manager assigned to each
 - Sample credentials across both student accounts (verified 3D Printer Training, pending Laser Cutter Certification)
@@ -88,9 +89,9 @@ API will be available at `http://127.0.0.1:8000/api`
 ### Credentials
 
 - `POST /api/credentials` - Submit credential (multipart: requirement_name + file)
-  - Validate mimes: pdf, jpg, png, webp
-  - Max size: 5 MB
-  - Store on private disk, return safe URLs
+    - Validate mimes: pdf, jpg, png, webp
+    - Max size: 5 MB
+    - Store on private disk, return safe URLs
 - `GET /api/credentials` - List credentials (own; manager sees pending for their resources; admin sees all)
 - `PATCH /api/credentials/{id}` - Verify or reject credential (body: decision verify|reject, note)
 
@@ -144,12 +145,12 @@ Paginated lists add `meta`:
 
 ```json
 {
-  "meta": {
-    "page": 1,
-    "per_page": 10,
-    "total": 50,
-    "last_page": 5
-  }
+    "meta": {
+        "page": 1,
+        "per_page": 10,
+        "total": 50,
+        "last_page": 5
+    }
 }
 ```
 
@@ -217,6 +218,7 @@ php artisan pest
 ```
 
 Tests cover:
+
 - Unit tests for each BookingService rule: eligibility messages, cap across ISO week boundaries, max duration, overlap cases (touching, nested, partial, identical), UTC handling, priority ordering and tie-break, promotion order and offer expiry
 - Feature tests: policy denials per role, decision without a reason returns 422, audit log cannot be updated or deleted, user cannot read another user's booking, late-return flag and system-suggested incidents
 - Concurrency: two simultaneous requests for the same slot result in exactly one approvable booking and one waitlisted

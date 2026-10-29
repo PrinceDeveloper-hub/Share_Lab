@@ -114,8 +114,9 @@ Configure the Vercel project exactly like this:
 `sharelab/vercel.json` already pins the install and build commands plus the SPA
 fallback, but Vercel only reads it from the **Root Directory**. If the Root
 Directory is left at the repository root or at `sharelab-api`, the build runs
-the Laravel starter kit instead, which fails with
-`php: command not found` while generating Wayfinder types.
+the Laravel starter kit instead of the SPA. That build now tolerates the
+missing PHP binary (see [Wayfinder types](#wayfinder-types-sharelab-api)), but
+the artifact you want is still the SPA in `sharelab/`.
 
 Notes:
 
@@ -128,6 +129,40 @@ Notes:
 - Vercel hosts only the SPA. The Laravel API still needs its own host (Docker
   Compose above, or any PHP host) and `CORS_ALLOWED_ORIGINS` set to the Vercel
   origin.
+
+### Wayfinder types (`sharelab-api`)
+
+`resources/js/actions`, `resources/js/routes` and `resources/js/wayfinder` in
+`sharelab-api` are generated from PHP routes and controllers by
+`@laravel/vite-plugin-wayfinder`, which shells out to
+`php artisan wayfinder:generate --with-form`. Hosted build images such as
+Vercel's have no PHP, so `sharelab-api/vite.config.ts` probes for a `php`
+binary (and skips immediately when `VERCEL` is set) and leaves the plugin out
+instead of failing the build. The build then compiles the committed generated
+files, which is why they are tracked in Git and no longer listed in
+`sharelab-api/.gitignore`:
+
+| Path | Contents |
+| --- | --- |
+| `resources/js/actions/**` | one module per controller action |
+| `resources/js/routes/**` | one module per named route |
+| `resources/js/wayfinder/index.ts` | shared URL and query helpers |
+
+Regenerate and commit them whenever Laravel routes or controller signatures
+change:
+
+```bash
+cd sharelab-api
+php artisan wayfinder:generate --with-form
+git add resources/js/actions resources/js/routes resources/js/wayfinder
+```
+
+If a PHP-less build starts without those files, `vite.config.ts` stops it with
+`Wayfinder types are missing and php is not available to generate them:`
+followed by the absent paths, rather than letting it surface as unresolved
+`@/actions` and `@/routes` imports. `sharelab-api/.prettierignore` keeps the
+generated output out of `vp check` / `vp fmt`, since the `fmt.ignorePatterns`
+block does not match those directories.
 
 ## 7. Local development
 

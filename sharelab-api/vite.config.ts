@@ -24,9 +24,16 @@ export default defineConfig({
             presets: [reactCompilerPreset()],
         }),
         tailwindcss(),
-        wayfinder({
-            formVariants: true,
-        }),
+        // Wayfinder shells out to `php artisan wayfinder:generate --with-form`.
+        // Vercel's build image has no PHP, so the generated files under
+        // resources/js/{actions,routes,wayfinder} are committed to Git instead.
+        ...(process.env.VERCEL
+            ? []
+            : [
+                  wayfinder({
+                      formVariants: true,
+                  }),
+              ]),
     ]),
     server: {
         watch: {

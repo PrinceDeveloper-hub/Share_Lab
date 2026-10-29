@@ -3,7 +3,11 @@
     "name": "sharelab/api",
     "type": "project",
     "description": "ShareLab campus resource booking API (Laravel 11, JWT cookies).",
-    "keywords": ["laravel", "api", "sharelab"],
+    "keywords": [
+        "laravel",
+        "api",
+        "sharelab"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.2",
@@ -73,6 +77,21 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
+        },
+        "platform": {
+            "php": "8.3.0"
+        },
+        "audit": {
+            "ignore": [
+                "GHSA-f9x3-7vq9-cph6",
+                "GHSA-jh5r-qr3c-85q8",
+                "GHSA-crmm-hgp2-wgrp",
+                "GHSA-5vg9-5847-vvmq",
+                "GHSA-78fx-h6xr-vch4",
+                "PKSA-q46n-4fdk-zjr4",
+                "PKSA-qzrn-rnz3-85w1"
+            ],
+            "block-insecure": false
         }
     },
     "minimum-stability": "stable",

@@ -1,8 +1,10 @@
-# Complete nginx main config for the standalone API image. Rendered onto
-# /etc/nginx/nginx.conf at container start by envsubst, which replaces the PORT
-# placeholder below and leaves nginx variables ($uri, $query_string, ...) alone.
-# Shipping the whole file keeps the image independent of the distro's include
-# layout (Alpine uses http.d, Debian uses conf.d).
+# Complete nginx main configuration for the API container.
+#
+# Only ${PORT} is substituted (envsubst is constrained to that variable in the
+# container command), so nginx variables such as $uri survive untouched.
+# The process runs as an unprivileged user: the pid file and every temporary
+# path live in /tmp and the listening port is unprivileged.
+
 worker_processes auto;
 pid /tmp/nginx.pid;
 error_log /dev/stderr warn;
@@ -17,12 +19,26 @@ http {
 
     access_log /dev/stdout;
 
-    sendfile on;
-    keepalive_timeout 65;
+    # Temporary paths must be writable by the unprivileged user.
+    client_body_temp_path /tmp/client_temp;
+    proxy_temp_path /tmp/proxy_temp;
+    fastcgi_temp_path /tmp/fastcgi_temp;
+    uwsgi_temp_path /tmp/uwsgi_temp;
+    scgi_temp_path /tmp/scgi_temp;
 
-    # Credential uploads are capped at 5 MB by the API; leave headroom for
-    # multipart overhead.
-    client_max_body_size 12m;
+    sendfile on;
+    tcp_nopush on;
+    keepalive_timeout 65;
+    server_tokens off;
+
+    # Application uploads are capped at 4 MB (MAX_UPLOAD_KB); leave headroom for
+    # multipart encoding so the API, not nginx, returns the 422.
+    client_max_body_size 6m;
+    client_body_buffer_size 128k;
+
+    gzip on;
+    gzip_types application/json text/plain;
+    gzip_min_length 512;
 
     server {
         listen ${PORT};
@@ -31,19 +47,28 @@ http {
         root /var/www/html/public;
         index index.php;
 
+        charset utf-8;
+
+        # Signed, authorized credential downloads stream through PHP.
         location / {
             try_files $uri $uri/ /index.php?$query_string;
         }
 
+        location = /favicon.ico { access_log off; log_not_found off; }
+        location = /robots.txt  { access_log off; log_not_found off; }
+
         location ~ \.php$ {
-            include fastcgi_params;
+            include /etc/nginx/fastcgi_params;
+            fastcgi_pass 127.0.0.1:9000;
+            fastcgi_index index.php;
             fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
             fastcgi_param SCRIPT_NAME $fastcgi_script_name;
-            fastcgi_param HTTPS $https if_not_empty;
-            fastcgi_pass 127.0.0.1:9000;
             fastcgi_read_timeout 60s;
+            fastcgi_buffers 16 16k;
+            fastcgi_buffer_size 32k;
         }
 
+        # Dotfiles (.env, .git) must never be served.
         location ~ /\.(?!well-known).* {
             deny all;
         }

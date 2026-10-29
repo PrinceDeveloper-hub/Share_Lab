@@ -1,13 +1,30 @@
-vendor
-node_modules
+# Keep the build context small and free of secrets.
 .git
+.github
 .env
 .env.*
+.env.example
+
+vendor
+node_modules
+
+# Runtime files are created by the entrypoint, not shipped.
+storage/app/private/*
+storage/app/public/*
 storage/logs/*
 storage/framework/cache/*
 storage/framework/sessions/*
 storage/framework/views/*
 bootstrap/cache/*
+.phpunit.result.cache
+
+# Development and CI tooling.
 tests
 phpunit.xml
+phpstan.neon
+phpstan-baseline.neon
+pint.json
+compose*.yml
+docker-compose*.yml
+*.md
 *.log

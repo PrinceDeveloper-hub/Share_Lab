@@ -94,6 +94,33 @@ const isAuthEndpoint = (url: string) =>
 
 const defaultBaseURL = import.meta.env.VITE_API_BASE_URL || '/api'
 
+/**
+ * The API answers with `{ data, message, errors, meta }`. Anything else (an
+ * HTML page from a misrouted request, an empty body, a proxy error) must fail
+ * loudly here instead of reaching components as `undefined` and crashing the
+ * render tree.
+ */
+const unwrapEnvelope = <T>(
+  body: unknown,
+  url: string | undefined,
+): ApiResponse<T> => {
+  if (typeof body === 'object' && body !== null && 'data' in body) {
+    return body as ApiResponse<T>
+  }
+
+  const kind = Array.isArray(body)
+    ? 'an array'
+    : body === null
+      ? 'an empty body'
+      : typeof body === 'string'
+        ? 'a non-JSON body'
+        : `a ${typeof body}`
+
+  throw new Error(
+    `Unexpected API response from ${url ?? 'the API'}: expected a JSON envelope but received ${kind}. Check VITE_API_BASE_URL and that the API is reachable.`,
+  )
+}
+
 const baseConfig = {
   baseURL: defaultBaseURL,
   withCredentials: true,
@@ -151,9 +178,11 @@ export class ApiClient {
     url: string,
     config?: AxiosRequestConfig,
   ): Promise<ApiResponse<T>> {
-    const response: AxiosResponse<ApiResponse<T>> =
-      await this.axiosInstance.get(url, config)
-    return response.data
+    const response: AxiosResponse<unknown> = await this.axiosInstance.get(
+      url,
+      config,
+    )
+    return unwrapEnvelope<T>(response.data, url)
   }
 
   async post<TBody = unknown, TResponse = unknown>(
@@ -161,9 +190,12 @@ export class ApiClient {
     data?: TBody,
     config?: AxiosRequestConfig,
   ): Promise<ApiResponse<TResponse>> {
-    const response: AxiosResponse<ApiResponse<TResponse>> =
-      await this.axiosInstance.post(url, data, config)
-    return response.data
+    const response: AxiosResponse<unknown> = await this.axiosInstance.post(
+      url,
+      data,
+      config,
+    )
+    return unwrapEnvelope<TResponse>(response.data, url)
   }
 
   async postForm<TResponse = unknown>(
@@ -187,9 +219,12 @@ export class ApiClient {
     data?: TBody,
     config?: AxiosRequestConfig,
   ): Promise<ApiResponse<TResponse>> {
-    const response: AxiosResponse<ApiResponse<TResponse>> =
-      await this.axiosInstance.patch(url, data, config)
-    return response.data
+    const response: AxiosResponse<unknown> = await this.axiosInstance.patch(
+      url,
+      data,
+      config,
+    )
+    return unwrapEnvelope<TResponse>(response.data, url)
   }
 
   async patchForm<TResponse = unknown>(
@@ -206,16 +241,16 @@ export class ApiClient {
           'X-HTTP-Method-Override': 'PATCH',
         },
       })
-    return response.data
+    return unwrapEnvelope<TResponse>(response.data, url)
   }
 
   async delete<TResponse = unknown>(
     url: string,
     config?: AxiosRequestConfig,
   ): Promise<ApiResponse<TResponse>> {
-    const response: AxiosResponse<ApiResponse<TResponse>> =
+    const response: AxiosResponse<unknown> =
       await this.axiosInstance.delete(url, config)
-    return response.data
+    return unwrapEnvelope<TResponse>(response.data, url)
   }
 
   /**

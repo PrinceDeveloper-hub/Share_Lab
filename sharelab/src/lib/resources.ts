@@ -116,9 +116,67 @@ export const fetchResources = async (
   return api.get<Resource[]>('/resources', { params: compactParams(filters) })
 }
 
+<<<<<<< HEAD
 export const fetchResource = async (
   resourceId: number,
 ): Promise<ResourceDetailResponse> => {
+=======
+<<<<<<< HEAD
+export const fetchResource = async (
+  resourceId: number,
+): Promise<ResourceDetailResponse> => {
+  return api.get<Resource>(`/resources/${resourceId}`)
+}
+
+export interface ResourceCreatePayload {
+  name: string
+  category: string
+  location: string
+  description?: string
+  rules?: string
+  max_hours_per_booking: number
+  weekly_cap_hours: number
+  status?: 'active' | 'inactive'
+}
+
+export const createResource = async (
+  payload: ResourceCreatePayload,
+): Promise<Resource> => {
+  const response = await api.post<ResourceCreatePayload, Resource>(
+    '/resources',
+    payload,
+  )
+  return response.data
+}
+
+const categoryImages: { match: RegExp; src: string }[] = [
+  {
+    match: /3d|print|fab/i,
+    src: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=1200&q=80',
+  },
+  {
+    match: /electronic|test|solder|circuit/i,
+    src: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80',
+  },
+  {
+    match: /photo|media|studio|camera/i,
+    src: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1200&q=80',
+  },
+  {
+    match: /study|meeting|room|space/i,
+    src: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80',
+  },
+  {
+    match: /fabrication|laser|cnc|workshop/i,
+    src: 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1200&q=80',
+  },
+  {
+    match: /bio|chem|laboratory|science/i,
+    src: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=1200&q=80',
+  },
+=======
+export const fetchResource = async (resourceId: number): Promise<ResourceDetailResponse> => {
+>>>>>>> fcfa9474b26cbba7edc4b7c28053baa745d93073
   return api.get<ResourceDetail>(`/resources/${resourceId}`)
 }
 
@@ -141,6 +199,7 @@ export const fetchResourceEligibility = async (
 }
 
 const localResourceImages: { match: RegExp; src: string }[] = [
+<<<<<<< HEAD
   {
     match: /3d|print|resin|fdm|prototype/i,
     src: '/images/resources/3d-printer.webp',
@@ -165,6 +224,15 @@ const localResourceImages: { match: RegExp; src: string }[] = [
     match: /laser|fabrication|cnc|workshop|maker/i,
     src: '/images/resources/laser-cutter.webp',
   },
+=======
+  { match: /3d|print/i, src: '/images/resources/3d-printer.webp' },
+  { match: /oscillo|electronic|test|probe/i, src: '/images/resources/oscilloscope.webp' },
+  { match: /solder|circuit/i, src: '/images/resources/soldering-station.webp' },
+  { match: /camera|photo|media|studio/i, src: '/images/resources/camera-kit.webp' },
+  { match: /meeting|room|study|space/i, src: '/images/resources/meeting-room.webp' },
+  { match: /laser|fabrication|cnc|workshop/i, src: '/images/resources/laser-cutter.webp' },
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
+>>>>>>> fcfa9474b26cbba7edc4b7c28053baa745d93073
 ]
 
 /** Category-level fallback keeps every seeded listing paired with a fitting image. */
@@ -186,10 +254,25 @@ export const getResourceImage = (
 ) => {
   if (resource.image_url) return resource.image_url
 
+<<<<<<< HEAD
+export const getResourceImage = (
+  resource: Pick<Resource, 'name' | 'category'>,
+) => {
   const source = `${resource.category} ${resource.name}`
+  return (
+    categoryImages.find((entry) => entry.match.test(source))?.src ??
+    fallbackImage
+  )
+=======
+  const source = `${resource.category} ${resource.name}`
+<<<<<<< HEAD
   return (
     localResourceImages.find((entry) => entry.match.test(source))?.src ??
     categoryImages[resource.category] ??
     fallbackImage
   )
+=======
+  return localResourceImages.find((entry) => entry.match.test(source))?.src ?? fallbackImage
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
+>>>>>>> fcfa9474b26cbba7edc4b7c28053baa745d93073
 }

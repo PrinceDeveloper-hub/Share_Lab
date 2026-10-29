@@ -1,14 +1,23 @@
 /*
+<<<<<<< HEAD
+ * ShareLab design tokens.
+ *
+ * One warm, editorial palette: ivory paper, espresso ink, bronze details.
+ * Components should consume these variables (or the Tailwind aliases in
+ * @theme) rather than writing raw hex values.
+=======
  * ShareLab design tokens — warm editorial campus system.
  *
  * Palette: ivory paper, warm-white surfaces, espresso ink, bronze detail.
  * Legacy token names (cream, sand, taupe, deep-brown) are kept so existing
  * utilities keep working after the palette refresh.
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
  */
 
 :root {
   color-scheme: light;
 
+<<<<<<< HEAD
   /* Core palette — warm editorial campus system */
   --ivory: #f6f0e7; /* page background */
   --cream: #fffbf5; /* cards, elevated surfaces */
@@ -16,6 +25,53 @@
   --surface-sunken: #f1e8dc;
   --soft-beige: #efe4d5; /* secondary background */
   --sand: #e5d8c9; /* borders */
+=======
+  /* Core palette */
+<<<<<<< HEAD
+  --ivory: #f8f5ef;
+  --cream: #fffcf7;
+  --surface: #fffcf7;
+<<<<<<< HEAD
+  --surface-raised: #ffffff;
+  --soft-beige: #efe6d9;
+  --sand: #e4d9cb;
+  --taupe: #a78260;
+  --bronze: #a78260;
+  --bronze-deep: #8d6a4b;
+  --espresso: #513522;
+  --deep-brown: #2b1d14;
+  --charcoal: #292521;
+  --muted: #71685f;
+
+  /* Functional colors */
+  --success: #3f6b4f;
+  --success-soft: #eaf1eb;
+  --warning: #9c6b24;
+  --warning-soft: #f8f0e1;
+  --error: #a4453b;
+  --error-soft: #f8eae7;
+  --info: #3c5a74;
+  --info-soft: #eaf0f5;
+=======
+  --soft-beige: #e9d9c6;
+  --sand: #d6bda4;
+  --taupe: #a78b73;
+  --espresso: #4b2f1f;
+  --deep-brown: #302219;
+  --charcoal: #282522;
+  --muted: #6f655b;
+  --success: #387653;
+  --warning: #995e20;
+  --error: #b44d42;
+>>>>>>> b141025564dd3364106212a52ca5484ec458a43d
+=======
+  --ivory: #f8f5ef; /* page background */
+  --cream: #fffcf7; /* cards, elevated surfaces */
+  --surface: #fffcf7;
+  --surface-sunken: #f2ece1;
+  --soft-beige: #efe6d9; /* secondary background */
+  --sand: #e4d9cb; /* borders */
+>>>>>>> fcfa9474b26cbba7edc4b7c28053baa745d93073
   --taupe: #a78260; /* muted bronze */
   --bronze: #b78b62;
   --bronze-deep: #8f6a49;
@@ -28,6 +84,7 @@
   --success: #356b4c;
   --warning: #9a6b22;
   --error: #a9483c;
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
 
   /* Typography */
   --font-sans:
@@ -36,7 +93,17 @@
   --font-display:
     'Manrope', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
     sans-serif;
+<<<<<<< HEAD
+  --font-mono:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas,
+    'Liberation Mono', monospace;
+
+=======
   --font-editorial:
+<<<<<<< HEAD
+    'Fraunces', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+>>>>>>> b141025564dd3364106212a52ca5484ec458a43d
+=======
     'Manrope', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
     sans-serif;
   --font-mono:
@@ -44,6 +111,7 @@
     'Liberation Mono', monospace;
 
   --text-2xs: 0.6875rem;
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
   --text-base: 1rem;
@@ -56,6 +124,46 @@
   --text-6xl: 3.75rem;
 
   /* Layout */
+<<<<<<< HEAD
+  --container: 82rem;
+  --container-narrow: 46rem;
+  --container-wide: 92rem;
+  --header-height: 4.25rem;
+  --sidebar-width: 16.5rem;
+  --section-y: clamp(3.5rem, 7vw, 6rem);
+  --gutter: clamp(1.125rem, 4vw, 2.5rem);
+
+  /* Radii */
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-pill: 9999px;
+
+<<<<<<< HEAD
+  /* Borders and elevation */
+  --border-subtle: #e4d9cb;
+  --border-strong: #d3c2ae;
+  --border-ink: rgba(41, 37, 33, 0.14);
+  --shadow-xs: 0 1px 2px rgba(43, 29, 20, 0.04);
+  --shadow-sm:
+    0 1px 3px rgba(43, 29, 20, 0.05), 0 8px 20px -16px rgba(43, 29, 20, 0.22);
+  --shadow-md:
+    0 2px 4px rgba(43, 29, 20, 0.04), 0 18px 40px -30px rgba(43, 29, 20, 0.4);
+  --shadow-lg:
+    0 4px 8px rgba(43, 29, 20, 0.04), 0 32px 64px -40px rgba(43, 29, 20, 0.5);
+  --ring: #8d6a4b;
+=======
+  /* Borders + shadows */
+  --border-subtle: rgba(82, 59, 45, 0.12);
+  --border-strong: rgba(82, 59, 45, 0.22);
+  --shadow-xs: 0 1px 2px rgba(75, 47, 31, 0.05);
+  --shadow-sm: 0 8px 24px -16px rgba(75, 47, 31, 0.3);
+  --shadow-md: 0 18px 44px -28px rgba(75, 47, 31, 0.35);
+  --shadow-lg: 0 32px 80px -40px rgba(75, 47, 31, 0.45);
+  --ring: rgba(75, 47, 31, 0.4);
+=======
   --container: 78rem;
   --container-narrow: 58rem;
   --header-height: 4.5rem;
@@ -71,8 +179,14 @@
   --radius-pill: 9999px;
 
   /* Borders */
+<<<<<<< HEAD
   --border-subtle: #e5d8c9;
   --border-strong: #d2bfac;
+=======
+  --border-subtle: #e4d9cb;
+  --border-strong: #d3c3af;
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
+>>>>>>> fcfa9474b26cbba7edc4b7c28053baa745d93073
 
   /* Elevation — quiet, warm, never heavy */
   --shadow-xs: 0 1px 2px rgba(41, 37, 33, 0.04);
@@ -91,6 +205,16 @@
   --glass-dark: rgba(34, 24, 18, 0.7);
   --glass-dark-border: rgba(255, 255, 255, 0.18);
 
+<<<<<<< HEAD
+  /* Status badge backgrounds */
+  --badge-pending: rgba(183, 121, 50, 0.15);
+  --badge-approved: rgba(56, 118, 83, 0.15);
+  --badge-rejected: rgba(180, 77, 66, 0.15);
+  --badge-checked-in: rgba(75, 47, 31, 0.15);
+  --badge-returned: rgba(130, 119, 109, 0.1);
+  --badge-cancelled: rgba(130, 119, 109, 0.08);
+>>>>>>> b141025564dd3364106212a52ca5484ec458a43d
+=======
   --sidebar-bg: #221812;
 
   /* Status tones */
@@ -100,9 +224,11 @@
   --badge-checked-in: rgba(81, 53, 34, 0.1);
   --badge-returned: rgba(113, 104, 95, 0.1);
   --badge-cancelled: rgba(113, 104, 95, 0.08);
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
 
   /* Motion */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+<<<<<<< HEAD
   --transition-fast: 150ms var(--ease-out);
   --transition-base: 250ms var(--ease-out);
 
@@ -220,21 +346,56 @@
   --error-tint: rgba(226, 146, 138, 0.16);
   --error-tint-soft: rgba(226, 146, 138, 0.08);
   --error-line: rgba(226, 146, 138, 0.32);
+=======
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --transition-fast: 140ms var(--ease-out);
+  --transition-base: 220ms var(--ease-out);
+>>>>>>> fcfa9474b26cbba7edc4b7c28053baa745d93073
 }
 
 /*
+<<<<<<< HEAD
+ * Tailwind v4 theme bridge. Utilities used across the app (bg-cream,
+ * text-charcoal, border-sand, font-display, ...) resolve to the tokens above.
+=======
  * Tailwind v4 theme bridge: exposes the palette, type families, radii and
  * shadows as utilities (bg-espresso, font-display, shadow-soft, ...).
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
  */
 @theme {
   --color-ivory: #f8f5ef;
   --color-cream: #fffcf7;
   --color-surface: #fffcf7;
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
   --color-surface-sunken: #f2ece1;
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
   --color-soft-beige: #efe6d9;
   --color-sand: #e4d9cb;
   --color-taupe: #a78260;
   --color-bronze: #a78260;
+<<<<<<< HEAD
+  --color-espresso: #513522;
+  --color-deep-brown: #2b1d14;
+  --color-charcoal: #292521;
+  --color-muted: #71685f;
+  --color-success: #3f6b4f;
+  --color-warning: #9c6b24;
+  --color-error: #a4453b;
+=======
+  --color-soft-beige: #e9d9c6;
+  --color-sand: #d6bda4;
+  --color-taupe: #a78b73;
+  --color-espresso: #4b2f1f;
+  --color-deep-brown: #302219;
+  --color-charcoal: #282522;
+  --color-muted: #6f655b;
+  --color-success: #387653;
+  --color-warning: #995e20;
+  --color-error: #b44d42;
+>>>>>>> b141025564dd3364106212a52ca5484ec458a43d
+=======
   --color-bronze-deep: #8c6849;
   --color-espresso: #513522;
   --color-deep-brown: #221812;
@@ -244,13 +405,24 @@
   --color-success: #356b4c;
   --color-warning: #9a6b22;
   --color-error: #a9483c;
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
 
   --font-sans:
     'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-display:
     'Manrope', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
     sans-serif;
+<<<<<<< HEAD
+  --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+=======
   --font-editorial:
+<<<<<<< HEAD
+    'Fraunces', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+>>>>>>> b141025564dd3364106212a52ca5484ec458a43d
+
+  --radius-card: 1rem;
+  --radius-panel: 1.5rem;
+=======
     'Manrope', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
     sans-serif;
   --font-mono:
@@ -259,6 +431,7 @@
 
   --radius-card: 1.125rem;
   --radius-panel: 1.75rem;
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
   --radius-pill: 9999px;
 
   --shadow-soft: var(--shadow-sm);

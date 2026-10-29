@@ -1,11 +1,18 @@
+<<<<<<< HEAD
+import { useEffect, useState } from 'react'
+import { Link, useRouter } from '@tanstack/react-router'
+import { ArrowRight, Loader2 } from 'lucide-react'
+=======
 import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import { ArrowRight, ChevronDown, KeyRound, Loader2, Mail } from 'lucide-react'
 import { AuthField } from '../../components/auth/AuthField'
+>>>>>>> b141025564dd3364106212a52ca5484ec458a43d
 import { AuthLayout } from '../../components/auth/AuthLayout'
 import { FormAlert } from '../../components/auth/FormAlert'
 import { PasswordField } from '../../components/auth/PasswordField'
 import { Button } from '../../components/ui/button'
+import { Field, Input } from '../../components/ui/Field'
 import { useAuth } from '../../hooks/useAuth'
 import { usePageMeta } from '../../hooks/usePageMeta'
 
@@ -97,12 +104,25 @@ export const Login = ({ redirect }: LoginProps) => {
   return (
     <AuthLayout mode="login">
       <div>
+<<<<<<< HEAD
+<<<<<<< HEAD
+        <span className="eyebrow">Welcome back</span>
+        <h1 className="mt-2.5 font-display text-[clamp(1.85rem,3.6vw,2.3rem)] font-semibold leading-[1.08] tracking-[-0.032em] text-[var(--charcoal)]">
+          Sign in to ShareLab
+        </h1>
+        <p className="mt-2.5 text-[0.875rem] leading-relaxed text-[var(--muted)]">
+          Continue to your resource requests, approvals, and handover records.
+=======
+        <h1 className="font-editorial text-[clamp(2rem,4.6vw,2.65rem)] font-semibold leading-[1.04] tracking-[-0.035em] text-[var(--charcoal)]">
+=======
         <h1 className="font-display text-[clamp(2rem,4.6vw,2.65rem)] font-semibold leading-[1.04] tracking-[-0.035em] text-(--charcoal)">
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
           Welcome back.
         </h1>
         <p className="mt-3 max-w-100 text-sm leading-relaxed text-(--muted)">
           Sign in to pick up where your last request left off — approvals,
           handovers, and lab time in one place.
+>>>>>>> b141025564dd3364106212a52ca5484ec458a43d
         </p>
       </div>
 
@@ -113,14 +133,37 @@ export const Login = ({ redirect }: LoginProps) => {
       ) : null}
 
       <form
-        className="mt-6 space-y-5"
+        className="mt-6 space-y-4"
         onSubmit={handleSubmit}
         noValidate
         aria-busy={submitting}
       >
-        <AuthField
+        <Field
           id="login-email"
           label="Email address"
+<<<<<<< HEAD
+          error={errors.email}
+          required
+        >
+          <Input
+            id="login-email"
+            type="email"
+            value={email}
+            onChange={(event) => {
+              setEmail(event.target.value)
+              setServerError(null)
+              if (errors.email)
+                setErrors((current) => ({ ...current, email: undefined }))
+            }}
+            autoComplete="email"
+            inputMode="email"
+            placeholder="you@university.edu"
+            aria-invalid={errors.email ? 'true' : undefined}
+            aria-describedby={errors.email ? 'login-email-error' : undefined}
+            disabled={submitting}
+          />
+        </Field>
+=======
           type="email"
           value={email}
           onChange={(event) => {
@@ -137,6 +180,7 @@ export const Login = ({ redirect }: LoginProps) => {
           disabled={submitting}
           autoFocus
         />
+>>>>>>> b141025564dd3364106212a52ca5484ec458a43d
 
         <PasswordField
           id="login-password"
@@ -163,7 +207,7 @@ export const Login = ({ redirect }: LoginProps) => {
           {submitting ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-              Signing in...
+              Signing in…
             </>
           ) : (
             <>
@@ -174,8 +218,31 @@ export const Login = ({ redirect }: LoginProps) => {
         </Button>
       </form>
 
+<<<<<<< HEAD
       <details className="group mt-5 rounded-xl border border-(--tint-3) bg-(--tint-1)">
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+      <div className="mt-6 flex items-center gap-3">
+        <span
+          className="h-px flex-1 bg-[var(--border-subtle)]"
+          aria-hidden="true"
+        />
+        <span className="text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-[var(--muted)]">
+          New here
+        </span>
+        <span
+          className="h-px flex-1 bg-[var(--border-subtle)]"
+          aria-hidden="true"
+        />
+=======
+      <details className="group mt-5 rounded-xl border border-[rgba(82,59,45,0.12)] bg-[rgba(75,47,31,0.028)]">
+        <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 rounded-xl px-3.5 py-2.5 text-[0.72rem] font-semibold text-[var(--espresso)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--ring)] [&::-webkit-details-marker]:hidden">
+=======
+      <details className="group mt-5 rounded-xl border border-[rgba(81,53,34,0.12)] bg-[rgba(81,53,34,0.028)]">
+>>>>>>> fcfa9474b26cbba7edc4b7c28053baa745d93073
         <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 rounded-xl px-3.5 py-2.5 text-[0.72rem] font-semibold text-(--espresso) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-(--ring) [&::-webkit-details-marker]:hidden">
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
           <span className="inline-flex items-center gap-2">
             <KeyRound className="h-3.5 w-3.5" aria-hidden="true" />
             Reviewer demo accounts
@@ -219,7 +286,18 @@ export const Login = ({ redirect }: LoginProps) => {
             Create an account
           </Link>
         </p>
+>>>>>>> b141025564dd3364106212a52ca5484ec458a43d
       </div>
+
+      <p className="mt-4 text-center text-[0.8125rem] text-[var(--muted)]">
+        <Link
+          to="/register"
+          search={{ redirect }}
+          className="font-semibold text-[var(--espresso)] underline decoration-[rgba(81,53,34,0.28)] underline-offset-4 hover:text-[var(--bronze-deep)]"
+        >
+          Create a ShareLab account
+        </Link>
+      </p>
     </AuthLayout>
   )
 }

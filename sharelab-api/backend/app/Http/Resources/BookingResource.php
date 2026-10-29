@@ -27,6 +27,24 @@ class BookingResource extends JsonResource
             'priority_score' => $this->priority_score,
             'priority_explanation' => $this->priority_explanation,
             'waitlist_position' => $this->waitlist_position,
+<<<<<<< HEAD
+            'confirm_by' => $this->confirm_by,
+            'is_late' => $this->is_late,
+            'resource' => new ResourceResource($this->whenLoaded('resource')),
+            'user' => new UserResource($this->whenLoaded('user')),
+            'check_in_report' => $this->whenLoaded(
+                'checkInReport',
+                fn () => $this->checkInReport->isNotEmpty()
+                    ? new ConditionReportResource($this->checkInReport->first())
+                    : null
+            ),
+            'return_report' => $this->whenLoaded(
+                'returnReport',
+                fn () => $this->returnReport->isNotEmpty()
+                    ? new ConditionReportResource($this->returnReport->first())
+                    : null
+            ),
+=======
             'confirm_by' => $this->confirm_by?->toIso8601String(),
             'is_late' => (bool) $this->is_late,
             'is_offer' => $this->isOffer(),
@@ -52,6 +70,7 @@ class BookingResource extends JsonResource
                 'extend' => $viewer !== null && in_array($status, ['approved', 'checked_in'], true) && $viewer->can('extend', $this->resource),
             ],
             'created_at' => $this->created_at,
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
         ];
     }
 

@@ -21,10 +21,10 @@ interface BadgeProps {
 const toneClasses: Record<BadgeTone, string> = {
   neutral: 'bg-(--soft-beige) text-(--muted-strong) border-(--border-subtle)',
   bronze: 'bg-[rgba(167,130,96,0.12)] text-(--bronze-deep) border-[rgba(167,130,96,0.28)]',
-  success: 'bg-(--success-tint) text-(--success) border-(--success-tint)',
-  warning: 'bg-(--warning-tint) text-(--warning) border-(--warning-tint)',
-  error: 'bg-(--error-tint) text-(--error) border-(--error-tint)',
-  espresso: 'bg-(--espresso) text-(--accent-contrast) border-transparent',
+  success: 'bg-[rgba(53,107,76,0.1)] text-(--success) border-[rgba(53,107,76,0.22)]',
+  warning: 'bg-[rgba(154,107,34,0.1)] text-(--warning) border-[rgba(154,107,34,0.24)]',
+  error: 'bg-[rgba(169,72,60,0.1)] text-(--error) border-[rgba(169,72,60,0.22)]',
+  espresso: 'bg-(--espresso) text-(--cream) border-transparent',
   inverse: 'bg-[rgba(255,252,247,0.14)] text-(--cream) border-[rgba(255,252,247,0.24)]',
 }
 

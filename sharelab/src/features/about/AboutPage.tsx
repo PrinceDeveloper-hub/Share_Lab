@@ -1,21 +1,18 @@
 import { Link } from '@tanstack/react-router'
 import {
   ArrowRight,
-  ArrowUpRight,
   BookOpenCheck,
   Building2,
-  CheckCircle2,
-  ChevronRight as CrumbChevron,
   Compass,
   GraduationCap,
   Microscope,
-  Quote,
   Scale,
   Settings2,
   ShieldCheck,
 } from 'lucide-react'
 import { SiteLayout } from '../../components/layout/SiteLayout'
 import { Button } from '../../components/ui/button'
+import { PageHeader } from '../../components/ui/PageHeader'
 import { SectionHeading } from '../../components/ui/SectionHeading'
 import { usePageMeta } from '../../hooks/usePageMeta'
 
@@ -123,6 +120,54 @@ export const AboutPage = () => {
 
   return (
     <SiteLayout>
+<<<<<<< HEAD
+      <div className="page-shell py-8 sm:py-10 lg:py-12">
+        <PageHeader
+          breadcrumbs={[{ label: 'Home', to: '/' }, { label: 'About' }]}
+          eyebrow="About ShareLab"
+          title="Shared resources should be easy to find — and hard to lose track of."
+          description="ShareLab is a campus resource commons: a single place to discover shared equipment and facilities, understand what access requires, and follow a booking from request to return."
+          actions={
+            <>
+              <Button asChild size="lg">
+                <Link to="/resources">
+                  Explore resources
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="lg">
+                <Link to="/how-it-works">See how it works</Link>
+              </Button>
+            </>
+          }
+        />
+
+        <div className="mt-8 grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-14">
+          <div className="prose-editorial">
+            <p className="text-[0.9375rem] leading-[1.75] text-[var(--muted)]">
+              ShareLab is designed for the everyday reality of campus sharing —
+              where a lab, studio, or department owns the resource, a manager
+              protects it, and a student or researcher needs to use it
+              responsibly.
+            </p>
+            <p className="mt-4 text-[0.9375rem] leading-[1.75] text-[var(--muted)]">
+              The platform does not replace departmental policy. It gives those
+              policies a clear surface, a consistent request process, and a
+              record that survives the handover.
+            </p>
+
+            <dl className="mt-7 grid gap-px overflow-hidden rounded-[var(--radius-md)] border border-[var(--border-subtle)] bg-[var(--border-subtle)] sm:grid-cols-3">
+              {[
+                { label: 'Access', value: 'Credential-aware' },
+                { label: 'Decisions', value: 'Human-reviewed' },
+                { label: 'History', value: 'Fully auditable' },
+              ].map((item) => (
+                <div key={item.label} className="bg-[var(--cream)] px-4 py-3">
+                  <dt className="label">{item.label}</dt>
+                  <dd className="mt-1 text-[0.78rem] font-semibold text-[var(--charcoal)]">
+                    {item.value}
+                  </dd>
+=======
       <section className="relative overflow-hidden">
         <div
           aria-hidden="true"
@@ -192,29 +237,81 @@ export const AboutPage = () => {
                       the people who need a resource and the people who care for it.
                     </p>
                   </blockquote>
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
                 </div>
-              </div>
-            </div>
+              ))}
+            </dl>
           </div>
+
+          <figure className="overflow-hidden rounded-[var(--radius-xl)] border border-[var(--border-subtle)] bg-[var(--cream)] p-2">
+            <div className="relative overflow-hidden rounded-[calc(var(--radius-xl)-0.4rem)]">
+              <img
+                src="/images/hero/scientific-equipment.webp"
+                alt="Glassware and research equipment on a shared laboratory bench"
+                className="aspect-[4/3] w-full object-cover"
+                loading="eager"
+                decoding="async"
+              />
+              <div
+                aria-hidden="true"
+                className="absolute inset-0 bg-[linear-gradient(180deg,transparent_45%,rgba(43,29,20,0.62)_100%)]"
+              />
+              <blockquote className="absolute inset-x-4 bottom-4 rounded-[var(--radius-md)] border border-[rgba(248,245,239,0.28)] bg-[rgba(255,252,247,0.94)] p-4">
+                <p className="text-[0.8125rem] font-medium leading-relaxed text-[var(--charcoal)]">
+                  “The goal is not more bookings. It is a clearer, fairer
+                  relationship between the people who need a resource and the
+                  people who care for it.”
+                </p>
+              </blockquote>
+            </div>
+          </figure>
         </div>
-      </section>
+      </div>
 
       <section
         aria-labelledby="the-problem"
+<<<<<<< HEAD
         className="border-y border-(--border-subtle) bg-(--surface-band) py-16 sm:py-20"
+=======
+<<<<<<< HEAD
+        className="border-y border-[var(--border-subtle)] bg-[rgba(239,230,217,0.4)] py-[var(--section-y)]"
+=======
+        className="border-y border-(--border-subtle) bg-[rgba(255,249,241,0.6)] py-16 sm:py-20"
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
+>>>>>>> fcfa9474b26cbba7edc4b7c28053baa745d93073
       >
-        <div className="page-shell grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
-          <div>
-            <SectionHeading
-              id="the-problem"
-              eyebrow="The problem"
-              title="Campus resources are shared in theory, but fragmented in practice."
-              description="The gap is rarely the equipment itself. It is the information around it: what exists, who can use it, what it requires, and what happened last time."
-            />
-          </div>
+        <div className="page-shell grid gap-9 lg:grid-cols-[0.85fr_1.15fr] lg:gap-14">
+          <SectionHeading
+            id="the-problem"
+            eyebrow="The problem"
+            title="Shared in theory, fragmented in practice."
+            description="The gap is rarely the equipment itself. It is the information around it: what exists, who can use it, what it requires, and what happened last time."
+          />
 
           <div className="divide-y divide-(--border-subtle) border-y border-(--border-subtle)">
             {problems.map((problem) => (
+<<<<<<< HEAD
+              <div
+                key={problem.number}
+                className="grid grid-cols-[2.5rem_1fr] gap-4 py-5"
+              >
+                <div className="flex flex-col items-start gap-2">
+                  <span className="font-mono text-[0.7rem] text-[var(--bronze-deep)]">
+                    {problem.number}
+                  </span>
+                  <span className="flex h-8 w-8 items-center justify-center rounded-[0.45rem] border border-[var(--border-subtle)] bg-[var(--cream)]">
+                    <problem.icon
+                      className="h-3.5 w-3.5 text-[var(--espresso)]"
+                      aria-hidden="true"
+                    />
+                  </span>
+                </div>
+                <div>
+                  <h3 className="text-[0.9375rem] font-semibold text-[var(--charcoal)]">
+                    {problem.title}
+                  </h3>
+                  <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-[var(--muted)]">
+=======
               <div key={problem.number} className="grid gap-4 py-6 sm:grid-cols-[3rem_1fr] sm:gap-5">
                 <div className="flex items-start gap-3 sm:flex-col sm:gap-2">
                   <span className="font-display text-xs font-bold tracking-[0.16em] text-(--taupe)">
@@ -227,6 +324,7 @@ export const AboutPage = () => {
                 <div>
                   <h3 className="text-lg font-semibold text-(--charcoal)">{problem.title}</h3>
                   <p className="mt-1.5 text-sm leading-relaxed text-(--muted)">
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
                     {problem.description}
                   </p>
                 </div>
@@ -236,6 +334,28 @@ export const AboutPage = () => {
         </div>
       </section>
 
+<<<<<<< HEAD
+      <section
+        aria-labelledby="our-approach"
+        className="bg-[var(--deep-brown)] py-[var(--section-y)]"
+      >
+        <div className="page-shell grid gap-9 lg:grid-cols-[0.9fr_1.1fr] lg:gap-14">
+          <div>
+            <span className="eyebrow text-[rgba(248,245,239,0.5)]">
+              Our approach
+            </span>
+            <h2
+              id="our-approach"
+              className="mt-3 max-w-lg font-display text-[clamp(1.7rem,3vw,2.3rem)] font-semibold leading-tight tracking-[-0.03em] text-[var(--cream)]"
+            >
+              Make the rules legible, then make the handover visible.
+            </h2>
+            <p className="mt-3 max-w-lg text-[0.9rem] leading-relaxed text-[rgba(248,245,239,0.62)]">
+              ShareLab does not replace the judgement of the people who own and
+              manage campus resources. It gives their rules a clear surface and
+              gives every request a traceable path.
+            </p>
+=======
       <section aria-labelledby="our-approach" className="relative overflow-hidden bg-(--deep-brown) py-16 text-(--cream) sm:py-20">
         <div
           aria-hidden="true"
@@ -275,18 +395,36 @@ export const AboutPage = () => {
                 </div>
               ))}
             </div>
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
           </div>
 
-          <blockquote className="mt-12 border-t border-[rgba(255,249,241,0.14)] pt-8">
-            <p className="max-w-4xl font-display text-xl font-medium leading-snug tracking-[-0.02em] text-[rgba(255,249,241,0.88)] sm:text-2xl lg:text-3xl">
-              “A shared resource works best when everyone can see the same rules, the same decision,
-              and the same history.”
-            </p>
-          </blockquote>
+          <div className="grid gap-2.5">
+            {approach.map((item) => (
+              <div
+                key={item.title}
+                className="flex gap-3.5 rounded-[var(--radius-md)] border border-[rgba(248,245,239,0.12)] bg-[rgba(248,245,239,0.05)] p-4"
+              >
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[0.45rem] bg-[rgba(248,245,239,0.08)]">
+                  <item.icon
+                    className="h-3.5 w-3.5 text-[var(--cream)]"
+                    aria-hidden="true"
+                  />
+                </span>
+                <div>
+                  <h3 className="text-[0.875rem] font-semibold text-[var(--cream)]">
+                    {item.title}
+                  </h3>
+                  <p className="mt-1 text-[0.78rem] leading-relaxed text-[rgba(248,245,239,0.6)]">
+                    {item.description}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      <section aria-labelledby="who-it-serves" className="page-shell py-16 sm:py-20">
+      <section aria-labelledby="who-it-serves" className="section page-shell">
         <SectionHeading
           id="who-it-serves"
           eyebrow="Who it is for"
@@ -294,11 +432,34 @@ export const AboutPage = () => {
           description="The platform is intended to make shared access more predictable for the people on every side of a booking."
         />
 
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {audiences.map((audience) => (
             <div
               key={audience.title}
+<<<<<<< HEAD
               className="flex h-full flex-col gap-4 rounded-(--radius-lg) border border-(--border-subtle) bg-(--surface) p-6 transition-all duration-300 hover:-translate-y-1 hover:bg-(--surface-sunken) hover:shadow-(--shadow-md)"
+=======
+<<<<<<< HEAD
+              className="flex h-full flex-col rounded-[var(--radius-lg)] border border-[var(--border-subtle)] bg-[var(--cream)] p-5"
+            >
+              <span className="flex h-9 w-9 items-center justify-center rounded-[0.45rem] border border-[var(--border-subtle)] bg-[var(--ivory)]">
+                <audience.icon
+                  className="h-4 w-4 text-[var(--espresso)]"
+                  aria-hidden="true"
+                />
+              </span>
+              <h3 className="mt-3 text-[0.9375rem] font-semibold text-[var(--charcoal)]">
+                {audience.title}
+              </h3>
+              <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-[var(--muted)]">
+                {audience.description}
+              </p>
+            </div>
+          ))}
+        </div>
+=======
+              className="flex h-full flex-col gap-4 rounded-(--radius-lg) border border-(--border-subtle) bg-(--surface) p-6 transition-all duration-300 hover:-translate-y-1 hover:bg-(--cream) hover:shadow-(--shadow-md)"
+>>>>>>> fcfa9474b26cbba7edc4b7c28053baa745d93073
             >
               <span className="flex h-11 w-11 items-center justify-center rounded-full bg-(--tint-2)">
                 <audience.icon className="h-5 w-5 text-(--espresso)" aria-hidden="true" />
@@ -327,27 +488,57 @@ export const AboutPage = () => {
             <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
           </Link>
         </div>
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
       </section>
 
       <section
         aria-labelledby="principles-heading"
+<<<<<<< HEAD
         className="border-t border-(--border-subtle) bg-(--surface-band) py-16 sm:py-20"
+=======
+<<<<<<< HEAD
+        className="border-t border-[var(--border-subtle)] bg-[rgba(239,230,217,0.35)] py-[var(--section-y)]"
+=======
+        className="border-t border-(--border-subtle) bg-[rgba(255,249,241,0.6)] py-16 sm:py-20"
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
+>>>>>>> fcfa9474b26cbba7edc4b7c28053baa745d93073
       >
-        <div className="page-shell grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+        <div className="page-shell grid gap-9 lg:grid-cols-[0.8fr_1.2fr] lg:gap-14">
           <div>
             <SectionHeading
               id="principles-heading"
               eyebrow="Guiding principles"
               title="Four commitments that shape the product"
             />
+<<<<<<< HEAD
+            <p className="mt-4 max-w-md text-[0.8125rem] leading-relaxed text-[var(--muted)]">
+              These principles are deliberately practical. They guide what a
+              listing exposes, how a request is decided, and what the platform
+              remembers afterwards.
+=======
             <p className="mt-5 max-w-md text-sm leading-relaxed text-(--muted)">
               These principles are deliberately practical. They guide what a listing exposes, how a
               request is decided, and what the platform remembers afterwards.
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
             </p>
           </div>
 
           <ol className="divide-y divide-(--border-subtle) border-y border-(--border-subtle)">
             {principles.map((principle, index) => (
+<<<<<<< HEAD
+              <li
+                key={principle.title}
+                className="grid grid-cols-[2.25rem_1fr] gap-4 py-4"
+              >
+                <span className="font-mono text-[0.72rem] text-[var(--bronze-deep)]">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                <div>
+                  <h3 className="text-[0.875rem] font-semibold text-[var(--charcoal)]">
+                    {principle.title}
+                  </h3>
+                  <p className="mt-1 text-[0.8125rem] leading-relaxed text-[var(--muted)]">
+=======
               <li key={principle.title} className="grid grid-cols-[2.5rem_1fr] gap-4 py-5">
                 <span className="font-display text-sm font-bold tracking-[0.14em] text-(--taupe)">
                   {String(index + 1).padStart(2, '0')}
@@ -357,6 +548,7 @@ export const AboutPage = () => {
                     {principle.title}
                   </h3>
                   <p className="mt-1.5 text-sm leading-relaxed text-(--muted)">
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
                     {principle.description}
                   </p>
                 </div>
@@ -366,6 +558,17 @@ export const AboutPage = () => {
         </div>
       </section>
 
+<<<<<<< HEAD
+      <div className="page-shell py-[var(--section-y)]">
+        <div className="flex flex-col items-start justify-between gap-5 rounded-[var(--radius-xl)] border border-[var(--border-subtle)] bg-[var(--cream)] px-6 py-8 sm:flex-row sm:items-center sm:px-8">
+          <div>
+            <h2 className="font-display text-[1.5rem] font-semibold tracking-[-0.02em] text-[var(--charcoal)] sm:text-[1.8rem]">
+              Start with what your work needs.
+            </h2>
+            <p className="mt-2 max-w-xl text-[0.875rem] leading-relaxed text-[var(--muted)]">
+              Browse the catalogue, open a listing, and review its requirements
+              before you request a slot.
+=======
       <section className="page-shell py-16 sm:py-20">
         <div className="flex flex-col items-start justify-between gap-6 rounded-(--radius-panel) border border-(--border-subtle) bg-(--surface) px-6 py-8 shadow-soft sm:flex-row sm:items-center sm:px-8">
           <div>
@@ -375,6 +578,7 @@ export const AboutPage = () => {
             <p className="mt-2 max-w-xl text-sm leading-relaxed text-(--muted)">
               Browse the catalogue, open a listing, and review its requirements before you request
               a slot.
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
             </p>
           </div>
           <div className="flex shrink-0 flex-wrap gap-2">
@@ -384,12 +588,9 @@ export const AboutPage = () => {
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
             </Button>
-            <Button asChild variant="ghost" size="lg">
-              <Link to="/how-it-works">How it works</Link>
-            </Button>
           </div>
         </div>
-      </section>
+      </div>
     </SiteLayout>
   )
 }

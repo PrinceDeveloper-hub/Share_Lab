@@ -24,13 +24,29 @@ export const FormAlert = ({
       role={variant === 'error' ? 'alert' : 'status'}
       aria-live="polite"
       className={cn(
-        'flex items-start gap-2.5 rounded-xl border px-3.5 py-3 text-xs leading-relaxed',
+        'flex items-start gap-2.5 rounded-[var(--radius-sm)] border px-3.5 py-2.5 text-[0.8125rem] leading-relaxed',
         variant === 'error' &&
+<<<<<<< HEAD
           'border-(--error-tint) bg-(--error-tint-soft) text-(--error)',
+=======
+<<<<<<< HEAD
+          'border-[rgba(164,69,59,0.22)] bg-[var(--error-soft)] text-[var(--error)]',
+        variant === 'success' &&
+          'border-[rgba(63,107,79,0.22)] bg-[var(--success-soft)] text-[var(--success)]',
+        variant === 'info' &&
+          'border-[var(--border-subtle)] bg-[rgba(239,230,217,0.5)] text-[var(--muted)]',
+=======
+          'border-[rgba(169,72,60,0.2)] bg-[rgba(169,72,60,0.07)] text-(--error)',
+>>>>>>> fcfa9474b26cbba7edc4b7c28053baa745d93073
         variant === 'success' &&
           'border-(--success-tint) bg-(--success-tint-soft) text-(--success)',
         variant === 'info' &&
+<<<<<<< HEAD
           'border-(--tint-3) bg-(--tint-1) text-(--muted)',
+=======
+          'border-[rgba(81,53,34,0.12)] bg-[rgba(81,53,34,0.045)] text-(--muted)',
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
+>>>>>>> fcfa9474b26cbba7edc4b7c28053baa745d93073
         className,
       )}
     >
@@ -39,3 +55,5 @@ export const FormAlert = ({
     </div>
   )
 }
+
+export default FormAlert

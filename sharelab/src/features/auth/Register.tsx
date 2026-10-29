@@ -1,11 +1,18 @@
+<<<<<<< HEAD
+import { useEffect, useState } from 'react'
+import { Link, useRouter } from '@tanstack/react-router'
+import { ArrowRight, Check, Loader2 } from 'lucide-react'
+=======
 import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import { ArrowRight, Check, Loader2, Mail, UserRound } from 'lucide-react'
 import { AuthField } from '../../components/auth/AuthField'
+>>>>>>> b141025564dd3364106212a52ca5484ec458a43d
 import { AuthLayout } from '../../components/auth/AuthLayout'
 import { FormAlert } from '../../components/auth/FormAlert'
 import { PasswordField } from '../../components/auth/PasswordField'
 import { Button } from '../../components/ui/button'
+import { Field, Input } from '../../components/ui/Field'
 import { useAuth } from '../../hooks/useAuth'
 import { usePageMeta } from '../../hooks/usePageMeta'
 
@@ -150,7 +157,30 @@ export const Register = ({ redirect }: RegisterProps) => {
   return (
     <AuthLayout mode="register">
       <div>
+<<<<<<< HEAD
+<<<<<<< HEAD
+        <span className="eyebrow">Join the commons</span>
+        <h1 className="mt-2.5 font-display text-[clamp(1.85rem,3.6vw,2.3rem)] font-semibold leading-[1.08] tracking-[-0.032em] text-[var(--charcoal)]">
+          Create your account
+        </h1>
+        <p className="mt-2.5 text-[0.875rem] leading-relaxed text-[var(--muted)]">
+          One account for the equipment, studios, and shared facilities you
+          need.
+        </p>
+      </div>
+
+      <ul className="mt-5 space-y-1.5 rounded-[var(--radius-sm)] border border-[var(--border-subtle)] bg-[rgba(239,230,217,0.35)] px-3.5 py-3">
+        {accountBenefits.map((benefit) => (
+          <li
+            key={benefit}
+            className="flex items-start gap-2 text-[0.75rem] leading-relaxed text-[var(--muted)]"
+          >
+            <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[rgba(63,107,79,0.12)] text-[var(--success)]">
+=======
+        <h1 className="font-editorial text-[clamp(2rem,4.6vw,2.65rem)] font-semibold leading-[1.04] tracking-[-0.035em] text-[var(--charcoal)]">
+=======
         <h1 className="font-display text-[clamp(2rem,4.6vw,2.65rem)] font-semibold leading-[1.04] tracking-[-0.035em] text-(--charcoal)">
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
           Create your account.
         </h1>
         <p className="mt-3 max-w-100 text-sm leading-relaxed text-(--muted)">
@@ -165,7 +195,16 @@ export const Register = ({ redirect }: RegisterProps) => {
             key={benefit}
             className="flex items-start gap-2 text-[0.76rem] leading-relaxed text-(--muted)"
           >
+<<<<<<< HEAD
             <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-(--success-tint) text-(--success)">
+=======
+<<<<<<< HEAD
+            <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[rgba(56,118,83,0.12)] text-[var(--success)]">
+>>>>>>> b141025564dd3364106212a52ca5484ec458a43d
+=======
+            <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[rgba(53,107,76,0.12)] text-(--success)">
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
+>>>>>>> fcfa9474b26cbba7edc4b7c28053baa745d93073
               <Check
                 className="h-2.5 w-2.5"
                 strokeWidth={3}
@@ -189,26 +228,43 @@ export const Register = ({ redirect }: RegisterProps) => {
         noValidate
         aria-busy={submitting}
       >
+<<<<<<< HEAD
+        <Field
+=======
         <AuthField
+>>>>>>> b141025564dd3364106212a52ca5484ec458a43d
           id="register-name"
           label="Full name"
-          value={name}
-          onChange={(event) => {
-            setName(event.target.value)
-            setServerError(null)
-            clearError('name')
-          }}
-          autoComplete="name"
-          placeholder="Your full name"
-          icon={UserRound}
           error={errors.name}
+<<<<<<< HEAD
+          required
+        >
+          <Input
+            id="register-name"
+            value={name}
+            onChange={(event) => {
+              setName(event.target.value)
+              setServerError(null)
+              clearError('name')
+            }}
+            autoComplete="name"
+            placeholder="Your full name"
+            aria-invalid={errors.name ? 'true' : undefined}
+            aria-describedby={errors.name ? 'register-name-error' : undefined}
+            disabled={submitting}
+          />
+        </Field>
+=======
           disabled={submitting}
           autoFocus
         />
+>>>>>>> b141025564dd3364106212a52ca5484ec458a43d
 
-        <AuthField
+        <Field
           id="register-email"
           label="Email address"
+<<<<<<< HEAD
+=======
           type="email"
           value={email}
           onChange={(event) => {
@@ -220,9 +276,27 @@ export const Register = ({ redirect }: RegisterProps) => {
           inputMode="email"
           placeholder="you@campus.edu"
           icon={Mail}
+>>>>>>> b141025564dd3364106212a52ca5484ec458a43d
           error={errors.email}
-          disabled={submitting}
-        />
+          required
+        >
+          <Input
+            id="register-email"
+            type="email"
+            value={email}
+            onChange={(event) => {
+              setEmail(event.target.value)
+              setServerError(null)
+              clearError('email')
+            }}
+            autoComplete="email"
+            inputMode="email"
+            placeholder="you@university.edu"
+            aria-invalid={errors.email ? 'true' : undefined}
+            aria-describedby={errors.email ? 'register-email-error' : undefined}
+            disabled={submitting}
+          />
+        </Field>
 
         <div>
           <PasswordField
@@ -239,6 +313,7 @@ export const Register = ({ redirect }: RegisterProps) => {
             }}
             autoComplete="new-password"
             placeholder="8+ characters"
+            hint="At least 8 characters."
             error={errors.password}
             disabled={submitting}
           />
@@ -265,6 +340,8 @@ export const Register = ({ redirect }: RegisterProps) => {
           </div>
         </div>
 
+<<<<<<< HEAD
+=======
         <PasswordField
           id="register-password-confirmation"
           label="Confirm password"
@@ -280,6 +357,7 @@ export const Register = ({ redirect }: RegisterProps) => {
           disabled={submitting}
         />
 
+>>>>>>> b141025564dd3364106212a52ca5484ec458a43d
         <Button
           type="submit"
           size="lg"
@@ -289,7 +367,7 @@ export const Register = ({ redirect }: RegisterProps) => {
           {submitting ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-              Creating account...
+              Creating account…
             </>
           ) : (
             <>
@@ -300,7 +378,23 @@ export const Register = ({ redirect }: RegisterProps) => {
         </Button>
       </form>
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+      <p className="mt-5 text-center text-[0.8125rem] text-[var(--muted)]">
+        Already have an account?{' '}
+        <Link
+          to="/login"
+          search={{ redirect }}
+          className="font-semibold text-[var(--espresso)] underline decoration-[rgba(81,53,34,0.28)] underline-offset-4 hover:text-[var(--bronze-deep)]"
+        >
+          Sign in
+        </Link>
+      </p>
+=======
+      <p className="mt-4 text-center text-[0.68rem] leading-relaxed text-[var(--muted)]">
+=======
       <p className="mt-4 text-center text-[0.68rem] leading-relaxed text-(--muted)">
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
         By creating an account you agree to the campus resource-use policy.
       </p>
 
@@ -316,6 +410,7 @@ export const Register = ({ redirect }: RegisterProps) => {
           </Link>
         </p>
       </div>
+>>>>>>> b141025564dd3364106212a52ca5484ec458a43d
     </AuthLayout>
   )
 }

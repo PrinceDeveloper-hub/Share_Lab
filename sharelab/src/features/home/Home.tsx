@@ -26,25 +26,29 @@ const workflow = [
     step: '01',
     icon: Search,
     title: 'Discover',
-    description: 'Browse the live catalogue and compare locations, rules and booking limits.',
+    description:
+      'Browse the live catalogue and compare locations, rules and booking limits.',
   },
   {
     step: '02',
     icon: ListChecks,
     title: 'Check requirements',
-    description: 'See exactly which credentials and conditions apply before you request.',
+    description:
+      'See exactly which credentials and conditions apply before you request.',
   },
   {
     step: '03',
     icon: CalendarCheck,
     title: 'Request a slot',
-    description: 'Submit a time window and purpose. Conflicts move to a ranked waitlist.',
+    description:
+      'Submit a time window and purpose. Conflicts move to a ranked waitlist.',
   },
   {
     step: '04',
     icon: Undo2,
     title: 'Use and return',
-    description: 'Check in, record condition, and complete the return trail when you are done.',
+    description:
+      'Check in, record condition, and complete the return trail when you are done.',
   },
 ]
 
@@ -102,14 +106,18 @@ export const Home = () => {
     <SiteLayout>
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-(--border-subtle)">
-        <div className="page-shell grid items-center gap-12 py-14 sm:py-16 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16 lg:py-20">
+        <div className="page-shell grid items-center gap-10 py-8 sm:py-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-12 lg:py-10">
           <motion.div
             initial={shouldReduceMotion ? false : 'hidden'}
             animate="visible"
             variants={{ visible: { transition: { staggerChildren: 0.07 } } }}
             className="flex flex-col"
           >
-            <motion.span variants={heroFade} transition={{ duration: 0.5 }} className="eyebrow">
+            <motion.span
+              variants={heroFade}
+              transition={{ duration: 0.5 }}
+              className="eyebrow"
+            >
               <span aria-hidden="true" className="h-px w-6 bg-(--bronze)" />
               Campus resource commons
             </motion.span>
@@ -129,9 +137,10 @@ export const Home = () => {
               transition={{ duration: 0.55 }}
               className="lede mt-5"
             >
-              ShareLab connects students, researchers and creators with the equipment, studios and
-              facilities their work needs — with clear eligibility, manager-reviewed bookings, and a
-              record that keeps every handover accountable.
+              ShareLab connects students, researchers and creators with the
+              equipment, studios and facilities their work needs — with clear
+              eligibility, manager-reviewed bookings, and a record that keeps
+              every handover accountable.
             </motion.p>
 
             <motion.div
@@ -175,7 +184,11 @@ export const Home = () => {
           <motion.div
             initial={shouldReduceMotion ? false : { opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65, delay: shouldReduceMotion ? 0 : 0.1, ease: [0.22, 1, 0.36, 1] }}
+            transition={{
+              duration: 0.65,
+              delay: shouldReduceMotion ? 0 : 0.1,
+              ease: [0.22, 1, 0.36, 1],
+            }}
             className="w-full lg:justify-self-end"
           >
             <HeroCarousel />
@@ -184,7 +197,10 @@ export const Home = () => {
       </section>
 
       {/* Catalogue preview */}
-      <section aria-labelledby="featured-resources" className="page-shell py-16 sm:py-20">
+      <section
+        aria-labelledby="featured-resources"
+        className="page-shell py-16 sm:py-20"
+      >
         <div className="flex flex-wrap items-end justify-between gap-6">
           <SectionHeading
             id="featured-resources"
@@ -209,7 +225,10 @@ export const Home = () => {
 
         <div className="mt-9">
           {featured.isLoading ? (
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3" aria-label="Loading featured resources">
+            <div
+              className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
+              aria-label="Loading featured resources"
+            >
               {Array.from({ length: 3 }).map((_, index) => (
                 <ResourceCardSkeleton key={index} />
               ))}
@@ -221,12 +240,16 @@ export const Home = () => {
                   The live catalogue is unavailable right now.
                 </p>
                 <p className="mt-1 max-w-md text-[0.8125rem] leading-relaxed text-(--muted)">
-                  Featured listings could not be loaded. Retry, or open the catalogue to see its
-                  current state.
+                  Featured listings could not be loaded. Retry, or open the
+                  catalogue to see its current state.
                 </p>
               </div>
               <div className="flex shrink-0 gap-2">
-                <Button variant="secondary" size="sm" onClick={() => void featured.refetch()}>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => void featured.refetch()}
+                >
                   Retry
                 </Button>
                 <Button asChild size="sm">
@@ -236,10 +259,16 @@ export const Home = () => {
             </div>
           ) : featuredResources.length === 0 ? (
             <div className="rounded-(--radius-lg) border border-dashed border-(--border-strong) bg-(--surface) px-6 py-12 text-center">
-              <FlaskConical className="mx-auto h-7 w-7 text-(--taupe)" aria-hidden="true" />
-              <p className="mt-3 text-sm font-semibold text-(--charcoal)">No resources are published yet</p>
+              <FlaskConical
+                className="mx-auto h-7 w-7 text-(--taupe)"
+                aria-hidden="true"
+              />
+              <p className="mt-3 text-sm font-semibold text-(--charcoal)">
+                No resources are published yet
+              </p>
               <p className="mx-auto mt-1 max-w-sm text-[0.8125rem] leading-relaxed text-(--muted)">
-                New listings will appear here as soon as they are added to the catalogue.
+                New listings will appear here as soon as they are added to the
+                catalogue.
               </p>
             </div>
           ) : (
@@ -265,7 +294,10 @@ export const Home = () => {
       </section>
 
       {/* Workflow */}
-      <section aria-labelledby="workflow-preview" className="border-y border-(--border-subtle) bg-(--soft-beige)">
+      <section
+        aria-labelledby="workflow-preview"
+        className="border-y border-(--border-subtle) bg-(--soft-beige)"
+      >
         <div className="page-shell py-16 sm:py-20">
           <SectionHeading
             id="workflow-preview"
@@ -275,11 +307,31 @@ export const Home = () => {
           />
 
           <ol className="mt-10 grid gap-px overflow-hidden rounded-(--radius-lg) border border-[rgba(81,53,34,0.12)] bg-[rgba(81,53,34,0.12)] sm:grid-cols-2 lg:grid-cols-4">
-            {workflow.map((item) => (
-              <li key={item.step} className="flex flex-col gap-4 bg-(--surface) p-6">
+            {workflow.map((item, index) => (
+              <motion.li
+                key={item.step}
+                initial={
+                  shouldReduceMotion ? false : { opacity: 0, y: 18, rotateX: 4 }
+                }
+                whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+                whileHover={
+                  shouldReduceMotion ? undefined : { y: -4, rotateX: -2 }
+                }
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{
+                  duration: shouldReduceMotion ? 0 : 0.45,
+                  delay: shouldReduceMotion ? 0 : index * 0.07,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                style={{ transformPerspective: 900 }}
+                className="flex flex-col gap-4 bg-(--surface) p-6"
+              >
                 <div className="flex items-center justify-between">
                   <span className="flex h-9 w-9 items-center justify-center rounded-[0.5rem] bg-(--espresso)">
-                    <item.icon className="h-4 w-4 text-(--cream)" aria-hidden="true" />
+                    <item.icon
+                      className="h-4 w-4 text-(--cream)"
+                      aria-hidden="true"
+                    />
                   </span>
                   <span className="font-mono text-[0.6875rem] tracking-[0.08em] text-(--bronze-deep)">
                     {item.step}
@@ -293,14 +345,17 @@ export const Home = () => {
                     {item.description}
                   </p>
                 </div>
-              </li>
+              </motion.li>
             ))}
           </ol>
         </div>
       </section>
 
       {/* Trust */}
-      <section aria-labelledby="accountability" className="page-shell py-16 sm:py-20">
+      <section
+        aria-labelledby="accountability"
+        className="page-shell py-16 sm:py-20"
+      >
         <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
           <div>
             <SectionHeading
@@ -318,18 +373,31 @@ export const Home = () => {
           </div>
 
           <ul className="divide-y divide-(--border-subtle) border-y border-(--border-subtle)">
-            {trustPoints.map((point) => (
-              <li key={point.title} className="flex gap-4 py-5">
+            {trustPoints.map((point, index) => (
+              <motion.li
+                key={point.title}
+                initial={shouldReduceMotion ? false : { opacity: 0, x: 16 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{
+                  duration: shouldReduceMotion ? 0 : 0.4,
+                  delay: shouldReduceMotion ? 0 : index * 0.05,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                className="flex gap-4 py-5"
+              >
                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[0.45rem] bg-[rgba(167,130,96,0.14)] text-(--bronze-deep)">
                   <point.icon className="h-4 w-4" aria-hidden="true" />
                 </span>
                 <div>
-                  <h3 className="text-[0.9375rem] font-semibold text-(--charcoal)">{point.title}</h3>
+                  <h3 className="text-[0.9375rem] font-semibold text-(--charcoal)">
+                    {point.title}
+                  </h3>
                   <p className="mt-1 max-w-xl text-[0.8125rem] leading-relaxed text-(--muted)">
                     {point.description}
                   </p>
                 </div>
-              </li>
+              </motion.li>
             ))}
           </ul>
         </div>
@@ -337,7 +405,18 @@ export const Home = () => {
 
       {/* Closing CTA */}
       <section className="page-shell pb-16 sm:pb-20">
-        <div className="relative overflow-hidden rounded-(--radius-panel) bg-(--deep-brown) px-6 py-12 sm:px-10 lg:px-14 lg:py-16">
+        <motion.div
+          initial={
+            shouldReduceMotion ? false : { opacity: 0, y: 20, scale: 0.99 }
+          }
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{
+            duration: shouldReduceMotion ? 0 : 0.55,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+          className="relative overflow-hidden rounded-(--radius-panel) bg-(--deep-brown) px-6 py-12 sm:px-10 lg:px-14 lg:py-16"
+        >
           <div
             aria-hidden="true"
             className="absolute inset-y-0 right-0 hidden w-1/2 bg-[linear-gradient(120deg,transparent,rgba(167,130,96,0.16))] lg:block"
@@ -351,8 +430,8 @@ export const Home = () => {
                 Find the resource your work needs next.
               </h2>
               <p className="mt-3 max-w-lg text-[0.9375rem] leading-relaxed text-[rgba(255,252,247,0.7)]">
-                Start with the live catalogue, check what a listing requires, and send a request
-                through the same transparent process.
+                Start with the live catalogue, check what a listing requires,
+                and send a request through the same transparent process.
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-2.5">
@@ -371,7 +450,7 @@ export const Home = () => {
               </Link>
             </div>
           </div>
-        </div>
+        </motion.div>
       </section>
     </SiteLayout>
   )

@@ -21,21 +21,13 @@ export interface HeroSlide {
 
 export const heroSlides: HeroSlide[] = [
   {
-    id: 'research-lab',
-    src: '/images/hero/research-lab.webp',
-    alt: 'Researcher using laboratory equipment in a shared campus lab',
-    title: 'Research without barriers',
-    description: 'Discover the equipment and facilities your next project needs.',
-    badge: 'Research resources',
-    objectPosition: 'center',
-  },
-  {
     id: 'scientific-equipment',
     src: '/images/hero/scientific-equipment.webp',
-    alt: 'Scientific instruments arranged on a laboratory bench',
-    title: 'Access the right equipment',
-    description: 'Explore shared instruments maintained across campus.',
-    badge: 'Shared facilities',
+    alt: 'Researcher using laboratory equipment in a shared campus lab',
+    title: 'Research without barriers',
+    description:
+      'Discover the equipment and facilities your next project needs.',
+    badge: 'Research resources',
     objectPosition: 'center',
   },
   {
@@ -45,6 +37,26 @@ export const heroSlides: HeroSlide[] = [
     title: 'Make ideas happen',
     description: 'Find the spaces and tools that move your work forward.',
     badge: 'Campus collaboration',
+    objectPosition: 'center',
+  },
+  {
+    id: 'campus-research',
+    src: '/images/hero/campus-research.jpg',
+    alt: 'Glass beakers and pipettes prepared for a research experiment',
+    title: 'Room to experiment',
+    description:
+      'Find shared lab equipment ready for your next research question.',
+    badge: 'Open lab access',
+    objectPosition: 'center',
+  },
+  {
+    id: 'shared-laboratory',
+    src: '/images/hero/shared-laboratory.jpg',
+    alt: 'A pipette dispensing a sample into a laboratory plate',
+    title: 'Tools for discovery',
+    description:
+      'Explore the specialist tools and facilities available across campus.',
+    badge: 'Research in progress',
     objectPosition: 'center',
   },
 ]

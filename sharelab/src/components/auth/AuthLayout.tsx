@@ -75,7 +75,7 @@ export const AuthLayout = ({ children, mode }: AuthLayoutProps) => {
             <Link
               to="/"
               aria-label="ShareLab home"
-              className="inline-flex w-fit items-center gap-3 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-4 focus-visible:ring-offset-transparent"
+              className="hidden w-fit items-center gap-3 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-4 focus-visible:ring-offset-transparent lg:inline-flex"
             >
               <span className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-white/10 shadow-[0_12px_32px_-14px_rgba(0,0,0,0.7)] backdrop-blur-md">
                 <FlaskConical
@@ -150,12 +150,21 @@ export const AuthLayout = ({ children, mode }: AuthLayoutProps) => {
               <motion.div
                 initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
+                whileHover={
+                  shouldReduceMotion
+                    ? undefined
+                    : { y: -2, rotateX: 0.6, rotateY: -0.6 }
+                }
                 transition={{
                   duration: shouldReduceMotion ? 0 : 0.55,
                   delay: shouldReduceMotion ? 0 : 0.06,
                   ease: [0.22, 1, 0.36, 1],
                 }}
-                className="w-full"
+                style={{
+                  transformPerspective: 1100,
+                  transformStyle: 'preserve-3d',
+                }}
+                className="w-full [transform-style:preserve-3d]"
               >
                 <div className="relative overflow-hidden rounded-(--radius-lg) border border-(--border-subtle) bg-(--surface) p-6 shadow-(--shadow-md) sm:p-8">
                   <div

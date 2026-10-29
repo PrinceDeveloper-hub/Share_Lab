@@ -1,6 +1,13 @@
 import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
-import { ArrowUpRight, Clock3, FlaskConical, MapPin, ShieldCheck } from 'lucide-react'
+import { motion, useReducedMotion } from 'framer-motion'
+import {
+  ArrowUpRight,
+  Clock3,
+  FlaskConical,
+  MapPin,
+  ShieldCheck,
+} from 'lucide-react'
 import { cn } from '../../lib/utils'
 import { getResourceImage } from '../../lib/resources'
 import type { Resource } from '../../lib/resources'
@@ -13,11 +20,26 @@ export interface ResourceCardProps {
 export const ResourceCard = ({ resource, className }: ResourceCardProps) => {
   const [imageFailed, setImageFailed] = useState(false)
   const isActive = resource.status === 'active'
+  const reduceMotion = Boolean(useReducedMotion())
 
   return (
-    <article
+    <motion.article
+      initial={false}
+      whileHover={
+        reduceMotion
+          ? undefined
+          : { y: -4, rotateX: 1.2, rotateY: -1.2, scale: 1.008 }
+      }
+      whileTap={reduceMotion ? undefined : { scale: 0.995 }}
+      transition={{
+        type: 'spring',
+        stiffness: 260,
+        damping: 22,
+        mass: 0.7,
+      }}
+      style={{ transformPerspective: 1000, transformStyle: 'preserve-3d' }}
       className={cn(
-        'group flex h-full flex-col overflow-hidden rounded-(--radius-lg) border border-(--border-subtle) bg-(--surface) transition-[border-color,box-shadow,transform] duration-300 hover:-translate-y-0.5 hover:border-(--border-strong) hover:shadow-(--shadow-md)',
+        'group flex h-full flex-col overflow-hidden rounded-(--radius-lg) border border-(--border-subtle) bg-(--surface) transition-[border-color,box-shadow] duration-300 hover:border-(--border-strong) hover:shadow-(--shadow-md)',
         className,
       )}
     >
@@ -25,7 +47,10 @@ export const ResourceCard = ({ resource, className }: ResourceCardProps) => {
       <div className="relative aspect-[3/2] w-full overflow-hidden bg-(--surface-sunken)">
         {imageFailed ? (
           <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(150deg,var(--soft-beige),var(--surface))]">
-            <FlaskConical className="h-8 w-8 text-[rgba(81,53,34,0.28)]" aria-hidden="true" />
+            <FlaskConical
+              className="h-8 w-8 text-[rgba(81,53,34,0.28)]"
+              aria-hidden="true"
+            />
           </div>
         ) : (
           <img
@@ -53,7 +78,10 @@ export const ResourceCard = ({ resource, className }: ResourceCardProps) => {
                 : 'bg-[rgba(34,24,18,0.88)] text-(--cream)',
             )}
           >
-            <span className="h-1 w-1 rounded-full bg-current" aria-hidden="true" />
+            <span
+              className="h-1 w-1 rounded-full bg-current"
+              aria-hidden="true"
+            />
             {isActive ? 'Active' : 'Paused'}
           </span>
         </div>
@@ -71,7 +99,10 @@ export const ResourceCard = ({ resource, className }: ResourceCardProps) => {
             </Link>
           </h3>
           <p className="mt-1 inline-flex items-center gap-1.5 text-xs text-(--muted)">
-            <MapPin className="h-3.5 w-3.5 text-(--bronze)" aria-hidden="true" />
+            <MapPin
+              className="h-3.5 w-3.5 text-(--bronze)"
+              aria-hidden="true"
+            />
             {resource.location}
           </p>
         </div>
@@ -84,7 +115,10 @@ export const ResourceCard = ({ resource, className }: ResourceCardProps) => {
 
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[0.75rem] text-(--muted)">
           <span className="inline-flex items-center gap-1.5">
-            <Clock3 className="h-3.5 w-3.5 text-(--bronze)" aria-hidden="true" />
+            <Clock3
+              className="h-3.5 w-3.5 text-(--bronze)"
+              aria-hidden="true"
+            />
             Up to {resource.max_hours_per_booking}h per booking
           </span>
           {resource.rules ? (
@@ -96,7 +130,9 @@ export const ResourceCard = ({ resource, className }: ResourceCardProps) => {
         </div>
 
         <div className="mt-auto flex items-center justify-between gap-3 border-t border-(--border-subtle) pt-3.5">
-          <span className="text-[0.75rem] text-(--muted)">Weekly cap {resource.weekly_cap_hours}h</span>
+          <span className="text-[0.75rem] text-(--muted)">
+            Weekly cap {resource.weekly_cap_hours}h
+          </span>
           <Link
             to="/resources/$resourceId"
             params={{ resourceId: String(resource.id) }}
@@ -110,6 +146,6 @@ export const ResourceCard = ({ resource, className }: ResourceCardProps) => {
           </Link>
         </div>
       </div>
-    </article>
+    </motion.article>
   )
 }

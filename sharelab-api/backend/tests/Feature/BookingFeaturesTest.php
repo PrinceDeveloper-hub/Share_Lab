@@ -6,7 +6,6 @@ use App\Enums\BookingStatus;
 use App\Enums\Role;
 use App\Models\AuditLog;
 use App\Models\Booking;
-use App\Models\Notification;
 use App\Models\User;
 use Carbon\CarbonImmutable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -15,13 +14,17 @@ use Tests\TestCase;
 
 class BookingFeaturesTest extends TestCase
 {
-    use RefreshDatabase;
     use DomainFixtures;
+    use RefreshDatabase;
 
     private User $user1;
+
     private User $user2;
+
     private User $manager;
+
     private User $owner;
+
     private \App\Models\Resource $resource;
 
     protected function setUp(): void
@@ -41,6 +44,21 @@ class BookingFeaturesTest extends TestCase
     {
         CarbonImmutable::setTestNow();
         parent::tearDown();
+    }
+
+    public function test_admin_can_submit_a_booking_request(): void
+    {
+        $admin = $this->makeUser(Role::Admin);
+
+        $this->actingAs($admin)
+            ->postJson('/api/bookings', [
+                'resource_id' => $this->resource->id,
+                'start_at' => '2026-03-02 10:00:00',
+                'end_at' => '2026-03-02 11:00:00',
+                'purpose' => 'Test the resource booking flow.',
+            ])
+            ->assertCreated()
+            ->assertJsonPath('data.status', 'pending');
     }
 
     public function test_duration_over_resource_maximum_is_rejected(): void

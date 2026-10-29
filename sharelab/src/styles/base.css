@@ -24,6 +24,8 @@
     min-height: 100%;
     scroll-padding-top: calc(var(--header-height) + 1.5rem);
     -webkit-text-size-adjust: 100%;
+    color-scheme: light;
+    scrollbar-color: rgba(75, 47, 31, 0.28) transparent;
     text-rendering: optimizeLegibility;
   }
 
@@ -74,12 +76,19 @@
     font: inherit;
   }
 
+<<<<<<< HEAD
   button {
     cursor: pointer;
   }
 
   button:disabled {
     cursor: not-allowed;
+=======
+  input,
+  select,
+  textarea {
+    caret-color: var(--espresso);
+>>>>>>> b141025564dd3364106212a52ca5484ec458a43d
   }
 
   img,
@@ -96,7 +105,12 @@
   }
 
   ::selection {
+<<<<<<< HEAD
     background: rgba(81, 53, 34, 0.16);
+=======
+    background: rgba(75, 47, 31, 0.18);
+    color: var(--deep-brown);
+>>>>>>> b141025564dd3364106212a52ca5484ec458a43d
   }
 
   :focus-visible {

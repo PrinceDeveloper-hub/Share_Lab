@@ -29,4 +29,4 @@ class ResourceCreateRequest extends FormRequest
             'weekly_cap_hours' => ['required', 'integer', 'min:1'],
             'status' => ['nullable', 'in:active,inactive'],
         ];
-    }
+    }}

@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { GuestGuard } from '../components/auth/GuestGuard'
 import { Register } from '../features/auth/Register'
 
 export interface RegisterSearch {
@@ -14,7 +15,11 @@ const parseRegisterSearch = (
 const RegisterRoute = () => {
   const { redirect } = Route.useSearch()
 
-  return <Register redirect={redirect} />
+  return (
+    <GuestGuard redirect={redirect}>
+      <Register redirect={redirect} />
+    </GuestGuard>
+  )
 }
 
 export const Route = createFileRoute('/register')({

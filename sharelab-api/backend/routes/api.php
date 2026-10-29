@@ -23,17 +23,25 @@ use Illuminate\Validation\Rule;
 |--------------------------------------------------------------------------
 */
 
-// Public authentication
-Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:10,1');
-Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:10,1');
+// Public authentication: only guests may hit these endpoints.
+Route::middleware('guest:api')->group(function () {
+    Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:10,1');
+    Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:10,1');
+});
 
-// Public catalogue
+// Rotate the access cookie with the HttpOnly refresh cookie.
+Route::post('/refresh', [AuthController::class, 'refresh'])->middleware('throttle:30,1');
+
+// Logout is intentionally public so a browser with an expired access cookie
+// can still clear both session cookies.
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('throttle:30,1');
+
+// Public catalogue (the API guard enriches responses for signed-in users).
 Route::get('/resources', [ResourceController::class, 'index']);
 Route::get('/resources/{resource}', [ResourceController::class, 'show']);
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:api')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
-    Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', fn (Request $request) => new UserResource($request->user()));
 
     // Resource management

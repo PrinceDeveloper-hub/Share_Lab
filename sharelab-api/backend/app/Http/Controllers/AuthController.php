@@ -7,18 +7,22 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Services\Auth\JwtService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Throwable;
 
 class AuthController extends Controller
 {
-    /**
-     * Authenticate a user and issue an HttpOnly session cookie.
-     */
+    public function __construct(private readonly JwtService $jwt)
+    {
+    }
+
     public function login(LoginRequest $request): JsonResponse
     {
-        $user = User::query()->where('email', $request->input('email'))->first();
+        $email = (string) $request->string('email')->lower()->trim();
+        $user = User::query()->where('email', $email)->first();
 
         if (! $user || ! Hash::check((string) $request->input('password'), $user->password)) {
             return response()->json([
@@ -28,19 +32,15 @@ class AuthController extends Controller
             ], 401);
         }
 
-        return $this->authenticatedResponse($user, 'Logged in successfully.');
+        return $this->authenticatedResponse($user, 'Signed in successfully.');
     }
 
-    /**
-     * Create a standard user account. Privileged roles can never be supplied
-     * by the public registration form.
-     */
     public function register(RegisterRequest $request): JsonResponse
     {
         $user = User::query()->create([
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'password' => $request->input('password'),
+            'name' => (string) $request->string('name')->trim(),
+            'email' => (string) $request->string('email')->lower()->trim(),
+            'password' => (string) $request->input('password'),
             'role' => Role::User,
         ]);
 
@@ -48,38 +48,60 @@ class AuthController extends Controller
     }
 
     /**
-     * End the current API token session and clear the HttpOnly cookie.
+     * Rotate an expired access token using the HttpOnly refresh cookie.
      */
-    public function logout(Request $request): JsonResponse
+    public function refresh(Request $request): JsonResponse
     {
-        $token = $request->user()?->currentAccessToken();
+        $token = $request->cookie((string) config('jwt.refresh_cookie', 'sharelab_refresh'));
 
-        if ($token && method_exists($token, 'delete')) {
-            $token->delete();
+        if (! is_string($token) || $token === '') {
+            return $this->unauthenticatedResponse();
         }
 
+        try {
+            $payload = $this->jwt->decode($token);
+        } catch (Throwable) {
+            return $this->unauthenticatedResponse();
+        }
+
+        if (($payload['token_type'] ?? null) !== 'refresh') {
+            return $this->unauthenticatedResponse();
+        }
+
+        $user = User::query()->find($payload['sub'] ?? null);
+
+        if (! $user) {
+            return $this->unauthenticatedResponse();
+        }
+
+        return $this->authenticatedResponse($user, 'Session refreshed.');
+    }
+
+    public function logout(): JsonResponse
+    {
         return response()
             ->json([
                 'data' => null,
-                'message' => 'Logged out successfully.',
+                'message' => 'Signed out successfully.',
+                'errors' => [],
             ])
-            ->withoutCookie('sharelab_token');
+            ->withCookie($this->jwt->forgetAccessCookie())
+            ->withCookie($this->jwt->forgetRefreshCookie());
     }
 
-    /**
-     * Return the currently authenticated user.
-     */
     public function me(Request $request): JsonResponse
     {
         return response()->json([
             'data' => new UserResource($request->user()),
-            'message' => 'User info retrieved successfully.',
+            'message' => 'User retrieved successfully.',
+            'errors' => [],
         ]);
     }
 
     private function authenticatedResponse(User $user, string $message, int $status = 200): JsonResponse
     {
-        $token = $user->createToken('sharelab-web')->plainTextToken;
+        $access = $this->jwt->issueAccessToken($user);
+        $refresh = $this->jwt->issueRefreshToken($user);
 
         return response()
             ->json([
@@ -87,17 +109,21 @@ class AuthController extends Controller
                     'user' => new UserResource($user),
                 ],
                 'message' => $message,
+                'errors' => [],
             ], $status)
-            ->cookie(
-                'sharelab_token',
-                $token,
-                60 * 24 * 7,
-                '/',
-                null,
-                request()->isSecure(),
-                true,
-                false,
-                'lax',
-            );
+            ->withCookie($this->jwt->accessCookie($access))
+            ->withCookie($this->jwt->refreshCookie($refresh));
+    }
+
+    private function unauthenticatedResponse(): JsonResponse
+    {
+        return response()
+            ->json([
+                'data' => null,
+                'message' => 'Your session has expired. Please sign in again.',
+                'errors' => [],
+            ], 401)
+            ->withCookie($this->jwt->forgetAccessCookie())
+            ->withCookie($this->jwt->forgetRefreshCookie());
     }
 }

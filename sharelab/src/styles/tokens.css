@@ -13,6 +13,7 @@
   --ivory: #f8f5ef;
   --cream: #fffcf7;
   --surface: #fffcf7;
+<<<<<<< HEAD
   --surface-raised: #ffffff;
   --soft-beige: #efe6d9;
   --sand: #e4d9cb;
@@ -33,6 +34,18 @@
   --error-soft: #f8eae7;
   --info: #3c5a74;
   --info-soft: #eaf0f5;
+=======
+  --soft-beige: #e9d9c6;
+  --sand: #d6bda4;
+  --taupe: #a78b73;
+  --espresso: #4b2f1f;
+  --deep-brown: #302219;
+  --charcoal: #282522;
+  --muted: #6f655b;
+  --success: #387653;
+  --warning: #995e20;
+  --error: #b44d42;
+>>>>>>> b141025564dd3364106212a52ca5484ec458a43d
 
   /* Typography */
   --font-sans:
@@ -41,10 +54,15 @@
   --font-display:
     'Manrope', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
     sans-serif;
+<<<<<<< HEAD
   --font-mono:
     'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas,
     'Liberation Mono', monospace;
 
+=======
+  --font-editorial:
+    'Fraunces', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+>>>>>>> b141025564dd3364106212a52ca5484ec458a43d
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
   --text-base: 1rem;
@@ -72,6 +90,7 @@
   --radius-xl: 1.5rem;
   --radius-pill: 9999px;
 
+<<<<<<< HEAD
   /* Borders and elevation */
   --border-subtle: #e4d9cb;
   --border-strong: #d3c2ae;
@@ -84,6 +103,35 @@
   --shadow-lg:
     0 4px 8px rgba(43, 29, 20, 0.04), 0 32px 64px -40px rgba(43, 29, 20, 0.5);
   --ring: #8d6a4b;
+=======
+  /* Borders + shadows */
+  --border-subtle: rgba(82, 59, 45, 0.12);
+  --border-strong: rgba(82, 59, 45, 0.22);
+  --shadow-xs: 0 1px 2px rgba(75, 47, 31, 0.05);
+  --shadow-sm: 0 8px 24px -16px rgba(75, 47, 31, 0.3);
+  --shadow-md: 0 18px 44px -28px rgba(75, 47, 31, 0.35);
+  --shadow-lg: 0 32px 80px -40px rgba(75, 47, 31, 0.45);
+  --ring: rgba(75, 47, 31, 0.4);
+
+  /* Glassmorphism */
+  --glass-light: rgba(255, 249, 241, 0.76);
+  --glass-border: rgba(255, 255, 255, 0.62);
+  --glass-shadow:
+    0 12px 36px rgba(75, 47, 31, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.68);
+  --glass-dark: rgba(48, 34, 25, 0.76);
+  --glass-dark-border: rgba(255, 255, 255, 0.4);
+
+  /* Sidebar */
+  --sidebar-bg: #302219;
+
+  /* Status badge backgrounds */
+  --badge-pending: rgba(183, 121, 50, 0.15);
+  --badge-approved: rgba(56, 118, 83, 0.15);
+  --badge-rejected: rgba(180, 77, 66, 0.15);
+  --badge-checked-in: rgba(75, 47, 31, 0.15);
+  --badge-returned: rgba(130, 119, 109, 0.1);
+  --badge-cancelled: rgba(130, 119, 109, 0.08);
+>>>>>>> b141025564dd3364106212a52ca5484ec458a43d
 
   /* Motion */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
@@ -100,6 +148,7 @@
   --color-ivory: #f8f5ef;
   --color-cream: #fffcf7;
   --color-surface: #fffcf7;
+<<<<<<< HEAD
   --color-soft-beige: #efe6d9;
   --color-sand: #e4d9cb;
   --color-taupe: #a78260;
@@ -111,13 +160,30 @@
   --color-success: #3f6b4f;
   --color-warning: #9c6b24;
   --color-error: #a4453b;
+=======
+  --color-soft-beige: #e9d9c6;
+  --color-sand: #d6bda4;
+  --color-taupe: #a78b73;
+  --color-espresso: #4b2f1f;
+  --color-deep-brown: #302219;
+  --color-charcoal: #282522;
+  --color-muted: #6f655b;
+  --color-success: #387653;
+  --color-warning: #995e20;
+  --color-error: #b44d42;
+>>>>>>> b141025564dd3364106212a52ca5484ec458a43d
 
   --font-sans:
     'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-display:
     'Manrope', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
     sans-serif;
+<<<<<<< HEAD
   --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+=======
+  --font-editorial:
+    'Fraunces', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+>>>>>>> b141025564dd3364106212a52ca5484ec458a43d
 
   --radius-card: 1rem;
   --radius-panel: 1.5rem;

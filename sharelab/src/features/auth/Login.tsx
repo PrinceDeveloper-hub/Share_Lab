@@ -1,6 +1,13 @@
+<<<<<<< HEAD
 import { useEffect, useState } from 'react'
 import { Link, useRouter } from '@tanstack/react-router'
 import { ArrowRight, Loader2 } from 'lucide-react'
+=======
+import { useState } from 'react'
+import { Link } from '@tanstack/react-router'
+import { ArrowRight, ChevronDown, KeyRound, Loader2, Mail } from 'lucide-react'
+import { AuthField } from '../../components/auth/AuthField'
+>>>>>>> b141025564dd3364106212a52ca5484ec458a43d
 import { AuthLayout } from '../../components/auth/AuthLayout'
 import { FormAlert } from '../../components/auth/FormAlert'
 import { PasswordField } from '../../components/auth/PasswordField'
@@ -8,7 +15,6 @@ import { Button } from '../../components/ui/button'
 import { Field, Input } from '../../components/ui/Field'
 import { useAuth } from '../../hooks/useAuth'
 import { usePageMeta } from '../../hooks/usePageMeta'
-import { getSafeRedirect } from '../../lib/auth'
 
 export interface LoginProps {
   redirect?: string
@@ -21,10 +27,15 @@ interface LoginErrors {
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
+const demoAccounts = [
+  { role: 'Student', email: 'user1@sharelab.test' },
+  { role: 'Manager', email: 'manager@sharelab.test' },
+  { role: 'Owner', email: 'owner@sharelab.test' },
+  { role: 'Admin', email: 'admin@sharelab.test' },
+] as const
+
 export const Login = ({ redirect }: LoginProps) => {
-  const { login, status } = useAuth()
-  const router = useRouter()
-  const destination = getSafeRedirect(redirect)
+  const { login } = useAuth()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -37,12 +48,6 @@ export const Login = ({ redirect }: LoginProps) => {
     description:
       'Sign in to ShareLab to request shared campus resources, review eligibility requirements, and track your bookings.',
   })
-
-  useEffect(() => {
-    if (status === 'authenticated') {
-      router.history.replace(destination)
-    }
-  }, [destination, router, status])
 
   const validate = () => {
     const nextErrors: LoginErrors = {}
@@ -89,15 +94,31 @@ export const Login = ({ redirect }: LoginProps) => {
     }
   }
 
+  const fillDemo = (demoEmail: string) => {
+    setEmail(demoEmail)
+    setPassword('password')
+    setErrors({})
+    setServerError(null)
+  }
+
   return (
     <AuthLayout mode="login">
       <div>
+<<<<<<< HEAD
         <span className="eyebrow">Welcome back</span>
         <h1 className="mt-2.5 font-display text-[clamp(1.85rem,3.6vw,2.3rem)] font-semibold leading-[1.08] tracking-[-0.032em] text-[var(--charcoal)]">
           Sign in to ShareLab
         </h1>
         <p className="mt-2.5 text-[0.875rem] leading-relaxed text-[var(--muted)]">
           Continue to your resource requests, approvals, and handover records.
+=======
+        <h1 className="font-editorial text-[clamp(2rem,4.6vw,2.65rem)] font-semibold leading-[1.04] tracking-[-0.035em] text-[var(--charcoal)]">
+          Welcome back.
+        </h1>
+        <p className="mt-3 max-w-[25rem] text-sm leading-relaxed text-[var(--muted)]">
+          Sign in to pick up where your last request left off — approvals,
+          handovers, and lab time in one place.
+>>>>>>> b141025564dd3364106212a52ca5484ec458a43d
         </p>
       </div>
 
@@ -116,6 +137,7 @@ export const Login = ({ redirect }: LoginProps) => {
         <Field
           id="login-email"
           label="Email address"
+<<<<<<< HEAD
           error={errors.email}
           required
         >
@@ -137,6 +159,24 @@ export const Login = ({ redirect }: LoginProps) => {
             disabled={submitting}
           />
         </Field>
+=======
+          type="email"
+          value={email}
+          onChange={(event) => {
+            setEmail(event.target.value)
+            setServerError(null)
+            if (errors.email)
+              setErrors((current) => ({ ...current, email: undefined }))
+          }}
+          autoComplete="email"
+          inputMode="email"
+          placeholder="you@campus.edu"
+          icon={Mail}
+          error={errors.email}
+          disabled={submitting}
+          autoFocus
+        />
+>>>>>>> b141025564dd3364106212a52ca5484ec458a43d
 
         <PasswordField
           id="login-password"
@@ -174,6 +214,7 @@ export const Login = ({ redirect }: LoginProps) => {
         </Button>
       </form>
 
+<<<<<<< HEAD
       <div className="mt-6 flex items-center gap-3">
         <span
           className="h-px flex-1 bg-[var(--border-subtle)]"
@@ -186,6 +227,53 @@ export const Login = ({ redirect }: LoginProps) => {
           className="h-px flex-1 bg-[var(--border-subtle)]"
           aria-hidden="true"
         />
+=======
+      <details className="group mt-5 rounded-xl border border-[rgba(82,59,45,0.12)] bg-[rgba(75,47,31,0.028)]">
+        <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 rounded-xl px-3.5 py-2.5 text-[0.72rem] font-semibold text-[var(--espresso)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--ring)] [&::-webkit-details-marker]:hidden">
+          <span className="inline-flex items-center gap-2">
+            <KeyRound className="h-3.5 w-3.5" aria-hidden="true" />
+            Reviewer demo accounts
+          </span>
+          <ChevronDown
+            className="h-3.5 w-3.5 text-[var(--muted)] transition-transform group-open:rotate-180"
+            aria-hidden="true"
+          />
+        </summary>
+        <div className="grid grid-cols-2 gap-1.5 border-t border-[rgba(82,59,45,0.08)] p-2">
+          {demoAccounts.map((account) => (
+            <button
+              key={account.email}
+              type="button"
+              onClick={() => fillDemo(account.email)}
+              className="rounded-lg px-2.5 py-2 text-left transition-colors hover:bg-[rgba(75,47,31,0.06)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
+            >
+              <span className="block text-[0.7rem] font-semibold text-[var(--charcoal)]">
+                {account.role}
+              </span>
+              <span className="mt-0.5 block truncate text-[0.64rem] text-[var(--muted)]">
+                {account.email}
+              </span>
+            </button>
+          ))}
+        </div>
+        <p className="border-t border-[rgba(82,59,45,0.08)] px-3.5 py-2 text-[0.64rem] leading-relaxed text-[var(--muted)]">
+          Demo password:{' '}
+          <span className="font-semibold text-[var(--charcoal)]">password</span>
+        </p>
+      </details>
+
+      <div className="mt-6 border-t border-[rgba(82,59,45,0.1)] pt-5">
+        <p className="text-center text-sm text-[var(--muted)]">
+          New to ShareLab?{' '}
+          <Link
+            to="/register"
+            search={{ redirect }}
+            className="inline-flex min-h-11 items-center rounded-sm px-1 font-semibold text-[var(--espresso)] underline decoration-[rgba(75,47,31,0.28)] underline-offset-4 transition-colors hover:text-[var(--deep-brown)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
+          >
+            Create an account
+          </Link>
+        </p>
+>>>>>>> b141025564dd3364106212a52ca5484ec458a43d
       </div>
 
       <p className="mt-4 text-center text-[0.8125rem] text-[var(--muted)]">

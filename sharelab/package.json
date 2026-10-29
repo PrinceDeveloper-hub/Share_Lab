@@ -1,3 +1,4 @@
+
 {
   "name": "sharelab",
   "private": true,
@@ -54,11 +55,6 @@
     "onlyBuiltDependencies": [
       "esbuild",
       "lightningcss"
-    ]
-  },
-  "intent": {
-    "skills": [
-      "*"
     ]
   }
 }

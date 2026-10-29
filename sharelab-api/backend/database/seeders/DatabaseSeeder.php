@@ -19,11 +19,11 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Create accounts with password "password" for all
-        $roles = ['user', 'user', 'manager', 'owner', 'admin'];
+        $roles = ['user', 'user', 'manager', 'owner', 'admin', 'admin'];
 
-        foreach (['user1@sharelab.test', 'user2@sharelab.test', 'manager@sharelab.test', 'owner@sharelab.test', 'admin@sharelab.test'] as $i => $email) {
+        foreach (['user1@sharelab.test', 'user2@sharelab.test', 'manager@sharelab.test', 'owner@sharelab.test', 'admin@sharelab.test', 'admin@admin.com'] as $i => $email) {
             User::create([
-                'name' => str_replace(['@sharelab.test'], '', $email),
+                'name' => str_replace(['@sharelab.test', '@admin.com'], '', $email),
                 'email' => $email,
                 'password' => Hash::make('password'),
                 'role' => $roles[$i],

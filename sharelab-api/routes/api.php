@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CredentialController;
+use App\Http\Controllers\HealthController;
 use App\Http\Controllers\IncidentController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
@@ -21,6 +22,12 @@ use Illuminate\Support\Facades\Route;
 | a policy or a role middleware. There are no /admin routes in this app.
 |
 */
+
+// Unauthenticated readiness probe for container health checks and uptime
+// monitors. Reports application version and database reachability only.
+Route::get('/health', HealthController::class)
+    ->middleware('throttle:60,1')
+    ->name('health');
 
 Route::middleware('guest:api')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])

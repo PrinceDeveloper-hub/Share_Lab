@@ -55,7 +55,7 @@ class ResourceController extends Controller
 
         $data = collect($request->validated())->except('image')->all();
         if ($request->hasFile('image')) {
-            $data['image_path'] = $request->file('image')->store('resources', 'public');
+            $data['image_path'] = $request->file('image')->store('resources', (string) config('sharelab.images_disk'));
         }
 
         $resource = $this->resources->create($request->user(), $data);
@@ -69,7 +69,7 @@ class ResourceController extends Controller
 
         $data = collect($request->validated())->except('image')->all();
         if ($request->hasFile('image')) {
-            $data['image_path'] = $request->file('image')->store('resources', 'public');
+            $data['image_path'] = $request->file('image')->store('resources', (string) config('sharelab.images_disk'));
         }
 
         $resource = $this->resources->update($request->user(), $resource, $data);

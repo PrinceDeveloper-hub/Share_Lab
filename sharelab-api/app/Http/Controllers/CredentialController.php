@@ -43,7 +43,7 @@ class CredentialController extends Controller
     public function store(CredentialUploadRequest $request): JsonResponse
     {
         $file = $request->file('file');
-        $path = $file->store('credentials/'.$request->user()->id, 'local');
+        $path = $file->store('credentials/'.$request->user()->id, (string) config('sharelab.uploads_disk'));
 
         $credential = $this->credentials->submit(
             $request->user(),
@@ -70,8 +70,10 @@ class CredentialController extends Controller
 
     public function download(UserCredential $credential): StreamedResponse
     {
-        abort_unless($credential->file_path && Storage::disk('local')->exists($credential->file_path), 404);
+        $disk = Storage::disk((string) config('sharelab.uploads_disk'));
 
-        return Storage::disk('local')->download($credential->file_path);
+        abort_unless($credential->file_path && $disk->exists($credential->file_path), 404);
+
+        return $disk->download($credential->file_path);
     }
 }

@@ -134,7 +134,7 @@ class BookingController extends Controller
 
         $data = $request->validated();
         if ($request->hasFile('photo')) {
-            $data['file_path'] = $request->file('photo')->store('condition-reports/'.$booking->id, 'local');
+            $data['file_path'] = $request->file('photo')->store('condition-reports/'.$booking->id, (string) config('sharelab.uploads_disk'));
         }
 
         $report = $this->conditions->checkIn($request->user(), $booking, $data);
@@ -156,7 +156,7 @@ class BookingController extends Controller
 
         $data = $request->validated();
         if ($request->hasFile('photo')) {
-            $data['file_path'] = $request->file('photo')->store('condition-reports/'.$booking->id, 'local');
+            $data['file_path'] = $request->file('photo')->store('condition-reports/'.$booking->id, (string) config('sharelab.uploads_disk'));
         }
 
         $report = $this->conditions->return($request->user(), $booking, $data);

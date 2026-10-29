@@ -31,6 +31,7 @@ use App\Services\Notification\NotificationService;
 use App\Services\Resource\ResourceService;
 use App\Services\Resource\ResourceServiceInterface;
 use App\Support\Clock;
+use App\Support\EnvironmentGuard;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -61,6 +62,9 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        // Refuse to serve production traffic with a half-filled environment.
+        EnvironmentGuard::assertProductionReady();
+
         // Tagged in registration order: eligibility, duration, weekly cap, conflict.
         $this->app->tag([
             EligibilityRule::class,

@@ -10,4 +10,3 @@ parameters:
         - app
     excludePaths:
         - app/Exceptions/Handler.php
-    checkMissingIterableValueType: false

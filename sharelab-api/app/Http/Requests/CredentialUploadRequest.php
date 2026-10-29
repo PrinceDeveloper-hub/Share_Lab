@@ -15,7 +15,7 @@ class CredentialUploadRequest extends FormRequest
     {
         return [
             'requirement_name' => ['required', 'string', 'max:255'],
-            'file' => ['required', 'file', 'mimes:pdf,jpg,jpeg,png,webp', 'max:5120'],
+            'file' => ['required', 'file', 'mimes:pdf,jpg,jpeg,png,webp', 'max:'.config('sharelab.max_upload_kb')],
         ];
     }
 }

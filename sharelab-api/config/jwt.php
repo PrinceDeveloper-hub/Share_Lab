@@ -16,12 +16,19 @@ return [
     'secret' => env('JWT_SECRET') ?: env('APP_KEY'),
 
     /*
+    | Whether a dedicated secret was provided. The production boot guard uses
+    | this to refuse starting with only the application key.
+    */
+
+    'secret_configured' => filled(env('JWT_SECRET')),
+
+    /*
     |--------------------------------------------------------------------------
     | Token lifetimes (minutes)
     |--------------------------------------------------------------------------
     */
 
-    'access_ttl' => (int) env('JWT_ACCESS_TTL', 15),
+    'access_ttl' => (int) env('JWT_ACCESS_TTL', env('JWT_TTL', 15)),
 
     'refresh_ttl' => (int) env('JWT_REFRESH_TTL', 60 * 24 * 7),
 
@@ -56,8 +63,8 @@ return [
     |
     */
 
-    'cookie_same_site' => env('JWT_COOKIE_SAME_SITE', 'lax'),
+    'cookie_same_site' => env('AUTH_COOKIE_SAMESITE', env('JWT_COOKIE_SAME_SITE', 'lax')),
 
-    'cookie_secure' => env('JWT_COOKIE_SECURE'),
+    'cookie_secure' => env('AUTH_COOKIE_SECURE', env('JWT_COOKIE_SECURE')),
 
 ];

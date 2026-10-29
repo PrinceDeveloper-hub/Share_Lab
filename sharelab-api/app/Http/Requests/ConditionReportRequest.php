@@ -18,7 +18,7 @@ class ConditionReportRequest extends FormRequest
             'notes' => ['nullable', 'string', 'max:3000'],
             'checklist' => ['nullable', 'array'],
             'checklist.*' => ['string', 'max:255'],
-            'photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:'.config('sharelab.max_upload_kb')],
         ];
     }
 }

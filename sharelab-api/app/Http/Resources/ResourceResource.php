@@ -46,7 +46,7 @@ class ResourceResource extends JsonResource
             'image_url' => $imagePath
                 ? (str_starts_with($imagePath, '/') || str_starts_with($imagePath, 'http')
                     ? $imagePath
-                    : Storage::disk('public')->url($imagePath))
+                    : Storage::disk((string) config('sharelab.images_disk'))->url($imagePath))
                 : null,
             'status' => $this->status,
             'owner' => $this->whenLoaded('owner', fn () => $this->person($this->owner, $request)),

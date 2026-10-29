@@ -30,7 +30,7 @@ class ResourceCreateRequest extends FormRequest
             'requirements' => ['sometimes', 'array'],
             'requirements.*.name' => ['required_with:requirements', 'string', 'max:255'],
             'requirements.*.requires_verification' => ['sometimes', 'boolean'],
-            'image' => ['sometimes', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'image' => ['sometimes', 'image', 'mimes:jpg,jpeg,png,webp', 'max:'.config('sharelab.max_upload_kb')],
         ];
     }
 }

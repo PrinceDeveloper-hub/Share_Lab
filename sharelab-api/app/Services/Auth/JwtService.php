@@ -193,6 +193,12 @@ class JwtService
         $configured = config('jwt.cookie_secure');
 
         if ($configured === null || $configured === '') {
+            // Browsers drop a SameSite=None cookie that is not Secure, so
+            // mirror the flag rather than silently breaking authentication.
+            if (strtolower((string) config('jwt.cookie_same_site')) === 'none') {
+                return true;
+            }
+
             return request()->isSecure();
         }
 

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\EnsureGuest;
+use App\Http\Middleware\EnsureTrustedOrigin;
 use App\Http\Middleware\JwtCookieMiddleware;
 use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -36,10 +37,18 @@ return Application::configure(basePath: dirname(__DIR__))
             fn (Request $request) => $request->is('api/*') ? null : '/',
         );
 
+        // Cookie-authenticated writes are only accepted from the SPA origins in
+        // ALLOWED_ORIGINS. Applied to the whole API group so no route can opt
+        // out of CSRF-style protection by accident.
+        $middleware->api(append: [
+            EnsureTrustedOrigin::class,
+        ]);
+
         $middleware->alias([
             'jwt.auth' => JwtCookieMiddleware::class,
             'role' => RoleMiddleware::class,
             'guest' => EnsureGuest::class,
+            'trusted.origin' => EnsureTrustedOrigin::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

@@ -13,7 +13,14 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'ShareLab'),
+
+    /*
+    | Reported by GET /api/health, GET / and the SPA's build metadata. Bump it
+    | on releases so a health probe identifies which build is live.
+    */
+
+    'version' => env('APP_VERSION', '1.0.0'),
 
     /*
     |--------------------------------------------------------------------------

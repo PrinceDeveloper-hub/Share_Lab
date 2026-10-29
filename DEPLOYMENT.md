@@ -97,6 +97,38 @@ Then set the API's `CORS_ALLOWED_ORIGINS` to the frontend origin (comma-separate
 and ensure cookies are `SameSite=None; Secure` — which requires HTTPS on both
 origins. The same-origin setup above avoids that complexity.
 
+### Vercel
+
+The frontend lives in `sharelab/`, which is a subdirectory of this repository.
+Configure the Vercel project exactly like this:
+
+| Setting | Value |
+|---|---|
+| Root Directory | `sharelab` |
+| Framework Preset | Vite |
+| Install Command | `pnpm install --frozen-lockfile` |
+| Build Command | `pnpm build` |
+| Output Directory | `dist` |
+| Environment variable | `VITE_API_BASE_URL=https://<api-host>/api` |
+
+`sharelab/vercel.json` already pins the install and build commands plus the SPA
+fallback, but Vercel only reads it from the **Root Directory**. If the Root
+Directory is left at the repository root or at `sharelab-api`, the build runs
+the Laravel starter kit instead, which fails with
+`php: command not found` while generating Wayfinder types.
+
+Notes:
+
+- `sharelab/pnpm-lock.yaml` is the lockfile. Verify the log says pnpm; an
+  `npm install` step re-resolves every floating range and can pull broken
+  upstream releases.
+- The SPA rewrite must keep `/api` excluded (`sharelab/vercel.json`), otherwise
+  API requests return `index.html` with status 200 and the app crashes on
+  unexpected response shapes.
+- Vercel hosts only the SPA. The Laravel API still needs its own host (Docker
+  Compose above, or any PHP host) and `CORS_ALLOWED_ORIGINS` set to the Vercel
+  origin.
+
 ## 7. Local development
 
 ```bash

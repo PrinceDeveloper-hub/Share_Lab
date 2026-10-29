@@ -3,6 +3,30 @@
 
 import { api } from './api-client'
 import { fetchResource } from './resources'
+import type { Resource } from './resources'
+
+export type BookingDecision = 'approve' | 'reject' | 'waitlist'
+
+export type ConditionLevel = 'excellent' | 'good' | 'fair' | 'damaged'
+
+export interface BookingRequester {
+  id: number
+  name: string
+  email?: string
+  role?: string
+}
+
+export interface BookingConditionReport {
+  id: number
+  booking_id: number
+  type: 'checkin' | 'return'
+  condition: ConditionLevel
+  notes: string | null
+  checklist: { name: string; status: string }[] | null
+  reported_by: number | null
+  reporter?: BookingRequester | null
+  reported_at: string | null
+}
 
 export interface Booking {
   id: number
@@ -25,6 +49,10 @@ export interface Booking {
   waitlist_position: number | null
   confirm_by: string | null
   is_late: boolean
+  resource?: Resource | null
+  user?: BookingRequester | null
+  check_in_report?: BookingConditionReport | null
+  return_report?: BookingConditionReport | null
 }
 
 export interface CreateBookingParams {
@@ -32,6 +60,27 @@ export interface CreateBookingParams {
   start_at: string
   end_at: string
   purpose?: string
+}
+
+export interface BookingQueueFilters {
+  status?: Booking['status']
+  q?: string
+  page?: number
+  perPage?: number
+  sort?: 'priority' | 'schedule'
+}
+
+export interface BookingQueueResult {
+  items: Booking[]
+  total: number
+  page: number
+  lastPage: number
+}
+
+export interface ConditionReportPayload {
+  condition: ConditionLevel
+  notes?: string
+  checklist?: { name: string; status: string }[]
 }
 
 export interface EligibilityCheck {
@@ -76,12 +125,18 @@ export const checkEligibility = async (
     qualifies: false,
     missing: [],
     checklist: [],
-    message: 'Eligibility is verified again when a booking request is submitted.',
+    message:
+      'Eligibility is verified again when a booking request is submitted.',
   }
 }
 
-export const createBooking = async (data: CreateBookingParams): Promise<Booking> => {
-  const response = await api.post<CreateBookingParams, Booking>('/bookings', data)
+export const createBooking = async (
+  data: CreateBookingParams,
+): Promise<Booking> => {
+  const response = await api.post<CreateBookingParams, Booking>(
+    '/bookings',
+    data,
+  )
   return response.data
 }
 
@@ -94,12 +149,64 @@ export const cancelBooking = async (bookingId: number): Promise<void> => {
   await api.post(`/bookings/${bookingId}/cancel`)
 }
 
-export const checkIn = async (bookingId: number): Promise<void> => {
-  await api.post(`/bookings/${bookingId}/checkin`)
+export const getBookingQueue = async (
+  filters: BookingQueueFilters = {},
+): Promise<BookingQueueResult> => {
+  const params: Record<string, string | number> = {
+    per_page: filters.perPage ?? 20,
+  }
+
+  if (filters.status) params.status = filters.status
+  if (filters.q?.trim()) params.q = filters.q.trim()
+  if (filters.page) params.page = filters.page
+  if (filters.sort) params.sort = filters.sort
+
+  const response = await api.get<BookingEnvelope>('/manager/bookings', {
+    params,
+  })
+  const items = unwrapBookings(response.data)
+  const meta = response.meta
+
+  return {
+    items,
+    total: meta?.total ?? items.length,
+    page: meta?.page ?? filters.page ?? 1,
+    lastPage: meta?.last_page ?? 1,
+  }
 }
 
-export const returnItems = async (bookingId: number): Promise<void> => {
-  await api.post(`/bookings/${bookingId}/return`)
+export const decideBooking = async (
+  bookingId: number,
+  decision: BookingDecision,
+  reason: string,
+): Promise<Booking> => {
+  const response = await api.patch<
+    { decision: BookingDecision; reason: string },
+    Booking
+  >(`/bookings/${bookingId}/decision`, { decision, reason })
+  return response.data
+}
+
+export const checkIn = async (
+  bookingId: number,
+  report: ConditionReportPayload,
+): Promise<Booking> => {
+  const response = await api.post<ConditionReportPayload, Booking>(
+    `/bookings/${bookingId}/checkin`,
+    report,
+  )
+  return response.data
+}
+
+export const returnItems = async (
+  bookingId: number,
+  report: ConditionReportPayload,
+): Promise<Booking> => {
+  const response = await api.post<ConditionReportPayload, Booking>(
+    `/bookings/${bookingId}/return`,
+    report,
+  )
+  return response.data
 }
 
 export const reportIncident = async (
@@ -110,10 +217,16 @@ export const reportIncident = async (
   await api.post(`/bookings/${bookingId}/incidents`, { type, description })
 }
 
-export const getAvailability = async (resourceId: number, date: string): Promise<unknown> => {
-  const response = await api.get<unknown>(`/resources/${resourceId}/availability`, {
-    params: { date },
-  })
+export const getAvailability = async (
+  resourceId: number,
+  date: string,
+): Promise<unknown> => {
+  const response = await api.get<unknown>(
+    `/resources/${resourceId}/availability`,
+    {
+      params: { date },
+    },
+  )
   return response.data
 }
 

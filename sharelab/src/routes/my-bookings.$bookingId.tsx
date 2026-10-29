@@ -1,17 +1,19 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { RouteGuard } from '../components/auth/RouteGuard'
-import { SiteLayout } from '../components/layout/SiteLayout'
-import { MyBookings } from '../features/bookings/MyBookings'
+import { AppShell } from '../components/layout/AppShell'
+import { BookingDetail } from '../features/bookings/BookingDetail'
 
-const MyBookingDetailRoute = () => (
-  <SiteLayout>
+const MyBookingDetailRoute = () => {
+  const { bookingId } = Route.useParams()
+
+  return (
     <RouteGuard>
-      <div className="page-shell py-10 sm:py-14">
-        <MyBookings />
-      </div>
+      <AppShell>
+        <BookingDetail bookingId={bookingId} />
+      </AppShell>
     </RouteGuard>
-  </SiteLayout>
-)
+  )
+}
 
 export const Route = createFileRoute('/my-bookings/$bookingId')({
   component: MyBookingDetailRoute,

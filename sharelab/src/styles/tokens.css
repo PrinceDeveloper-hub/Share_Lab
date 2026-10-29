@@ -1,26 +1,50 @@
-/* ShareLab design tokens — warm beige + espresso glassmorphism */
+/*
+ * ShareLab design tokens.
+ *
+ * One warm, editorial palette: ivory paper, espresso ink, bronze details.
+ * Components should consume these variables (or the Tailwind aliases in
+ * @theme) rather than writing raw hex values.
+ */
 
 :root {
+  color-scheme: light;
+
   /* Core palette */
-  --ivory: #f7f0e6;
-  --cream: #fff9f1;
+  --ivory: #f8f5ef;
+  --cream: #fffcf7;
   --surface: #fffcf7;
-  --soft-beige: #e9d9c6;
-  --sand: #d6bda4;
-  --taupe: #a78b73;
-  --espresso: #4b2f1f;
-  --deep-brown: #302219;
-  --charcoal: #282522;
-  --muted: #82776d;
-  --success: #387653;
-  --warning: #b77932;
-  --error: #b44d42;
+  --surface-raised: #ffffff;
+  --soft-beige: #efe6d9;
+  --sand: #e4d9cb;
+  --taupe: #a78260;
+  --bronze: #a78260;
+  --bronze-deep: #8d6a4b;
+  --espresso: #513522;
+  --deep-brown: #2b1d14;
+  --charcoal: #292521;
+  --muted: #71685f;
+
+  /* Functional colors */
+  --success: #3f6b4f;
+  --success-soft: #eaf1eb;
+  --warning: #9c6b24;
+  --warning-soft: #f8f0e1;
+  --error: #a4453b;
+  --error-soft: #f8eae7;
+  --info: #3c5a74;
+  --info-soft: #eaf0f5;
 
   /* Typography */
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
-    Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  --font-display: 'Manrope', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-editorial: 'Fraunces', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  --font-sans:
+    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --font-display:
+    'Manrope', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    sans-serif;
+  --font-mono:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas,
+    'Liberation Mono', monospace;
+
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
   --text-base: 1rem;
@@ -31,81 +55,72 @@
   --text-4xl: 2.25rem;
   --text-5xl: 3rem;
 
-  /* Spacing + layout */
-  --container: 78rem;
-  --container-narrow: 58rem;
-  --header-height: 4.75rem;
-  --section-y: clamp(3.5rem, 7vw, 6.5rem);
-  --gutter: clamp(1.125rem, 4vw, 2rem);
+  /* Layout */
+  --container: 82rem;
+  --container-narrow: 46rem;
+  --container-wide: 92rem;
+  --header-height: 4.25rem;
+  --sidebar-width: 16.5rem;
+  --section-y: clamp(3.5rem, 7vw, 6rem);
+  --gutter: clamp(1.125rem, 4vw, 2.5rem);
 
   /* Radii */
-  --radius-xs: 0.5rem;
-  --radius-sm: 0.75rem;
-  --radius-md: 1rem;
-  --radius-lg: 1.5rem;
-  --radius-xl: 2rem;
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
   --radius-pill: 9999px;
 
-  /* Borders + shadows */
-  --border-subtle: rgba(82, 59, 45, 0.12);
-  --border-strong: rgba(82, 59, 45, 0.22);
-  --shadow-xs: 0 1px 2px rgba(75, 47, 31, 0.05);
-  --shadow-sm: 0 8px 24px -16px rgba(75, 47, 31, 0.3);
-  --shadow-md: 0 18px 44px -28px rgba(75, 47, 31, 0.35);
-  --shadow-lg: 0 32px 80px -40px rgba(75, 47, 31, 0.45);
-  --ring: rgba(75, 47, 31, 0.4);
-
-  /* Glassmorphism */
-  --glass-light: rgba(255, 249, 241, 0.76);
-  --glass-border: rgba(255, 255, 255, 0.62);
-  --glass-shadow: 0 12px 36px rgba(75, 47, 31, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.68);
-  --glass-dark: rgba(48, 34, 25, 0.76);
-  --glass-dark-border: rgba(255, 255, 255, 0.4);
-
-  /* Sidebar */
-  --sidebar-bg: #302219;
-
-  /* Status badge backgrounds */
-  --badge-pending: rgba(183, 121, 50, 0.15);
-  --badge-approved: rgba(56, 118, 83, 0.15);
-  --badge-rejected: rgba(180, 77, 66, 0.15);
-  --badge-checked-in: rgba(75, 47, 31, 0.15);
-  --badge-returned: rgba(130, 119, 109, 0.1);
-  --badge-cancelled: rgba(130, 119, 109, 0.08);
+  /* Borders and elevation */
+  --border-subtle: #e4d9cb;
+  --border-strong: #d3c2ae;
+  --border-ink: rgba(41, 37, 33, 0.14);
+  --shadow-xs: 0 1px 2px rgba(43, 29, 20, 0.04);
+  --shadow-sm:
+    0 1px 3px rgba(43, 29, 20, 0.05), 0 8px 20px -16px rgba(43, 29, 20, 0.22);
+  --shadow-md:
+    0 2px 4px rgba(43, 29, 20, 0.04), 0 18px 40px -30px rgba(43, 29, 20, 0.4);
+  --shadow-lg:
+    0 4px 8px rgba(43, 29, 20, 0.04), 0 32px 64px -40px rgba(43, 29, 20, 0.5);
+  --ring: #8d6a4b;
 
   /* Motion */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-  --transition-fast: 150ms var(--ease-out);
-  --transition-base: 250ms var(--ease-out);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --transition-fast: 140ms var(--ease-out);
+  --transition-base: 220ms var(--ease-out);
 }
 
 /*
- * Tailwind v4 theme bridge. The project previously relied on tailwind.config.js
- * color names, but v4 only exposes the default theme unless tokens are declared
- * with @theme. Keeping these here means existing utility names (bg-espresso,
- * text-charcoal, ...) and the new components share one source of truth.
+ * Tailwind v4 theme bridge. Utilities used across the app (bg-cream,
+ * text-charcoal, border-sand, font-display, ...) resolve to the tokens above.
  */
 @theme {
-  --color-ivory: #f7f0e6;
-  --color-cream: #fff9f1;
+  --color-ivory: #f8f5ef;
+  --color-cream: #fffcf7;
   --color-surface: #fffcf7;
-  --color-soft-beige: #e9d9c6;
-  --color-sand: #d6bda4;
-  --color-taupe: #a78b73;
-  --color-espresso: #4b2f1f;
-  --color-deep-brown: #302219;
-  --color-charcoal: #282522;
-  --color-muted: #82776d;
-  --color-success: #387653;
-  --color-warning: #b77932;
-  --color-error: #b44d42;
+  --color-soft-beige: #efe6d9;
+  --color-sand: #e4d9cb;
+  --color-taupe: #a78260;
+  --color-bronze: #a78260;
+  --color-espresso: #513522;
+  --color-deep-brown: #2b1d14;
+  --color-charcoal: #292521;
+  --color-muted: #71685f;
+  --color-success: #3f6b4f;
+  --color-warning: #9c6b24;
+  --color-error: #a4453b;
 
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-display: 'Manrope', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-editorial: 'Fraunces', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  --font-sans:
+    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display:
+    'Manrope', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  --radius-card: 1.25rem;
-  --radius-panel: 2rem;
+  --radius-card: 1rem;
+  --radius-panel: 1.5rem;
   --radius-pill: 9999px;
 
   --shadow-soft: var(--shadow-sm);

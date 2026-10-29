@@ -1,6 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from './useAuth'
-import type { Booking, CreateBookingParams, EligibilityCheck } from '../lib/booking-service'
+import type {
+  Booking,
+  ConditionLevel,
+  CreateBookingParams,
+  EligibilityCheck,
+} from '../lib/booking-service'
 import {
   checkEligibility,
   createBooking,
@@ -30,7 +35,8 @@ export const useBookings = () => {
 
   const createMutation = useMutation({
     mutationKey: ['create-booking'],
-    mutationFn: async (params: CreateBookingParams) => await createBooking(params),
+    mutationFn: async (params: CreateBookingParams) =>
+      await createBooking(params),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['bookings'] })
     },
@@ -57,21 +63,36 @@ export const useBookings = () => {
 
   const checkInMutation = useMutation({
     mutationKey: ['check-in'],
-    mutationFn: async (bookingId: number) => {
-      await checkIn(bookingId)
-    },
+    mutationFn: async ({
+      bookingId,
+      condition,
+      notes,
+    }: {
+      bookingId: number
+      condition: ConditionLevel
+      notes?: string
+    }) => await checkIn(bookingId, { condition, notes }),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['bookings'] })
+      void queryClient.invalidateQueries({ queryKey: ['booking-queue'] })
     },
   })
 
   const returnMutation = useMutation({
     mutationKey: ['return-items'],
-    mutationFn: async (bookingId: number) => {
-      await returnItems(bookingId)
-    },
+    mutationFn: async ({
+      bookingId,
+      condition,
+      notes,
+    }: {
+      bookingId: number
+      condition: ConditionLevel
+      notes?: string
+    }) => await returnItems(bookingId, { condition, notes }),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['bookings'] })
+      void queryClient.invalidateQueries({ queryKey: ['booking-queue'] })
+      void queryClient.invalidateQueries({ queryKey: ['incidents'] })
     },
   })
 

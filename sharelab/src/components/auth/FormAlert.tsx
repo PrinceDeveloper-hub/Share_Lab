@@ -7,21 +7,30 @@ export interface FormAlertProps {
   className?: string
 }
 
-export const FormAlert = ({ children, variant = 'error', className }: FormAlertProps) => {
-  const Icon = variant === 'success' ? CheckCircle2 : variant === 'info' ? Info : AlertCircle
+export const FormAlert = ({
+  children,
+  variant = 'error',
+  className,
+}: FormAlertProps) => {
+  const Icon =
+    variant === 'success'
+      ? CheckCircle2
+      : variant === 'info'
+        ? Info
+        : AlertCircle
 
   return (
     <div
       role={variant === 'error' ? 'alert' : 'status'}
       aria-live="polite"
       className={cn(
-        'flex items-start gap-2.5 rounded-xl border px-3.5 py-3 text-xs leading-relaxed',
+        'flex items-start gap-2.5 rounded-[var(--radius-sm)] border px-3.5 py-2.5 text-[0.8125rem] leading-relaxed',
         variant === 'error' &&
-          'border-[rgba(180,77,66,0.2)] bg-[rgba(180,77,66,0.07)] text-[var(--error)]',
+          'border-[rgba(164,69,59,0.22)] bg-[var(--error-soft)] text-[var(--error)]',
         variant === 'success' &&
-          'border-[rgba(56,118,83,0.2)] bg-[rgba(56,118,83,0.07)] text-[var(--success)]',
+          'border-[rgba(63,107,79,0.22)] bg-[var(--success-soft)] text-[var(--success)]',
         variant === 'info' &&
-          'border-[rgba(75,47,31,0.12)] bg-[rgba(75,47,31,0.045)] text-[var(--muted)]',
+          'border-[var(--border-subtle)] bg-[rgba(239,230,217,0.5)] text-[var(--muted)]',
         className,
       )}
     >
@@ -30,3 +39,5 @@ export const FormAlert = ({ children, variant = 'error', className }: FormAlertP
     </div>
   )
 }
+
+export default FormAlert

@@ -1,5 +1,6 @@
 import { SiteFooter } from './SiteFooter'
 import { SiteHeader } from './SiteHeader'
+import { PageFade } from '../ui/Reveal'
 
 export interface SiteLayoutProps {
   children: React.ReactNode
@@ -13,7 +14,7 @@ export const SiteLayout = ({ children }: SiteLayoutProps) => {
       </a>
       <SiteHeader />
       <main id="main-content" className="flex-1">
-        {children}
+        <PageFade>{children}</PageFade>
       </main>
       <SiteFooter />
     </div>

@@ -22,6 +22,20 @@ class BookingResource extends JsonResource
             'waitlist_position' => $this->waitlist_position,
             'confirm_by' => $this->confirm_by,
             'is_late' => $this->is_late,
+            'resource' => new ResourceResource($this->whenLoaded('resource')),
+            'user' => new UserResource($this->whenLoaded('user')),
+            'check_in_report' => $this->whenLoaded(
+                'checkInReport',
+                fn () => $this->checkInReport->isNotEmpty()
+                    ? new ConditionReportResource($this->checkInReport->first())
+                    : null
+            ),
+            'return_report' => $this->whenLoaded(
+                'returnReport',
+                fn () => $this->returnReport->isNotEmpty()
+                    ? new ConditionReportResource($this->returnReport->first())
+                    : null
+            ),
         ];
 
         // Add timeline and recommendation only for certain users

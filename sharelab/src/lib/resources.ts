@@ -44,7 +44,8 @@ const compactParams = (filters: ResourceListFilters) => {
   const params: Record<string, string | number> = {}
 
   if (filters.q?.trim()) params.q = filters.q.trim()
-  if (filters.category && filters.category !== 'all') params.category = filters.category
+  if (filters.category && filters.category !== 'all')
+    params.category = filters.category
   if (filters.status && filters.status !== 'all') params.status = filters.status
   if (filters.page) params.page = filters.page
   if (filters.perPage) params.per_page = filters.perPage
@@ -58,8 +59,31 @@ export const fetchResources = async (
   return api.get<Resource[]>('/resources', { params: compactParams(filters) })
 }
 
-export const fetchResource = async (resourceId: number): Promise<ResourceDetailResponse> => {
+export const fetchResource = async (
+  resourceId: number,
+): Promise<ResourceDetailResponse> => {
   return api.get<Resource>(`/resources/${resourceId}`)
+}
+
+export interface ResourceCreatePayload {
+  name: string
+  category: string
+  location: string
+  description?: string
+  rules?: string
+  max_hours_per_booking: number
+  weekly_cap_hours: number
+  status?: 'active' | 'inactive'
+}
+
+export const createResource = async (
+  payload: ResourceCreatePayload,
+): Promise<Resource> => {
+  const response = await api.post<ResourceCreatePayload, Resource>(
+    '/resources',
+    payload,
+  )
+  return response.data
 }
 
 const categoryImages: { match: RegExp; src: string }[] = [
@@ -92,7 +116,12 @@ const categoryImages: { match: RegExp; src: string }[] = [
 const fallbackImage =
   'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80'
 
-export const getResourceImage = (resource: Pick<Resource, 'name' | 'category'>) => {
+export const getResourceImage = (
+  resource: Pick<Resource, 'name' | 'category'>,
+) => {
   const source = `${resource.category} ${resource.name}`
-  return categoryImages.find((entry) => entry.match.test(source))?.src ?? fallbackImage
+  return (
+    categoryImages.find((entry) => entry.match.test(source))?.src ??
+    fallbackImage
+  )
 }

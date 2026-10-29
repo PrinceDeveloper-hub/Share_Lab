@@ -11,12 +11,15 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as CredentialsRouteImport } from './routes/credentials'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ManagerRouteImport } from './routes/manager'
 import { Route as OwnerRouteImport } from './routes/owner'
 import { Route as RegisterRouteImport } from './routes/register'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminAuditRouteImport } from './routes/admin.audit'
 import { Route as MyBookingsIndexRouteImport } from './routes/my-bookings.index'
 import { Route as MyBookingsBookingIdRouteImport } from './routes/my-bookings.$bookingId'
 import { Route as ResourcesIndexRouteImport } from './routes/resources.index'
@@ -30,6 +33,11 @@ const IndexRoute = IndexRouteImport.update({
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CredentialsRoute = CredentialsRouteImport.update({
+  id: '/credentials',
+  path: '/credentials',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -62,6 +70,16 @@ const RegisterRoute = RegisterRouteImport.update({
   path: '/register',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminAuditRoute = AdminAuditRouteImport.update({
+  id: '/admin/audit',
+  path: '/admin/audit',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MyBookingsIndexRoute = MyBookingsIndexRouteImport.update({
   id: '/my-bookings/',
   path: '/my-bookings/',
@@ -86,28 +104,34 @@ const ResourcesResourceIdRoute = ResourcesResourceIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/credentials': typeof CredentialsRoute
   '/dashboard': typeof DashboardRoute
   '/how-it-works': typeof HowItWorksRoute
   '/login': typeof LoginRoute
   '/manager': typeof ManagerRoute
   '/owner': typeof OwnerRoute
   '/register': typeof RegisterRoute
+  '/admin/audit': typeof AdminAuditRoute
   '/my-bookings/$bookingId': typeof MyBookingsBookingIdRoute
   '/resources/$resourceId': typeof ResourcesResourceIdRoute
+  '/admin/': typeof AdminIndexRoute
   '/my-bookings/': typeof MyBookingsIndexRoute
   '/resources/': typeof ResourcesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/credentials': typeof CredentialsRoute
   '/dashboard': typeof DashboardRoute
   '/how-it-works': typeof HowItWorksRoute
   '/login': typeof LoginRoute
   '/manager': typeof ManagerRoute
   '/owner': typeof OwnerRoute
   '/register': typeof RegisterRoute
+  '/admin/audit': typeof AdminAuditRoute
   '/my-bookings/$bookingId': typeof MyBookingsBookingIdRoute
   '/resources/$resourceId': typeof ResourcesResourceIdRoute
+  '/admin': typeof AdminIndexRoute
   '/my-bookings': typeof MyBookingsIndexRoute
   '/resources': typeof ResourcesIndexRoute
 }
@@ -115,14 +139,17 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/credentials': typeof CredentialsRoute
   '/dashboard': typeof DashboardRoute
   '/how-it-works': typeof HowItWorksRoute
   '/login': typeof LoginRoute
   '/manager': typeof ManagerRoute
   '/owner': typeof OwnerRoute
   '/register': typeof RegisterRoute
+  '/admin/audit': typeof AdminAuditRoute
   '/my-bookings/$bookingId': typeof MyBookingsBookingIdRoute
   '/resources/$resourceId': typeof ResourcesResourceIdRoute
+  '/admin/': typeof AdminIndexRoute
   '/my-bookings/': typeof MyBookingsIndexRoute
   '/resources/': typeof ResourcesIndexRoute
 }
@@ -131,42 +158,51 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/credentials'
     | '/dashboard'
     | '/how-it-works'
     | '/login'
     | '/manager'
     | '/owner'
     | '/register'
+    | '/admin/audit'
     | '/my-bookings/$bookingId'
     | '/resources/$resourceId'
+    | '/admin/'
     | '/my-bookings/'
     | '/resources/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
+    | '/credentials'
     | '/dashboard'
     | '/how-it-works'
     | '/login'
     | '/manager'
     | '/owner'
     | '/register'
+    | '/admin/audit'
     | '/my-bookings/$bookingId'
     | '/resources/$resourceId'
+    | '/admin'
     | '/my-bookings'
     | '/resources'
   id:
     | '__root__'
     | '/'
     | '/about'
+    | '/credentials'
     | '/dashboard'
     | '/how-it-works'
     | '/login'
     | '/manager'
     | '/owner'
     | '/register'
+    | '/admin/audit'
     | '/my-bookings/$bookingId'
     | '/resources/$resourceId'
+    | '/admin/'
     | '/my-bookings/'
     | '/resources/'
   fileRoutesById: FileRoutesById
@@ -174,14 +210,17 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  CredentialsRoute: typeof CredentialsRoute
   DashboardRoute: typeof DashboardRoute
   HowItWorksRoute: typeof HowItWorksRoute
   LoginRoute: typeof LoginRoute
   ManagerRoute: typeof ManagerRoute
   OwnerRoute: typeof OwnerRoute
   RegisterRoute: typeof RegisterRoute
+  AdminAuditRoute: typeof AdminAuditRoute
   MyBookingsBookingIdRoute: typeof MyBookingsBookingIdRoute
   ResourcesResourceIdRoute: typeof ResourcesResourceIdRoute
+  AdminIndexRoute: typeof AdminIndexRoute
   MyBookingsIndexRoute: typeof MyBookingsIndexRoute
   ResourcesIndexRoute: typeof ResourcesIndexRoute
 }
@@ -200,6 +239,13 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/credentials': {
+      id: '/credentials'
+      path: '/credentials'
+      fullPath: '/credentials'
+      preLoaderRoute: typeof CredentialsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -244,6 +290,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/audit': {
+      id: '/admin/audit'
+      path: '/admin/audit'
+      fullPath: '/admin/audit'
+      preLoaderRoute: typeof AdminAuditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/my-bookings/': {
       id: '/my-bookings/'
       path: '/my-bookings'
@@ -278,14 +338,17 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  CredentialsRoute: CredentialsRoute,
   DashboardRoute: DashboardRoute,
   HowItWorksRoute: HowItWorksRoute,
   LoginRoute: LoginRoute,
   ManagerRoute: ManagerRoute,
   OwnerRoute: OwnerRoute,
   RegisterRoute: RegisterRoute,
+  AdminAuditRoute: AdminAuditRoute,
   MyBookingsBookingIdRoute: MyBookingsBookingIdRoute,
   ResourcesResourceIdRoute: ResourcesResourceIdRoute,
+  AdminIndexRoute: AdminIndexRoute,
   MyBookingsIndexRoute: MyBookingsIndexRoute,
   ResourcesIndexRoute: ResourcesIndexRoute,
 }

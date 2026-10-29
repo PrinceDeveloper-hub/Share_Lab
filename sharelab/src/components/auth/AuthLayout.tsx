@@ -1,8 +1,7 @@
 import type { ReactNode } from 'react'
 import { Link } from '@tanstack/react-router'
 import { motion, useReducedMotion } from 'framer-motion'
-import { FlaskConical, ShieldCheck, Sparkles } from 'lucide-react'
-import { BackButton } from '../ui/BackButton'
+import { ArrowLeft, Check, FlaskConical, ShieldCheck } from 'lucide-react'
 
 export interface AuthLayoutProps {
   children: ReactNode
@@ -11,22 +10,34 @@ export interface AuthLayoutProps {
 
 const copy = {
   login: {
+    eyebrow: 'Member access',
     headline: 'Your next discovery starts here.',
     description:
-      'Sign in to discover shared campus equipment, review eligibility requirements, and keep every request and handover in one accountable place.',
-    asideLabel: 'Member access',
-    asideTitle: 'One place for campus resources',
-    asideDescription:
-      'Browse live listings, request a time window, and follow each decision from review to return.',
+      'Sign in to request shared campus equipment, review eligibility requirements, and keep every handover in one accountable place.',
+    points: [
+      'Browse the live catalogue and its requirements',
+      'Follow each request from review to return',
+      'Keep condition and booking records together',
+    ],
+    asideLabel: 'Already a member?',
+    asideTitle: 'Everything in one workspace',
+    asideText:
+      'Your bookings, credentials, and decisions stay connected to your account.',
   },
   register: {
+    eyebrow: 'Join the commons',
     headline: 'Bring your next idea to life.',
     description:
       'Create an account to request laboratory equipment, studios, and shared facilities across campus — with clear requirements at every step.',
-    asideLabel: 'Join the commons',
+    points: [
+      'Check eligibility before you request a slot',
+      'Keep a clear record of every handover',
+      'Use one account across campus resources',
+    ],
+    asideLabel: 'New to ShareLab?',
     asideTitle: 'Access made understandable',
-    asideDescription:
-      'See what a resource requires before you ask for it, then track the outcome without chasing down messages.',
+    asideText:
+      'See what a resource requires before you ask for it, then follow the outcome.',
   },
 } as const
 
@@ -35,131 +46,137 @@ export const AuthLayout = ({ children, mode }: AuthLayoutProps) => {
   const content = copy[mode]
 
   return (
-    <div className="relative min-h-dvh overflow-x-clip bg-[#f5f0e8] text-[#241a16]">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-[34rem] bg-[radial-gradient(ellipse_at_25%_0%,rgba(214,189,164,0.26),transparent_58%)]"
-      />
-
-      <div className="relative mx-auto grid min-h-dvh w-full max-w-[100rem] lg:grid-cols-[minmax(0,1.05fr)_minmax(30rem,0.95fr)]">
-        <motion.aside
-          aria-label="About ShareLab"
-          initial={shouldReduceMotion ? false : { opacity: 0, x: -24 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: shouldReduceMotion ? 0 : 0.65, ease: [0.22, 1, 0.36, 1] }}
-          className="relative hidden min-h-dvh overflow-hidden lg:block"
-        >
+    <div className="min-h-dvh bg-[var(--ivory)]">
+      <div className="grid min-h-dvh lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
+        <aside className="relative hidden overflow-hidden bg-[var(--deep-brown)] lg:flex lg:flex-col lg:justify-between">
           <img
             src="/images/hero/scientific-equipment.webp"
             alt="Scientific instruments arranged on a laboratory bench"
             className="absolute inset-0 h-full w-full object-cover"
             loading="eager"
             decoding="async"
-            fetchPriority="high"
           />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(32,21,15,0.38)_0%,rgba(32,21,15,0.08)_34%,rgba(32,21,15,0.82)_100%)]" />
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(32,21,15,0.38),transparent_58%)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(43,29,20,0.72)_0%,rgba(43,29,20,0.36)_45%,rgba(43,29,20,0.9)_100%)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(43,29,20,0.45),transparent_70%)]" />
 
-          <div className="relative flex min-h-dvh flex-col justify-between p-10 xl:p-14">
+          <div className="relative p-10 xl:p-12">
             <Link
               to="/"
               aria-label="ShareLab home"
-              className="inline-flex w-fit items-center gap-3 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-4 focus-visible:ring-offset-transparent"
+              className="inline-flex items-center gap-2.5 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(248,245,239,0.8)] focus-visible:ring-offset-4 focus-visible:ring-offset-transparent"
             >
-              <span className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-white/10 shadow-[0_12px_32px_-14px_rgba(0,0,0,0.7)] backdrop-blur-md">
-                <FlaskConical className="h-5 w-5 text-[var(--cream)]" aria-hidden="true" />
+              <span className="flex h-9 w-9 items-center justify-center rounded-[0.5rem] border border-white/20 bg-white/10 backdrop-blur-md">
+                <FlaskConical
+                  className="h-4 w-4 text-[var(--cream)]"
+                  aria-hidden="true"
+                />
               </span>
               <span className="flex flex-col leading-none">
-                <span className="font-display text-lg font-bold tracking-tight text-white">
+                <span className="font-display text-[1.05rem] font-bold tracking-[-0.02em] text-white">
                   ShareLab
                 </span>
-                <span className="mt-1 text-[0.58rem] font-semibold uppercase tracking-[0.24em] text-white/60">
-                  Campus Commons
+                <span className="mt-1 text-[0.55rem] font-semibold uppercase tracking-[0.2em] text-white/55">
+                  Campus Resource Commons
                 </span>
               </span>
             </Link>
+          </div>
 
-            <div className="max-w-xl pb-2">
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-white/80 backdrop-blur-md">
-                <Sparkles className="h-3.5 w-3.5 text-[rgba(255,249,241,0.78)]" aria-hidden="true" />
-                Campus resource commons
-              </span>
-              <h1 className="mt-5 font-editorial text-[clamp(2.5rem,4vw,4.2rem)] font-semibold leading-[1.02] tracking-[-0.03em] text-white">
-                {content.headline}
-              </h1>
-              <p className="mt-5 max-w-lg text-base leading-relaxed text-white/70">
-                {content.description}
+          <div className="relative p-10 xl:p-12">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/18 bg-white/10 px-3 py-1.5 text-[0.6rem] font-semibold uppercase tracking-[0.16em] text-white/80 backdrop-blur-md">
+              <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
+              {content.eyebrow}
+            </span>
+
+            <motion.h1
+              initial={shouldReduceMotion ? false : { opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: shouldReduceMotion ? 0 : 0.5,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              className="mt-5 max-w-xl font-display text-[clamp(2.1rem,3.2vw,3.1rem)] font-semibold leading-[1.05] tracking-[-0.035em] text-white"
+            >
+              {content.headline}
+            </motion.h1>
+
+            <p className="mt-4 max-w-md text-[0.9375rem] leading-relaxed text-white/68">
+              {content.description}
+            </p>
+
+            <ul className="mt-7 space-y-2.5">
+              {content.points.map((point) => (
+                <li
+                  key={point}
+                  className="flex items-start gap-2.5 text-[0.8125rem] text-white/78"
+                >
+                  <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-white/12">
+                    <Check
+                      className="h-2.5 w-2.5"
+                      strokeWidth={3}
+                      aria-hidden="true"
+                    />
+                  </span>
+                  {point}
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-8 max-w-sm rounded-[var(--radius-md)] border border-white/16 bg-[rgba(248,245,239,0.08)] p-4 backdrop-blur-md">
+              <p className="text-[0.6rem] font-semibold uppercase tracking-[0.14em] text-white/45">
+                {content.asideLabel}
               </p>
-
-              <div className="mt-8 rounded-[1.35rem] border border-white/20 bg-[rgba(255,249,241,0.12)] p-4 shadow-[0_24px_60px_-30px_rgba(0,0,0,0.8)] backdrop-blur-xl sm:p-5">
-                <div className="flex items-start gap-3">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/10">
-                    <ShieldCheck className="h-4 w-4 text-[var(--cream)]" aria-hidden="true" />
-                  </span>
-                  <div>
-                    <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-white/50">
-                      {content.asideLabel}
-                    </p>
-                    <p className="mt-1 text-sm font-semibold text-white">{content.asideTitle}</p>
-                    <p className="mt-1 text-xs leading-relaxed text-white/60">
-                      {content.asideDescription}
-                    </p>
-                  </div>
-                </div>
-              </div>
+              <p className="mt-1 text-[0.8125rem] font-semibold text-white">
+                {content.asideTitle}
+              </p>
+              <p className="mt-1 text-[0.72rem] leading-relaxed text-white/58">
+                {content.asideText}
+              </p>
             </div>
           </div>
-        </motion.aside>
+        </aside>
 
-        <section className="relative flex min-h-dvh flex-col px-4 py-4 sm:px-6 sm:py-6 lg:px-10 lg:py-6 xl:px-14">
-          <div className="mx-auto flex w-full max-w-[30rem] flex-1 flex-col">
-            <div className="flex items-center justify-between gap-4 lg:justify-end">
-              <Link
-                to="/"
-                aria-label="ShareLab home"
-                className="inline-flex items-center gap-2.5 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-4 focus-visible:ring-offset-[#f5f0e8] lg:hidden"
-              >
-                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--espresso)] shadow-[0_10px_24px_-12px_rgba(75,47,31,0.8)]">
-                  <FlaskConical className="h-[1.15rem] w-[1.15rem] text-[var(--cream)]" aria-hidden="true" />
-                </span>
-                <span className="flex flex-col leading-none">
-                  <span className="font-display text-[1.05rem] font-bold tracking-tight text-[var(--charcoal)]">
-                    ShareLab
-                  </span>
-                  <span className="mt-1 text-[0.58rem] font-semibold uppercase tracking-[0.24em] text-[var(--muted)]">
-                    Campus Commons
-                  </span>
-                </span>
-              </Link>
+        <section className="flex min-h-dvh flex-col px-4 py-5 sm:px-8 lg:px-12 lg:py-6">
+          <div className="flex items-center justify-between gap-4">
+            <Link to="/" className="inline-flex items-center gap-2.5 lg:hidden">
+              <span className="flex h-8 w-8 items-center justify-center rounded-[0.45rem] bg-[var(--espresso)]">
+                <FlaskConical
+                  className="h-4 w-4 text-[var(--cream)]"
+                  aria-hidden="true"
+                />
+              </span>
+              <span className="font-display text-[1rem] font-bold tracking-[-0.02em] text-[var(--charcoal)]">
+                ShareLab
+              </span>
+            </Link>
 
-              <BackButton fallback="/" className="-mr-2 shrink-0" />
-            </div>
-
-            <div className="flex flex-1 items-center justify-center py-5 sm:py-8 lg:py-6">
-              <motion.div
-                initial={shouldReduceMotion ? false : { opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  duration: shouldReduceMotion ? 0 : 0.55,
-                  delay: shouldReduceMotion ? 0 : 0.08,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
-                className="w-full"
-              >
-                <div className="relative overflow-hidden rounded-[1.5rem] border border-[rgba(255,255,255,0.78)] bg-[rgba(255,252,247,0.8)] p-5 shadow-[0_32px_80px_-42px_rgba(75,47,31,0.5),inset_0_1px_0_rgba(255,255,255,0.92)] backdrop-blur-2xl sm:rounded-[1.85rem] sm:p-8">
-                  <div
-                    aria-hidden="true"
-                    className="pointer-events-none absolute inset-x-7 top-0 h-px bg-[linear-gradient(90deg,transparent,rgba(75,47,31,0.2),transparent)]"
-                  />
-                  {children}
-                </div>
-
-                <p className="mx-auto mt-4 max-w-[30rem] px-2 text-center text-[0.68rem] leading-relaxed text-[var(--muted)] sm:mt-5">
-                  Secure session · Server-managed authentication · ShareLab Campus Commons
-                </p>
-              </motion.div>
-            </div>
+            <Link
+              to="/"
+              className="ml-auto inline-flex items-center gap-1.5 rounded-[0.375rem] px-2 py-1 text-[0.78rem] font-medium text-[var(--muted)] transition-colors hover:text-[var(--espresso)]"
+            >
+              <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
+              Back to site
+            </Link>
           </div>
+
+          <div className="flex flex-1 items-center justify-center py-8 sm:py-10">
+            <motion.div
+              initial={shouldReduceMotion ? false : { opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: shouldReduceMotion ? 0 : 0.4,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              className="w-full max-w-[27rem]"
+            >
+              {children}
+            </motion.div>
+          </div>
+
+          <p className="mx-auto max-w-[27rem] text-center text-[0.68rem] leading-relaxed text-[var(--muted)]">
+            Server-managed sessions · Credential-aware access · ShareLab Campus
+            Resource Commons
+          </p>
         </section>
       </div>
     </div>

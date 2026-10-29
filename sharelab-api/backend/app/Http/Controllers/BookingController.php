@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Models\ConditionReport;
 use App\Models\Resource;
 use App\Models\User;
 use App\Enums\BookingStatus;
@@ -139,7 +140,7 @@ class BookingController extends Controller
         $status = $request->input('status');
 
         $query = $user->bookings()
-            ->with('resource');
+            ->with(['resource', 'checkInReport.reporter', 'returnReport.reporter']);
 
         if ($status) {
             $query->where('status', $status);
@@ -150,6 +151,69 @@ class BookingController extends Controller
         return response()->json([
             'data' => new \App\Http\Resources\BookingResourceCollection($bookings),
             'message' => 'Bookings retrieved successfully.',
+            'meta' => [
+                'page' => $bookings->currentPage(),
+                'per_page' => $bookings->perPage(),
+                'total' => $bookings->total(),
+                'last_page' => $bookings->lastPage(),
+            ],
+        ], 200);
+    }
+
+    /**
+     * List booking requests across the resources a manager is assigned to, or
+     * every booking for an administrator. Used by the manager decision queue.
+     */
+    public function queue(Request $request)
+    {
+        $user = $request->user();
+
+        $query = Booking::query()->with([
+            'resource.owner',
+            'user',
+            'checkInReport.reporter',
+            'returnReport.reporter',
+        ]);
+
+        if (! $user->role->isAdmin()) {
+            $resourceIds = $user->resourceManagerAssignments()->pluck('resource_id');
+            $query->whereIn('resource_id', $resourceIds);
+        }
+
+        if ($request->filled('status')) {
+            $validated = $request->validate([
+                'status' => ['required', 'in:pending,waitlisted,approved,rejected,cancelled,checked_in,returned'],
+            ]);
+            $query->where('status', $validated['status']);
+        }
+
+        if ($request->filled('resource_id')) {
+            $request->validate(['resource_id' => ['integer']]);
+            $query->where('resource_id', $request->integer('resource_id'));
+        }
+
+        if ($request->filled('q')) {
+            $term = $request->input('q');
+            $query->where(function ($inner) use ($term) {
+                $inner->where('purpose', 'like', "%{$term}%")
+                    ->orWhereHas('resource', fn ($resource) => $resource->where('name', 'like', "%{$term}%"))
+                    ->orWhereHas('user', fn ($requester) => $requester->where('name', 'like', "%{$term}%"));
+            });
+        }
+
+        if ($request->input('sort') === 'priority') {
+            $query->orderByRaw('CASE WHEN priority_score IS NULL THEN 1 ELSE 0 END')
+                ->orderBy('priority_score')
+                ->orderBy('created_at');
+        } else {
+            $query->latest('start_at');
+        }
+
+        $bookings = $query->paginate($request->input('per_page', 20));
+
+        return response()->json([
+            'data' => new \App\Http\Resources\BookingResourceCollection($bookings),
+            'message' => 'Booking queue retrieved successfully.',
             'meta' => [
                 'page' => $bookings->currentPage(),
                 'per_page' => $bookings->perPage(),
@@ -176,6 +240,8 @@ class BookingController extends Controller
                 'errors' => [],
             ], 403);
         }
+
+        $booking->load(['resource', 'user', 'checkInReport.reporter', 'returnReport.reporter']);
 
         $bookingResource = new \App\Http\Resources\BookingResource($booking);
 
@@ -269,7 +335,7 @@ class BookingController extends Controller
         ]);
 
         try {
-            $booking = BookingService::extend($booking, $validated['new_end_at'], $request->user();
+            $booking = BookingService::extend($booking, $validated['new_end_at'], $request->user());
 
             return response()->json([
                 'data' => new \App\Http\Resources\BookingResource($booking),
@@ -329,10 +395,24 @@ class BookingController extends Controller
     /**
      * Check in for a booking.
      */
-    public function checkIn(Request $request, Booking $booking, ConditionReport $report)
+    public function checkIn(Request $request, Booking $booking)
     {
+        $validated = $request->validate([
+            'condition' => ['required', 'in:excellent,good,fair,damaged'],
+            'notes' => ['nullable', 'string', 'max:2000'],
+            'checklist' => ['nullable', 'array'],
+        ]);
+
+        abort_unless(
+            $request->user()->can('checkIn', $booking),
+            403,
+            'You do not have permission to check in for this booking.'
+        );
+
         try {
+            $report = new ConditionReport($validated);
             $booking = BookingService::checkIn($booking, $request->user(), $report);
+            $booking->load(['checkInReport.reporter', 'returnReport.reporter']);
 
             return response()->json([
                 'data' => new \App\Http\Resources\BookingResource($booking),
@@ -350,10 +430,24 @@ class BookingController extends Controller
     /**
      * Return items for a booking.
      */
-    public function returnItems(Request $request, Booking $booking, ConditionReport $report)
+    public function returnItems(Request $request, Booking $booking)
     {
+        $validated = $request->validate([
+            'condition' => ['required', 'in:excellent,good,fair,damaged'],
+            'notes' => ['nullable', 'string', 'max:2000'],
+            'checklist' => ['nullable', 'array'],
+        ]);
+
+        abort_unless(
+            $request->user()->can('returnItems', $booking),
+            403,
+            'You do not have permission to return this booking.'
+        );
+
         try {
+            $report = new ConditionReport($validated);
             $booking = BookingService::returnItems($booking, $request->user(), $report);
+            $booking->load(['checkInReport.reporter', 'returnReport.reporter']);
 
             return response()->json([
                 'data' => new \App\Http\Resources\BookingResource($booking),

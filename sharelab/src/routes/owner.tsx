@@ -1,16 +1,14 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { RouteGuard } from '../components/auth/RouteGuard'
-import { SiteLayout } from '../components/layout/SiteLayout'
-import { Dashboard } from '../features/dashboard/Dashboard'
+import { AppShell } from '../components/layout/AppShell'
+import { OwnerWorkspace } from '../features/owner/OwnerWorkspace'
 
 const OwnerRoute = () => (
-  <SiteLayout>
-    <RouteGuard roles={['owner', 'admin']}>
-      <div className="page-shell py-10 sm:py-14">
-        <Dashboard />
-      </div>
-    </RouteGuard>
-  </SiteLayout>
+  <RouteGuard roles={['owner', 'admin']}>
+    <AppShell>
+      <OwnerWorkspace />
+    </AppShell>
+  </RouteGuard>
 )
 
 export const Route = createFileRoute('/owner')({

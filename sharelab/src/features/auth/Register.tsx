@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 import { Link, useRouter } from '@tanstack/react-router'
-import { ArrowRight, Check, Loader2, Mail, UserRound } from 'lucide-react'
-import { AuthField } from '../../components/auth/AuthField'
+import { ArrowRight, Check, Loader2 } from 'lucide-react'
 import { AuthLayout } from '../../components/auth/AuthLayout'
 import { FormAlert } from '../../components/auth/FormAlert'
 import { PasswordField } from '../../components/auth/PasswordField'
 import { Button } from '../../components/ui/button'
+import { Field, Input } from '../../components/ui/Field'
 import { useAuth } from '../../hooks/useAuth'
 import { usePageMeta } from '../../hooks/usePageMeta'
 import { getSafeRedirect } from '../../lib/auth'
@@ -108,10 +108,16 @@ export const Register = ({ redirect }: RegisterProps) => {
         setErrors((current) => ({
           ...current,
           ...(result.fieldErrors.name ? { name: result.fieldErrors.name } : {}),
-          ...(result.fieldErrors.email ? { email: result.fieldErrors.email } : {}),
-          ...(result.fieldErrors.password ? { password: result.fieldErrors.password } : {}),
+          ...(result.fieldErrors.email
+            ? { email: result.fieldErrors.email }
+            : {}),
+          ...(result.fieldErrors.password
+            ? { password: result.fieldErrors.password }
+            : {}),
           ...(result.fieldErrors.password_confirmation
-            ? { password_confirmation: result.fieldErrors.password_confirmation }
+            ? {
+                password_confirmation: result.fieldErrors.password_confirmation,
+              }
             : {}),
         }))
       }
@@ -129,22 +135,28 @@ export const Register = ({ redirect }: RegisterProps) => {
   return (
     <AuthLayout mode="register">
       <div>
-        <p className="text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-[var(--taupe)]">
-          Join the commons
-        </p>
-        <h1 className="mt-2.5 font-editorial text-[clamp(1.85rem,4vw,2.3rem)] font-semibold leading-[1.08] tracking-[-0.03em] text-[var(--charcoal)]">
+        <span className="eyebrow">Join the commons</span>
+        <h1 className="mt-2.5 font-display text-[clamp(1.85rem,3.6vw,2.3rem)] font-semibold leading-[1.08] tracking-[-0.032em] text-[var(--charcoal)]">
           Create your account
         </h1>
-        <p className="mt-3 text-sm leading-relaxed text-[var(--muted)]">
-          One account for the equipment, studios, and shared facilities you need.
+        <p className="mt-2.5 text-[0.875rem] leading-relaxed text-[var(--muted)]">
+          One account for the equipment, studios, and shared facilities you
+          need.
         </p>
       </div>
 
-      <ul className="mt-4 hidden gap-1.5 rounded-xl border border-[rgba(75,47,31,0.1)] bg-[rgba(75,47,31,0.035)] px-3 py-2.5 sm:grid">
+      <ul className="mt-5 space-y-1.5 rounded-[var(--radius-sm)] border border-[var(--border-subtle)] bg-[rgba(239,230,217,0.35)] px-3.5 py-3">
         {accountBenefits.map((benefit) => (
-          <li key={benefit} className="flex items-start gap-2 text-[0.72rem] leading-relaxed text-[var(--muted)]">
-            <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[rgba(56,118,83,0.12)] text-[var(--success)]">
-              <Check className="h-2.5 w-2.5" strokeWidth={3} aria-hidden="true" />
+          <li
+            key={benefit}
+            className="flex items-start gap-2 text-[0.75rem] leading-relaxed text-[var(--muted)]"
+          >
+            <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[rgba(63,107,79,0.12)] text-[var(--success)]">
+              <Check
+                className="h-2.5 w-2.5"
+                strokeWidth={3}
+                aria-hidden="true"
+              />
             </span>
             {benefit}
           </li>
@@ -157,40 +169,57 @@ export const Register = ({ redirect }: RegisterProps) => {
         </FormAlert>
       ) : null}
 
-      <form className="mt-5 space-y-4" onSubmit={handleSubmit} noValidate aria-busy={submitting}>
-        <AuthField
+      <form
+        className="mt-5 space-y-4"
+        onSubmit={handleSubmit}
+        noValidate
+        aria-busy={submitting}
+      >
+        <Field
           id="register-name"
           label="Full name"
-          value={name}
-          onChange={(event) => {
-            setName(event.target.value)
-            setServerError(null)
-            clearError('name')
-          }}
-          autoComplete="name"
-          placeholder="Your full name"
-          icon={UserRound}
           error={errors.name}
-          disabled={submitting}
-        />
+          required
+        >
+          <Input
+            id="register-name"
+            value={name}
+            onChange={(event) => {
+              setName(event.target.value)
+              setServerError(null)
+              clearError('name')
+            }}
+            autoComplete="name"
+            placeholder="Your full name"
+            aria-invalid={errors.name ? 'true' : undefined}
+            aria-describedby={errors.name ? 'register-name-error' : undefined}
+            disabled={submitting}
+          />
+        </Field>
 
-        <AuthField
+        <Field
           id="register-email"
           label="Email address"
-          type="email"
-          value={email}
-          onChange={(event) => {
-            setEmail(event.target.value)
-            setServerError(null)
-            clearError('email')
-          }}
-          autoComplete="email"
-          inputMode="email"
-          placeholder="you@example.com"
-          icon={Mail}
           error={errors.email}
-          disabled={submitting}
-        />
+          required
+        >
+          <Input
+            id="register-email"
+            type="email"
+            value={email}
+            onChange={(event) => {
+              setEmail(event.target.value)
+              setServerError(null)
+              clearError('email')
+            }}
+            autoComplete="email"
+            inputMode="email"
+            placeholder="you@university.edu"
+            aria-invalid={errors.email ? 'true' : undefined}
+            aria-describedby={errors.email ? 'register-email-error' : undefined}
+            disabled={submitting}
+          />
+        </Field>
 
         <div className="grid gap-4 sm:grid-cols-2">
           <PasswordField
@@ -207,6 +236,7 @@ export const Register = ({ redirect }: RegisterProps) => {
             }}
             autoComplete="new-password"
             placeholder="8+ characters"
+            hint="At least 8 characters."
             error={errors.password}
             disabled={submitting}
           />
@@ -227,11 +257,16 @@ export const Register = ({ redirect }: RegisterProps) => {
           />
         </div>
 
-        <Button type="submit" size="lg" className="mt-1 w-full" disabled={submitting}>
+        <Button
+          type="submit"
+          size="lg"
+          className="mt-1 w-full"
+          disabled={submitting}
+        >
           {submitting ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-              Creating account...
+              Creating account…
             </>
           ) : (
             <>
@@ -242,18 +277,16 @@ export const Register = ({ redirect }: RegisterProps) => {
         </Button>
       </form>
 
-      <div className="mt-5 border-t border-[rgba(82,59,45,0.1)] pt-5">
-        <p className="text-center text-sm text-[var(--muted)]">
-          Already have an account?{' '}
-          <Link
-            to="/login"
-            search={{ redirect }}
-            className="rounded-sm font-semibold text-[var(--espresso)] underline decoration-[rgba(75,47,31,0.28)] underline-offset-4 transition-colors hover:text-[var(--deep-brown)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
-          >
-            Sign in
-          </Link>
-        </p>
-      </div>
+      <p className="mt-5 text-center text-[0.8125rem] text-[var(--muted)]">
+        Already have an account?{' '}
+        <Link
+          to="/login"
+          search={{ redirect }}
+          className="font-semibold text-[var(--espresso)] underline decoration-[rgba(81,53,34,0.28)] underline-offset-4 hover:text-[var(--bronze-deep)]"
+        >
+          Sign in
+        </Link>
+      </p>
     </AuthLayout>
   )
 }

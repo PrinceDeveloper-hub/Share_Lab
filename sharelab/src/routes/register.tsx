@@ -5,7 +5,9 @@ export interface RegisterSearch {
   redirect?: string
 }
 
-const parseRegisterSearch = (search: Record<string, unknown>): RegisterSearch => ({
+const parseRegisterSearch = (
+  search: Record<string, unknown>,
+): RegisterSearch => ({
   redirect: typeof search.redirect === 'string' ? search.redirect : undefined,
 })
 

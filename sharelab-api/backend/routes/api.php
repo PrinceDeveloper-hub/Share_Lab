@@ -49,6 +49,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/credentials/{credential}/verify', [CredentialController::class, 'update']);
 
     // Bookings
+    Route::get('/manager/bookings', [BookingController::class, 'queue'])
+        ->middleware('role:manager,admin');
     Route::post('/bookings', [BookingController::class, 'store']);
     Route::get('/bookings', [BookingController::class, 'index']);
     Route::get('/bookings/{booking}', [BookingController::class, 'show']);

@@ -11,11 +11,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint",
-<<<<<<< HEAD
     "test:e2e": "playwright test",
-=======
     "smoke": "node scripts/smoke.mjs",
->>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
     "format": "prettier --write . && eslint --fix",
     "check": "prettier --check ."
   },

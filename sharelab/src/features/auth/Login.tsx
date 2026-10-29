@@ -97,7 +97,7 @@ export const Login = ({ redirect }: LoginProps) => {
   return (
     <AuthLayout mode="login">
       <div>
-        <h1 className="font-editorial text-[clamp(2rem,4.6vw,2.65rem)] font-semibold leading-[1.04] tracking-[-0.035em] text-(--charcoal)">
+        <h1 className="font-display text-[clamp(2rem,4.6vw,2.65rem)] font-semibold leading-[1.04] tracking-[-0.035em] text-(--charcoal)">
           Welcome back.
         </h1>
         <p className="mt-3 max-w-100 text-sm leading-relaxed text-(--muted)">
@@ -174,7 +174,7 @@ export const Login = ({ redirect }: LoginProps) => {
         </Button>
       </form>
 
-      <details className="group mt-5 rounded-xl border border-[rgba(82,59,45,0.12)] bg-[rgba(75,47,31,0.028)]">
+      <details className="group mt-5 rounded-xl border border-[rgba(81,53,34,0.12)] bg-[rgba(81,53,34,0.028)]">
         <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 rounded-xl px-3.5 py-2.5 text-[0.72rem] font-semibold text-(--espresso) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-(--ring) [&::-webkit-details-marker]:hidden">
           <span className="inline-flex items-center gap-2">
             <KeyRound className="h-3.5 w-3.5" aria-hidden="true" />
@@ -185,13 +185,13 @@ export const Login = ({ redirect }: LoginProps) => {
             aria-hidden="true"
           />
         </summary>
-        <div className="grid grid-cols-2 gap-1.5 border-t border-[rgba(82,59,45,0.08)] p-2">
+        <div className="grid grid-cols-2 gap-1.5 border-t border-[rgba(81,53,34,0.08)] p-2">
           {demoAccounts.map((account) => (
             <button
               key={account.email}
               type="button"
               onClick={() => fillDemo(account.email)}
-              className="rounded-lg px-2.5 py-2 text-left transition-colors hover:bg-[rgba(75,47,31,0.06)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring)"
+              className="rounded-lg px-2.5 py-2 text-left transition-colors hover:bg-[rgba(81,53,34,0.06)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring)"
             >
               <span className="block text-[0.7rem] font-semibold text-(--charcoal)">
                 {account.role}
@@ -202,19 +202,19 @@ export const Login = ({ redirect }: LoginProps) => {
             </button>
           ))}
         </div>
-        <p className="border-t border-[rgba(82,59,45,0.08)] px-3.5 py-2 text-[0.64rem] leading-relaxed text-(--muted)">
+        <p className="border-t border-[rgba(81,53,34,0.08)] px-3.5 py-2 text-[0.64rem] leading-relaxed text-(--muted)">
           Demo password:{' '}
           <span className="font-semibold text-(--charcoal)">password</span>
         </p>
       </details>
 
-      <div className="mt-6 border-t border-[rgba(82,59,45,0.1)] pt-5">
+      <div className="mt-6 border-t border-[rgba(81,53,34,0.1)] pt-5">
         <p className="text-center text-sm text-(--muted)">
           New to ShareLab?{' '}
           <Link
             to="/register"
             search={{ redirect }}
-            className="inline-flex min-h-11 items-center rounded-sm px-1 font-semibold text-(--espresso) underline decoration-[rgba(75,47,31,0.28)] underline-offset-4 transition-colors hover:text-(--deep-brown) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring)"
+            className="inline-flex min-h-11 items-center rounded-sm px-1 font-semibold text-(--espresso) underline decoration-[rgba(81,53,34,0.28)] underline-offset-4 transition-colors hover:text-(--deep-brown) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring)"
           >
             Create an account
           </Link>

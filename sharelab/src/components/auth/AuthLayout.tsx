@@ -31,7 +31,7 @@ const copy = {
 
 const TrustLine = ({ children }: { children: ReactNode }) => (
   <span className="inline-flex items-center gap-2 text-[0.7rem] font-medium text-(--muted)">
-    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[rgba(56,118,83,0.1)] text-(--success)">
+    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[rgba(53,107,76,0.1)] text-(--success)">
       <ShieldCheck className="h-3 w-3" aria-hidden="true" />
     </span>
     {children}
@@ -43,13 +43,13 @@ export const AuthLayout = ({ children, mode }: AuthLayoutProps) => {
   const content = copy[mode]
 
   return (
-    <div className="relative min-h-dvh overflow-x-clip bg-[#f4eee5] text-(--charcoal)">
+    <div className="relative min-h-dvh overflow-x-clip bg-(--ivory) text-(--charcoal)">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 top-0 h-144 bg-[radial-gradient(ellipse_at_18%_0%,rgba(214,189,164,0.32),transparent_60%)]"
       />
 
-      <div className="relative mx-auto grid min-h-dvh w-full max-w-[104rem] lg:grid-cols-[minmax(0,1.04fr)_minmax(30rem,0.96fr)]">
+      <div className="relative mx-auto grid min-h-dvh w-full max-w-[104rem] lg:grid-cols-[minmax(0,1.02fr)_minmax(30rem,0.98fr)]">
         <motion.aside
           aria-label="About ShareLab"
           initial={shouldReduceMotion ? false : { opacity: 0 }}
@@ -94,7 +94,7 @@ export const AuthLayout = ({ children, mode }: AuthLayoutProps) => {
             </Link>
 
             <div className="max-w-136">
-              <h1 className="font-editorial text-[clamp(1.95rem,4.4vw,4.1rem)] font-semibold leading-[1.02] tracking-[-0.035em] text-white sm:text-[clamp(2.2rem,4.4vw,4.1rem)]">
+              <h1 className="font-display text-[clamp(1.85rem,3.6vw,3.1rem)] font-semibold leading-[1.05] tracking-[-0.035em] text-white">
                 {content.headline}
               </h1>
               <p className="mt-4 hidden max-w-lg text-sm leading-relaxed text-white/70 sm:block sm:text-[0.95rem]">
@@ -127,9 +127,9 @@ export const AuthLayout = ({ children, mode }: AuthLayoutProps) => {
               <Link
                 to="/"
                 aria-label="ShareLab home"
-                className="inline-flex min-h-11 items-center gap-2.5 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring) focus-visible:ring-offset-4 focus-visible:ring-offset-[#f4eee5] lg:hidden"
+                className="inline-flex min-h-11 items-center gap-2.5 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring) focus-visible:ring-offset-4 focus-visible:ring-offset-(--ivory) lg:hidden"
               >
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-(--espresso) shadow-[0_10px_24px_-12px_rgba(75,47,31,0.8)]">
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-(--espresso) shadow-[0_10px_24px_-12px_rgba(81,53,34,0.8)]">
                   <FlaskConical
                     className="h-4 w-4 text-(--cream)"
                     aria-hidden="true"
@@ -157,10 +157,10 @@ export const AuthLayout = ({ children, mode }: AuthLayoutProps) => {
                 }}
                 className="w-full"
               >
-                <div className="relative overflow-hidden rounded-[1.4rem] border border-[rgba(255,255,255,0.82)] bg-[rgba(255,252,247,0.9)] p-6 shadow-[0_32px_90px_-48px_rgba(75,47,31,0.55),inset_0_1px_0_rgba(255,255,255,0.95)] backdrop-blur-2xl sm:p-8">
+                <div className="relative overflow-hidden rounded-(--radius-lg) border border-(--border-subtle) bg-(--surface) p-6 shadow-(--shadow-md) sm:p-8">
                   <div
                     aria-hidden="true"
-                    className="pointer-events-none absolute inset-x-8 top-0 h-px bg-[linear-gradient(90deg,transparent,rgba(75,47,31,0.24),transparent)]"
+                    className="pointer-events-none absolute inset-x-8 top-0 h-px bg-[linear-gradient(90deg,transparent,rgba(81,53,34,0.24),transparent)]"
                   />
                   {children}
                 </div>
@@ -169,7 +169,7 @@ export const AuthLayout = ({ children, mode }: AuthLayoutProps) => {
                   <TrustLine>HttpOnly session cookies</TrustLine>
                   <span
                     aria-hidden="true"
-                    className="hidden h-3 w-px bg-[rgba(82,59,45,0.18)] sm:block"
+                    className="hidden h-3 w-px bg-[rgba(81,53,34,0.18)] sm:block"
                   />
                   <TrustLine>Role-aware access</TrustLine>
                 </div>
@@ -180,7 +180,7 @@ export const AuthLayout = ({ children, mode }: AuthLayoutProps) => {
               </motion.div>
             </div>
 
-            <div className="flex items-center justify-between gap-4 border-t border-[rgba(82,59,45,0.1)] pt-4 text-[0.68rem] text-(--muted)">
+            <div className="flex items-center justify-between gap-4 border-t border-(--border-subtle) pt-4 text-[0.68rem] text-(--muted)">
               <span className="inline-flex items-center gap-1.5">
                 <LockKeyhole className="h-3 w-3" aria-hidden="true" />
                 Secure access
@@ -188,13 +188,13 @@ export const AuthLayout = ({ children, mode }: AuthLayoutProps) => {
               <div className="flex items-center gap-3">
                 <Link
                   to="/resources"
-                  className="inline-flex min-h-11 items-center rounded-sm font-medium transition-colors hover:text-(--espresso) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring) focus-visible:ring-offset-4 focus-visible:ring-offset-[#f4eee5]"
+                  className="inline-flex min-h-11 items-center rounded-sm font-medium transition-colors hover:text-(--espresso) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring) focus-visible:ring-offset-4 focus-visible:ring-offset-(--ivory)"
                 >
                   Catalogue
                 </Link>
                 <Link
                   to="/how-it-works"
-                  className="inline-flex min-h-11 items-center rounded-sm font-medium transition-colors hover:text-(--espresso) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring) focus-visible:ring-offset-4 focus-visible:ring-offset-[#f4eee5]"
+                  className="inline-flex min-h-11 items-center rounded-sm font-medium transition-colors hover:text-(--espresso) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring) focus-visible:ring-offset-4 focus-visible:ring-offset-(--ivory)"
                 >
                   How it works
                 </Link>

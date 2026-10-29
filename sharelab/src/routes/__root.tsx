@@ -35,7 +35,7 @@ function NotFoundComponent() {
     <SiteLayout>
       <div className="page-shell flex min-h-[55vh] items-center justify-center py-16">
         <div className="max-w-lg text-center">
-          <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[rgba(75,47,31,0.08)]">
+          <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[rgba(81,53,34,0.08)]">
             <FlaskConical className="h-6 w-6 text-(--espresso)" aria-hidden="true" />
           </span>
           <p className="mt-5 text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-(--muted)">

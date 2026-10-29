@@ -13,6 +13,10 @@ class ResourceRequirement extends Model
         'requires_verification',
     ];
 
+    protected $casts = [
+        'requires_verification' => 'boolean',
+    ];
+
     /**
      * Get the resource this requirement belongs to.
      */

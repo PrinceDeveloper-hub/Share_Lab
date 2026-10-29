@@ -12,10 +12,12 @@ export interface ApiResponse<T> {
   message: string
   errors?: Record<string, string[]>
   meta?: {
+    success?: boolean
     page?: number
     per_page?: number
     total?: number
     last_page?: number
+    [key: string]: unknown
   }
 }
 
@@ -164,6 +166,22 @@ export class ApiClient {
     return response.data
   }
 
+  async postForm<TResponse = unknown>(
+    url: string,
+    data: FormData,
+    config?: AxiosRequestConfig,
+  ): Promise<ApiResponse<TResponse>> {
+    const response: AxiosResponse<ApiResponse<TResponse>> =
+      await this.axiosInstance.post(url, data, {
+        ...config,
+        headers: {
+          ...config?.headers,
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+    return response.data
+  }
+
   async patch<TBody = unknown, TResponse = unknown>(
     url: string,
     data?: TBody,
@@ -171,6 +189,23 @@ export class ApiClient {
   ): Promise<ApiResponse<TResponse>> {
     const response: AxiosResponse<ApiResponse<TResponse>> =
       await this.axiosInstance.patch(url, data, config)
+    return response.data
+  }
+
+  async patchForm<TResponse = unknown>(
+    url: string,
+    data: FormData,
+    config?: AxiosRequestConfig,
+  ): Promise<ApiResponse<TResponse>> {
+    const response: AxiosResponse<ApiResponse<TResponse>> =
+      await this.axiosInstance.post(url, data, {
+        ...config,
+        headers: {
+          ...config?.headers,
+          'Content-Type': 'multipart/form-data',
+          'X-HTTP-Method-Override': 'PATCH',
+        },
+      })
     return response.data
   }
 

@@ -20,18 +20,21 @@ export const SectionHeading = ({
   return (
     <div
       className={cn(
-        'flex max-w-2xl flex-col gap-3',
+        'flex max-w-2xl flex-col gap-3.5',
         align === 'center' && 'mx-auto items-center text-center',
         className,
       )}
     >
-      {eyebrow ? <span className="eyebrow">{eyebrow}</span> : null}
-      <h2 id={id} className="text-3xl font-semibold tracking-tight sm:text-4xl">
+      {eyebrow ? (
+        <span className="eyebrow">
+          <span aria-hidden="true" className="h-px w-6 bg-(--bronze)" />
+          {eyebrow}
+        </span>
+      ) : null}
+      <h2 id={id} className="display-lg">
         {title}
       </h2>
-      {description ? (
-        <p className="text-base leading-relaxed text-(--muted) sm:text-lg">{description}</p>
-      ) : null}
+      {description ? <p className="lede text-[0.9375rem] sm:text-base">{description}</p> : null}
     </div>
   )
 }

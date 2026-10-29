@@ -66,7 +66,7 @@ class JwtService
     public function accessCookie(string $token): Cookie
     {
         return $this->cookie(
-            (string) config('jwt.access_cookie', 'sharelab_access'),
+            (string) config('jwt.access_cookie', 'sl_access'),
             $token,
             (int) config('jwt.access_ttl', 15),
             (string) config('jwt.access_cookie_path', '/'),
@@ -76,7 +76,7 @@ class JwtService
     public function refreshCookie(string $token): Cookie
     {
         return $this->cookie(
-            (string) config('jwt.refresh_cookie', 'sharelab_refresh'),
+            (string) config('jwt.refresh_cookie', 'sl_refresh'),
             $token,
             (int) config('jwt.refresh_ttl', 10080),
             (string) config('jwt.refresh_cookie_path', '/api'),
@@ -86,7 +86,7 @@ class JwtService
     public function forgetAccessCookie(): Cookie
     {
         return $this->expiredCookie(
-            (string) config('jwt.access_cookie', 'sharelab_access'),
+            (string) config('jwt.access_cookie', 'sl_access'),
             (string) config('jwt.access_cookie_path', '/'),
         );
     }
@@ -94,7 +94,7 @@ class JwtService
     public function forgetRefreshCookie(): Cookie
     {
         return $this->expiredCookie(
-            (string) config('jwt.refresh_cookie', 'sharelab_refresh'),
+            (string) config('jwt.refresh_cookie', 'sl_refresh'),
             (string) config('jwt.refresh_cookie_path', '/api'),
         );
     }

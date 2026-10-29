@@ -2,247 +2,195 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
-use App\Models\User;
-use App\Models\Resource;
-use App\Models\Booking;
 use App\Enums\BookingStatus;
+use App\Enums\CredentialStatus;
+use App\Enums\Role;
+use App\Models\ResourceRequirement;
+use App\Models\UserCredential;
+use App\Services\Booking\PriorityScoreCalculator;
+use App\Services\Booking\Rules\ConflictRule;
+use App\Services\Booking\Rules\DurationRule;
+use App\Services\Booking\Rules\WeeklyCapRule;
+use App\Services\Eligibility\EligibilityService;
+use Carbon\CarbonImmutable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\Concerns\DomainFixtures;
+use Tests\TestCase;
 
 class BookingServiceTest extends TestCase
 {
     use RefreshDatabase;
+    use DomainFixtures;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user1 = User::factory()->create(['email' => 'test1@sharelab.test']);
-        $this->user2 = User::factory()->create(['email' => 'test2@sharelab.test']);
-        $this->resource = Resource::factory()->create([
-            'max_hours_per_booking' => 2,
-            'weekly_cap_hours' => 6,
-        ]);
+        CarbonImmutable::setTestNow('2026-03-02 09:00:00');
     }
 
-    /**
-     * Test eligibility: user with verified credential qualifies
-     * User without required credential does not qualify
-     */
-    public function test_user_with_verified_credential_qualifies()
+    protected function tearDown(): void
     {
-        // User2 has verified credential from seeder
-        $this->actingAs($this->user2);
-
-        // Test eligibility logic
-        // We'll test the service method
+        CarbonImmutable::setTestNow();
+        parent::tearDown();
     }
 
-    /**
-     * Test duration and weekly cap: reject if slot exceeds max_hours_per_booking.
-     */
-    public function test_duration_exceeds_max_hours_per_booking()
+    public function test_eligibility_requires_every_verified_requirement(): void
     {
-        $this->actingAs($this->user1);
+        $owner = $this->makeUser(Role::Owner);
+        $user = $this->makeUser(Role::User);
+        $resource = $this->makeResource($owner);
 
-        // Book 3 hours when max is 2
-        $booking = Booking::factory()->make([
-            'resource_id' => $this->resource->id,
-            'user_id' => $this->user1->id,
-            'start_at' => now()->addDay(1)->format('Y-m-d H:i:s'),
-            'end_at' => now()->addDay(1)->addHours(3)->format('Y-m-d H:i:s'),
+        ResourceRequirement::query()->create([
+            'resource_id' => $resource->id,
+            'name' => 'Safety Training',
+            'requires_verification' => true,
         ]);
 
-        $maxHours = 2;
-        $durationHours = abs(Carbon::parse($booking->end_at)->diffInHours(Carbon::parse($booking->start_at)));
+        $service = app(EligibilityService::class);
+        $missing = $service->for($user, $resource);
+        $this->assertFalse($missing['qualifies']);
+        $this->assertSame(['Safety Training'], $missing['missing']);
 
-        $this->assertTrue($durationHours > $maxHours);
-        $this->assertTrue($durationHours > $maxHours);
+        UserCredential::query()->create([
+            'user_id' => $user->id,
+            'requirement_name' => 'Safety Training',
+            'status' => CredentialStatus::Verified,
+        ]);
+
+        $this->assertTrue($service->for($user, $resource)['qualifies']);
     }
 
-    /**
-     * Test conflict check: overlapping bookings.
-     */
-    public function test_overlapping_bookings_conflict()
+    public function test_duration_rule_accepts_the_limit_and_rejects_longer_slots(): void
     {
-        $this->actingAs($this->user1);
+        $owner = $this->makeUser(Role::Owner);
+        $user = $this->makeUser(Role::User);
+        $resource = $this->makeResource($owner, ['max_hours_per_booking' => 2]);
+        $rule = app(DurationRule::class);
 
-        // Create an existing approved booking
-        $existing = Booking::factory()->create([
-            'resource_id' => $this->resource->id,
-            'user_id' => $this->user2->id,
-            'start_at' => now()->addDay(1)->format('Y-m-d H:i:s'),
-            'end_at' => now()->addDay(1)->addHours(2)->format('Y-m-d H:i:s'),
+        $this->assertNull($rule->violation(
+            $resource,
+            $user,
+            CarbonImmutable::parse('2026-03-02 10:00:00'),
+            CarbonImmutable::parse('2026-03-02 12:00:00'),
+        ));
+
+        $violation = $rule->violation(
+            $resource,
+            $user,
+            CarbonImmutable::parse('2026-03-02 10:00:00'),
+            CarbonImmutable::parse('2026-03-02 12:30:00'),
+        );
+
+        $this->assertSame('duration', $violation['rule']);
+    }
+
+    public function test_conflict_rule_handles_identical_nested_partial_and_touching_slots(): void
+    {
+        $owner = $this->makeUser(Role::Owner);
+        $user = $this->makeUser(Role::User);
+        $resource = $this->makeResource($owner);
+        $existing = $this->makeBooking($resource, $user, [
+            'start_at' => '2026-03-02 10:00:00',
+            'end_at' => '2026-03-02 12:00:00',
+            'status' => BookingStatus::Approved,
+        ]);
+        $rule = app(ConflictRule::class);
+
+        foreach ([
+            ['10:00', '12:00'],
+            ['10:30', '11:30'],
+            ['11:00', '13:00'],
+            ['09:00', '11:00'],
+        ] as [$start, $end]) {
+            $violation = $rule->violation(
+                $resource,
+                $user,
+                CarbonImmutable::parse("2026-03-02 {$start}:00"),
+                CarbonImmutable::parse("2026-03-02 {$end}:00"),
+                $existing->id,
+            );
+            $this->assertNull($violation, "Ignoring the booking itself should not conflict for {$start}-{$end}.");
+        }
+
+        $this->assertSame('conflict', $rule->violation(
+            $resource,
+            $user,
+            CarbonImmutable::parse('2026-03-02 11:00:00'),
+            CarbonImmutable::parse('2026-03-02 13:00:00'),
+        )['rule']);
+
+        $this->assertNull($rule->violation(
+            $resource,
+            $user,
+            CarbonImmutable::parse('2026-03-02 12:00:00'),
+            CarbonImmutable::parse('2026-03-02 13:00:00'),
+        ));
+    }
+
+    public function test_weekly_cap_rule_counts_only_overlapping_hours_in_the_same_week(): void
+    {
+        $owner = $this->makeUser(Role::Owner);
+        $user = $this->makeUser(Role::User);
+        $resource = $this->makeResource($owner, ['weekly_cap_hours' => 4]);
+
+        $this->makeBooking($resource, $user, [
+            'start_at' => '2026-03-02 09:00:00',
+            'end_at' => '2026-03-02 12:00:00',
             'status' => BookingStatus::Approved,
         ]);
 
-        // Try to book the same slot - should conflict
-        $this-> actingAs($this->user1);
-        $response = $this->postJson('/api/bookings', [
-            'resource_id' => $this->resource->id,
-            'start_at' => now()->addDay(1)->format('Y-m-d H:i:s'),
-            'end_at' => now()->addDay(1)->addHours(2)->format('Y-m-d H:i:s'),
-        ]);
+        $rule = app(WeeklyCapRule::class);
+        $violation = $rule->violation(
+            $resource,
+            $user,
+            CarbonImmutable::parse('2026-03-03 09:00:00'),
+            CarbonImmutable::parse('2026-03-03 11:00:00'),
+        );
 
-        // Should be waitlisted due to conflict
-        $response->assertStatus(201)
-            ->assertJsonStructure([
-                'data' => [
-                    'status',
-                    'waitlist_position',
-                ],
-                'message',
-            ]);
+        $this->assertSame('weekly_cap', $violation['rule']);
+
+        $this->assertNull($rule->violation(
+            $resource,
+            $user,
+            CarbonImmutable::parse('2026-03-09 09:00:00'),
+            CarbonImmutable::parse('2026-03-09 10:00:00'),
+        ));
     }
 
-    /**
-     * Test touching slots (end == start) do NOT conflict.
-     */
-    public function test_touching_slots_do_not_conflict()
+    public function test_priority_prefers_the_user_with_fewer_recent_hours(): void
     {
-        $this->actingAs($this->user1);
+        $owner = $this->makeUser(Role::Owner);
+        $busy = $this->makeUser(Role::User);
+        $quiet = $this->makeUser(Role::User);
+        $resource = $this->makeResource($owner, ['weekly_cap_hours' => 40]);
 
-        // Create an existing approved booking ending at 10:00
-        Booking::factory()->create([
-            'resource_id' => $this->resource->id,
-            'user_id' => $this->user2->id,
-            'start_at' => now()->addDay(1)->format('Y-m-d H:i:s'),
-            'end_at' => now()->addDay(1)->addHours(1)->format('Y-m-d H:i:s'),
-            'status' => BookingStatus::Approved,
+        $this->makeBooking($resource, $busy, [
+            'start_at' => '2026-02-20 09:00:00',
+            'end_at' => '2026-02-20 14:00:00',
+            'status' => BookingStatus::Returned,
+        ]);
+        $this->makeBooking($resource, $quiet, [
+            'start_at' => '2026-02-21 09:00:00',
+            'end_at' => '2026-02-21 11:00:00',
+            'status' => BookingStatus::Returned,
         ]);
 
-        // Try to book starting exactly when the other ends - should NOT conflict
-        $response = $this->postJson('/api/bookings', [
-            'resource_id' => $this->resource->id,
-            'start_at' => now()->addDay(1)->addHours(1)->format('Y-m-d H:i:s'),
-            'end_at' => now()->addDay(1)->addHours(2)->format('Y-m-d H:i:s'),
-        ]);
+        $calculator = app(PriorityScoreCalculator::class);
 
-        // Should be able to book (no conflict for touching slots)
-        $this->assertTrue(true); // Placeholder - will assert actual behavior
+        $this->assertGreaterThan(
+            $calculator->calculate($quiet, $resource)['priority_score'],
+            $calculator->calculate($busy, $resource)['priority_score'],
+        );
     }
 
-    /**
-     * Test priority ordering: lower hours used = higher priority.
-     */
-    public function test_priority_ordering()
+    public function test_timestamps_are_returned_as_utc_iso_strings(): void
     {
-        $this->actingAs($this->user1);
+        $owner = $this->makeUser(Role::Owner);
+        $user = $this->makeUser(Role::User);
+        $resource = $this->makeResource($owner);
+        $booking = $this->makeBooking($resource, $user);
 
-        // User1 has used 5 hours in last 30 days
-        // User2 has used 2 hours in last 30 days
-        // User2 should have higher priority (lower score)
-
-        $priority1 = BookingService::calculatePriorityScore($this->user1, $this->resource);
-        $priority2 = BookingService::calculatePriorityScore($this->user2, $this->resource);
-
-        $this->assertLessThan($priority2['priority_score'], $priority1['priority_score']);
-    }
-
-    /**
-     * Test priority tie-break: earlier request time breaks ties.
-     */
-    public function test_priority_tie_break()
-    {
-        $this->actingAs($this->user1);
-
-        // Both users have same hours used, but user1 made request earlier
-        // This tests the tie-breaking logic
-    }
-
-    /**
-     * Test waitlist promotion: offer freed slot to top-ranked waitlisted request.
-     */
-    public function test_waitlist_promotion()
-    {
-        $this->actingAs($this->user1);
-
-        // Create a booking that will be cancelled
-        $booking = Booking::factory()->create([
-            'resource_id' => $this->resource->id,
-            'user_id' => $this->user1->id,
-            'start_at' => now()->addDay(1)->format('Y-m-d H:i:s'),
-            'end_at' => now()->addDay(1)->addHours(2)->format('Y-m-d H:i:s'),
-            'status' => BookingStatus::Approved,
-        ]);
-
-        // User2 waits for this resource
-        $user2 = User::factory()->create(['email' => 'test2wait@sharelab.test']);
-        $booking2 = Booking::factory()->create([
-            'resource_id' => $this->resource->id,
-            'user_id' => $user2->id,
-            'start_at' => now()->addDay(2)->format('Y-m-d H:i:s'),
-            'end_at' => now()->addDay(2)->addHours(2)->format('Y-m-d H:i:s'),
-            'status' => BookingStatus::Waitlisted,
-            'waitlist_position' => 1,
-        ]);
-
-        // Cancel the approved booking
-        $booking->status = BookingStatus::Cancelled;
-        $booking->save();
-
-        // Promote waitlist - should offer slot to user2
-        // This is a simplified test
-        $this->assertTrue(true); // Placeholder
-    }
-
-    /**
-     * Test UTC handling of datetime fields.
-     */
-    public function test_utc_handling()
-    {
-        $this->actingAs($this->user1);
-
-        $booking = Booking::factory()->create([
-            'resource_id' => $this->resource->id,
-            'user_id' => $this->user1->id,
-            'start_at' => now()->addDay(1)->format('Y-m-d H:i:s'),
-            'end_at' => now()->addDay(1)->addHours(2)->format('Y-m-d H:i:s'),
-            'status' => BookingStatus::Pending,
-        ]);
-
-        // Verify timestamps are stored and returned in UTC
-        $this->assertNotNull($booking->start_at);
-        $this->assertNotNull($booking->end_at);
-    }
-
-    /**
-     * Test overlap cases: nested, partial, identical.
-     */
-    public function test_overlap_cases()
-    {
-        $this->actingAs($this->user1);
-
-        // Create existing booking: 10:00 - 12:00
-        Booking::factory()->create([
-            'resource_id' => $this->resource->id,
-            'user_id' => $this->user2->id,
-            'start_at' => now()->addDay(1)->format('Y-m-d H:i:s 10:00:00'),
-            'end_at' => now()->addDay(1)->format('Y-m-d H:i:s 12:00:00'),
-            'status' => BookingStatus::Approved,
-        ]);
-
-        // Test nested overlap: 10:30 - 11:30 (inside existing)
-        $response1 = $this->postJson('/api/bookings', [
-            'resource_id' => $this->resource->id,
-            'start_at' => now()->addDay(1)->format('Y-m-d H:i:s 10:30:00'),
-            'end_at' => now()->addDay(1)->format('Y-m-d H:i:s 11:30:00'),
-        ]);
-
-        // Test partial overlap: 11:00 - 13:00 (starts inside, ends outside)
-        $response2 = $this->postJson('/api/bookings', [
-            'resource_id' => $this->resource->id,
-            'start_at' => now()->addDay(1)->format('Y-m-d H:i:s 11:00:00'),
-            'end_at' => now()->addDay(1)->format('Y-m-d H:i:s 13:00:00'),
-        ]);
-
-        // Test identical: same slot
-        $response3 = $this->postJson('/api/bookings', [
-            'resource_id' => $this->resource->id,
-            'start_at' => now()->addDay(1)->format('Y-m-d H:i:s 10:00:00'),
-            'end_at' => now()->addDay(1)->format('Y-m-d H:i:s 12:00:00'),
-        ]);
-
-        // All should result in waitlisting or rejection
-        $this->assertTrue(true); // Placeholder
+        $this->assertSame('2026-03-02T10:00:00+00:00', $booking->start_at->toIso8601String());
+        $this->assertSame('UTC', $booking->start_at->timezoneName);
     }
 }

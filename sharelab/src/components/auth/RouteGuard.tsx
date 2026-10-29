@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { Link, useRouter, useRouterState } from '@tanstack/react-router'
 import { Loader2, ShieldAlert } from 'lucide-react'
 import type { User } from '../../lib/api-client'
@@ -16,7 +16,7 @@ const AuthLoading = () => (
     role="status"
     aria-live="polite"
   >
-    <div className="flex items-center gap-3 rounded-full border border-(--border-subtle) bg-[rgba(255,252,247,0.72)] px-5 py-3 text-sm font-medium text-(--muted) backdrop-blur">
+    <div className="flex items-center gap-3 rounded-full border border-(--border-subtle) bg-(--surface) px-5 py-3 text-sm font-medium text-(--muted) backdrop-blur">
       <Loader2
         className="h-4 w-4 animate-spin text-(--espresso)"
         aria-hidden="true"
@@ -28,8 +28,8 @@ const AuthLoading = () => (
 
 const AccessDenied = () => (
   <div className="page-shell py-16 sm:py-20">
-    <div className="mx-auto max-w-lg rounded-3xl border border-[rgba(180,77,66,0.2)] bg-[rgba(255,252,247,0.72)] p-8 text-center shadow-soft">
-      <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[rgba(180,77,66,0.08)]">
+    <div className="mx-auto max-w-lg rounded-3xl border border-[rgba(169,72,60,0.2)] bg-(--surface) p-8 text-center shadow-soft">
+      <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[rgba(169,72,60,0.08)]">
         <ShieldAlert
           className="h-5 w-5 text-(--error)"
           aria-hidden="true"
@@ -59,11 +59,18 @@ export const RouteGuard = ({ children, roles }: RouteGuardProps) => {
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
   })
+  // Remember where the visitor was headed: after the first redirect the
+  // location becomes /login, and re-reading it would replace the intended
+  // destination with the login page itself.
+  const intendedPath = useRef(pathname)
 
   useEffect(() => {
-    if (status === 'anonymous') {
-      router.history.replace(`/login?redirect=${encodeURIComponent(pathname)}`)
-    }
+    if (status !== 'anonymous') return
+    if (pathname.startsWith('/login') || pathname.startsWith('/register')) return
+
+    router.history.replace(
+      `/login?redirect=${encodeURIComponent(intendedPath.current)}`,
+    )
   }, [pathname, router, status])
 
   if (status === 'loading') return <AuthLoading />

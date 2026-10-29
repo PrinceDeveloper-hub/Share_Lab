@@ -62,6 +62,7 @@ routes/
 
 Every response goes through an API Resource. Never return Eloquent models or raw arrays
 from controllers. The envelope format is: { data, message, errors, meta }.
+```
 
 ### Frontend Architecture
 
@@ -233,11 +234,12 @@ J) All main routes usable at desktop and mobile widths
 - Run `cd sharelab-api && php artisan key:generate` after first setup
 - Ensure MariaDB is running with `sharelab` database (utf8mb4)
 - The demo uses these accounts (password "password" for local/demo only):
-  - user1@sharelab.test (no credential — needs to submit one)
-  - user2@sharelab.test (verified credential for 3D Printer Training)
+  - user1@sharelab.test (student; pending Laser Cutter Certification, needs 3D Printer Training)
+  - user2@sharelab.test (student; verified 3D Printer Training and Oscilloscope Safety)
+  - manager@sharelab.test (assigned to all six resources)
   - owner@sharelab.test
-  - manager@sharelab.test
   - admin@sharelab.test
+  - All five use the password `password`. Reseeding removes older demo accounts.
 - Six seeded resources: 3D Printer (requires "3D Printer Training"), Oscilloscope, Camera Kit, Meeting Room, Laser Cutter, Soldering Station
 - Run `cd sharelab-api && php artisan sharelab:demo-reset` to reset seed data
 

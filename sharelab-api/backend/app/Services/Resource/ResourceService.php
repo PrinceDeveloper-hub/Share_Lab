@@ -2,199 +2,266 @@
 
 namespace App\Services\Resource;
 
+use App\Enums\BookingStatus;
+use App\Enums\Role;
+use App\Models\Booking;
 use App\Models\Resource;
 use App\Models\ResourceRequirement;
 use App\Models\User;
-use App\Models\UserCredential;
+use App\Services\Audit\AuditService;
+use App\Services\Notification\NotificationService;
+use App\Support\Clock;
+use Carbon\CarbonImmutable;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use App\Http\Resources\CampusResourceResource;
-use App\Http\Resources\ResourceRequirementResource;
+use Illuminate\Validation\ValidationException;
 
 class ResourceService implements ResourceServiceInterface
 {
-    /**
-     * Get all resources with optional filters.
-     *
-     * @param string|null $query Search query for name/description
-     * @param string|null $category Filter by category
-     * @param string|null $status Filter by status
-     * @param string|null $sort Sort field
-     * @param bool $paginate Whether to paginate results
-     * @return \Illuminate\Pagination\LengthAwarePaginator|Collection
-     */
-    public function getAllResources(string $query = null, string $category = null, string $status = null, string $sort = 'name', bool $paginate = true)
-    {
-        $query = Resource::query();
-
-        // Apply search query filter
-        if ($query) {
-            $query->where('name', 'like', "%{$query}%")
-                ->orWhere('description', 'like', "%{$query}%");
-        }
-
-        // Apply category filter
-        if ($category) {
-            $query->where('category', $category);
-        }
-
-        // Apply status filter
-        if ($status) {
-            $query->where('status', $status);
-        }
-
-        // Apply sorting
-        $query->orderBy($sort, 'asc');
-
-        if ($paginate) {
-            return $query->paginate(12);
-        }
-
-        return $query->get();
+    public function __construct(
+        private readonly AuditService $audit,
+        private readonly NotificationService $notifications,
+        private readonly Clock $clock,
+    ) {
     }
 
-    /**
-     * Get a single resource by ID.
-     *
-     * @param int $id
-     * @param string $relations Eager-loaded relations
-     * @return Resource|null
-     */
-    public function getResourceById(int $id, string $relations = '')
+    public function paginate(?User $viewer, array $filters): LengthAwarePaginator
     {
-        $query = Resource::find($id);
+        $query = Resource::query()->with(['owner:id,name,email,role', 'requirements', 'managers:id,name']);
 
-        if ($relations) {
-            $query->with($relations);
+        if (!empty($filters['q'])) {
+            $term = '%'.trim((string) $filters['q']).'%';
+            $query->where(function ($builder) use ($term): void {
+                $builder->where('name', 'like', $term)
+                    ->orWhere('description', 'like', $term)
+                    ->orWhere('location', 'like', $term);
+            });
         }
 
-        return $query?->load($relations);
+        if (!empty($filters['category']) && $filters['category'] !== 'all') {
+            $query->where('category', $filters['category']);
+        }
+
+        if (!empty($filters['status']) && $filters['status'] !== 'all') {
+            $query->where('status', $filters['status']);
+        }
+
+        if (!empty($filters['owner_id'])) {
+            $query->where('owner_id', (int) $filters['owner_id']);
+        }
+
+        $sort = (string) ($filters['sort'] ?? 'name');
+        $direction = (string) ($filters['direction'] ?? 'asc') === 'desc' ? 'desc' : 'asc';
+        $sortable = ['name', 'category', 'location', 'weekly_cap_hours', 'max_hours_per_booking', 'created_at'];
+        $query->orderBy(in_array($sort, $sortable, true) ? $sort : 'name', $direction);
+
+        $perPage = min(100, max(1, (int) ($filters['per_page'] ?? 12)));
+
+        return $query->paginate($perPage)->withQueryString();
     }
 
-    /**
-     * Create a new resource.
-     *
-     * @param array $data Resource data (name, description, category, status)
-     * @return Resource
-     */
-    public function createResource(array $data): Resource
+    public function find(int $id): Resource
     {
-        return DB::transaction(function () use ($data) {
-            $resource = Resource::create([
+        return Resource::query()
+            ->with(['owner:id,name,email,role', 'requirements', 'managers:id,name,email,role'])
+            ->findOrFail($id);
+    }
+
+    public function create(User $owner, array $data): Resource
+    {
+        return DB::transaction(function () use ($owner, $data): Resource {
+            $resource = Resource::query()->create([
+                'owner_id' => $owner->id,
                 'name' => $data['name'],
+                'category' => $data['category'],
+                'location' => $data['location'],
                 'description' => $data['description'] ?? null,
-                'category' => $data['category'],
-                'status' => $data['status'] ?? 'available',
+                'rules' => $data['rules'] ?? null,
+                'max_hours_per_booking' => $data['max_hours_per_booking'],
+                'weekly_cap_hours' => $data['weekly_cap_hours'],
+                'availability_windows' => $data['availability_windows'] ?? null,
+                'image_path' => $data['image_path'] ?? null,
+                'status' => $data['status'] ?? 'active',
             ]);
 
-            // Create default resource requirements based on resource type
-            $this->createDefaultRequirements($resource);
+            $this->syncRequirements($resource, $data['requirements'] ?? []);
 
-            return $resource;
-        });
-    }
-
-    /**
-     * Update a resource.
-     *
-     * @param int $id
-     * @param array $data Resource data
-     * @return Resource
-     */
-    public function updateResource(int $id, array $data): Resource
-    {
-        return DB::transaction(function () use ($id, $data) {
-            $resource = Resource::findOrFail($id);
-
-            $resource->update([
-                'name' => $data['name'],
-                'description' => $data['description'] ?? $resource->description,
-                'category' => $data['category'],
-                'status' => $data['status'] ?? $resource->status,
-            ]);
-
-            return $resource;
-        });
-    }
-
-    /**
-     * Create default resource requirements based on resource type.
-     *
-     * @param Resource $resource
-     */
-    protected function createDefaultRequirements(Resource $resource)
-    {
-        // Define requirements based on resource category
-        $requirements = match ($resource->category) {
-            '3d-printer' => ['3D Printer Training'],
-            'oscilloscope' => ['Oscilloscope Certification'],
-            'camera-kit' => ['Camera Kit Training'],
-            'pcr-cycler' => ['PCR Cycler Certification'],
-            'laser-cutter' => ['Laser Cutter Certification'],
-            'meeting-room' => ['Safety Orientation'],
-            default => ['General Safety'],
-        };
-
-        foreach ($requirements as $credentialType) {
-            ResourceRequirement::firstOrCreate(
-                ['resource_id' => $resource->id, 'credential_type' => $credentialType],
-                ['status' => 'pending']
+            $this->audit->record(
+                $owner,
+                'resource_created',
+                Resource::class,
+                $resource->id,
+                null,
+                null,
+                ['name' => $resource->name],
             );
-        }
+
+            return $resource->load(['owner', 'requirements', 'managers']);
+        });
     }
 
-    /**
-     * Check user eligibility for a resource.
-     *
-     * @param int $resourceId
-     * @param int $userId
-     * @return bool
-     */
-    public function checkEligibility(int $resourceId, int $userId): bool
+    public function update(User $actor, Resource $resource, array $data): Resource
     {
-        $resource = Resource::find($resourceId);
-        if (!$resource || $resource->status !== 'available') {
-            return false;
+        return DB::transaction(function () use ($actor, $resource, $data): Resource {
+            $before = $resource->only([
+                'name', 'category', 'location', 'description', 'rules',
+                'max_hours_per_booking', 'weekly_cap_hours', 'status', 'availability_windows',
+            ]);
+
+            $payload = [];
+
+            foreach (['name', 'category', 'location', 'max_hours_per_booking', 'weekly_cap_hours', 'status'] as $key) {
+                if (array_key_exists($key, $data) && $data[$key] !== null) {
+                    $payload[$key] = $data[$key];
+                }
+            }
+
+            foreach (['description', 'rules', 'availability_windows', 'image_path'] as $key) {
+                if (array_key_exists($key, $data)) {
+                    $payload[$key] = $data[$key];
+                }
+            }
+
+            $resource->fill($payload);
+
+            $resource->save();
+
+            if (array_key_exists('requirements', $data)) {
+                $this->syncRequirements($resource, $data['requirements'] ?? []);
+            }
+
+            $this->audit->record(
+                $actor,
+                'resource_updated',
+                Resource::class,
+                $resource->id,
+                null,
+                null,
+                ['before' => $before, 'after' => $resource->fresh()->only(array_keys($before))],
+            );
+
+            return $resource->fresh()->load(['owner', 'requirements', 'managers']);
+        });
+    }
+
+    public function delete(User $actor, Resource $resource): void
+    {
+        DB::transaction(function () use ($actor, $resource): void {
+            $this->audit->record(
+                $actor,
+                'resource_deleted',
+                Resource::class,
+                $resource->id,
+                null,
+                null,
+                ['name' => $resource->name, 'category' => $resource->category],
+            );
+
+            $resource->delete();
+        });
+    }
+
+    public function availability(Resource $resource, string $date): array
+    {
+        $day = CarbonImmutable::parse($date, 'UTC')->startOfDay();
+        $windows = $resource->availability_windows ?: [['weekday' => 1, 'start' => '09:00', 'end' => '17:00']];
+
+        if ($day->dayOfWeekIso > 5) {
+            $windows = [];
         }
 
-        // Check all resource requirements
-        $requirements = $resource->resourceRequirements;
+        $windowsForDay = array_values(array_filter($windows, fn (array $window): bool => (int) ($window['weekday'] ?? 1) === $day->dayOfWeekIso));
 
-        foreach ($requirements as $requirement) {
-            // Check if user has a verified credential for this requirement
-            $hasVerifiedCredential = UserCredential::where('user_id', $userId)
-                ->where('credential_type', $requirement->credential_type)
-                ->where('status', 'verified')
-                ->exists();
+        if ($windowsForDay === []) {
+            return [
+                'date' => $day->toDateString(),
+                'slots' => [],
+                'message' => 'This resource has no availability on the selected day.',
+            ];
+        }
 
-            if (!$hasVerifiedCredential) {
-                return false;
+        $bookings = Booking::query()
+            ->where('resource_id', $resource->id)
+            ->whereIn('status', [
+                BookingStatus::Pending->value,
+                BookingStatus::Approved->value,
+                BookingStatus::CheckedIn->value,
+            ])
+            ->where('start_at', '<', $day->addDay())
+            ->where('end_at', '>', $day)
+            ->get(['start_at', 'end_at']);
+
+        $slots = [];
+
+        foreach ($windowsForDay as $window) {
+            $cursor = $day->setTimeFromTimeString($window['start'] ?? '09:00');
+            $end = $day->setTimeFromTimeString($window['end'] ?? '17:00');
+
+            while ($cursor->addHour()->lessThanOrEqualTo($end)) {
+                $slotEnd = $cursor->addHour();
+                $conflict = $bookings->first(fn (Booking $booking): bool =>
+                    CarbonImmutable::parse($booking->start_at)->lessThan($slotEnd)
+                    && CarbonImmutable::parse($booking->end_at)->greaterThan($cursor)
+                );
+
+                $slots[] = [
+                    'start_at' => $cursor->toIso8601String(),
+                    'end_at' => $slotEnd->toIso8601String(),
+                    'available' => $conflict === null,
+                    'reason' => $conflict === null ? null : 'Another request already holds this slot.',
+                ];
+
+                $cursor = $slotEnd;
             }
         }
 
-        return true;
+        return ['date' => $day->toDateString(), 'slots' => $slots, 'message' => null];
     }
 
-    /**
-     * Check resource availability for a date.
-     *
-     * @param int $resourceId
-     * @param string $date
-     * @return bool
-     */
-    public function checkAvailability(int $resourceId, string $date): bool
+    public function assignManager(User $actor, Resource $resource, User $manager): void
     {
-        $resource = Resource::find($resourceId);
-        if (!$resource) {
-            return false;
+        $this->assertManagerRole($manager);
+
+        DB::transaction(function () use ($actor, $resource, $manager): void {
+            $resource->managers()->syncWithoutDetaching([$manager->id]);
+            $this->audit->record($actor, 'manager_assigned', Resource::class, $resource->id, null, null, ['manager_id' => $manager->id]);
+            $this->notifications->send($manager, 'manager_assigned', "You were assigned as a manager for {$resource->name}.");
+        });
+    }
+
+    public function removeManager(User $actor, Resource $resource, User $manager): void
+    {
+        DB::transaction(function () use ($actor, $resource, $manager): void {
+            $resource->managers()->detach($manager->id);
+            $this->audit->record($actor, 'manager_removed', Resource::class, $resource->id, null, null, ['manager_id' => $manager->id]);
+            $this->notifications->send($manager, 'manager_removed', "You were removed as a manager for {$resource->name}.");
+        });
+    }
+
+    private function syncRequirements(Resource $resource, array $requirements): void
+    {
+        $resource->requirements()->delete();
+
+        foreach ($requirements as $requirement) {
+            $name = trim((string) ($requirement['name'] ?? ''));
+            if ($name === '') {
+                continue;
+            }
+
+            ResourceRequirement::query()->create([
+                'resource_id' => $resource->id,
+                'name' => $name,
+                'requires_verification' => (bool) ($requirement['requires_verification'] ?? true),
+            ]);
         }
+    }
 
-        // Check for conflicting bookings/availability
-        $conflicts = ResourceAvailability::where('resource_id', $resourceId)
-            ->where('date', $date)
-            ->where('is_available', true)
-            ->exists();
-
-        return $conflicts ? true : false;
+    private function assertManagerRole(User $manager): void
+    {
+        if ($manager->role !== Role::Manager) {
+            throw ValidationException::withMessages([
+                'email' => 'Only an existing user with the manager role can be assigned.',
+            ]);
+        }
     }
 }

@@ -14,6 +14,7 @@ class AuditLog extends Model
         'booking_id',
         'reason',
         'meta',
+        'created_at',
     ];
 
     protected $casts = [

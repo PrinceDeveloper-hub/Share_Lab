@@ -2,216 +2,289 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use App\Models\User;
-use App\Models\Resource;
-use App\Models\Booking;
 use App\Enums\BookingStatus;
+use App\Enums\Role;
+use App\Models\AuditLog;
+use App\Models\Booking;
+use App\Models\Notification;
+use App\Models\User;
+use Carbon\CarbonImmutable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\Concerns\DomainFixtures;
+use Tests\TestCase;
 
 class BookingFeaturesTest extends TestCase
 {
     use RefreshDatabase;
+    use DomainFixtures;
+
+    private User $user1;
+    private User $user2;
+    private User $manager;
+    private User $owner;
+    private \App\Models\Resource $resource;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user1 = User::factory()->create(['email' => 'feat1@sharelab.test']);
-        $this->user2 = User::factory()->create(['email' => 'feat2@sharelab.test']);
-        $this->resource = Resource::factory()->create([
-            'max_hours_per_booking' => 2,
-            'weekly_cap_hours' => 6,
-        ]);
+        CarbonImmutable::setTestNow('2026-03-02 09:00:00');
+
+        $this->owner = $this->makeUser(Role::Owner);
+        $this->manager = $this->makeUser(Role::Manager);
+        $this->user1 = $this->makeUser(Role::User);
+        $this->user2 = $this->makeUser(Role::User);
+        $this->resource = $this->makeResource($this->owner);
+        $this->assignManager($this->resource, $this->manager);
     }
 
-    /**
-     * Test policy denials per role.
-     */
-    public function test_policy_denials_per_role()
+    protected function tearDown(): void
     {
-        $this->actingAs($this->user1);
-
-        // Regular user cannot create booking on another user's resource without auth
-        // Already tested by actingAs
-
-        // Test that user cannot book a resource they don't have access to
-        $otherResource = Resource::factory()->create([
-            'owner_id' => 99,
-        ]);
-
-        $response = $this->postJson('/api/bookings', [
-            'resource_id' => $otherResource->id,
-            'start_at' => now()->addDay(1)->format('Y-m-d H:i:s'),
-            'end_at' => now()->addDay(1)->addHours(1)->format('Y-m-d H:i:s'),
-        ]);
-
-        // Should fail with 422 or 403
-        $response->assertStatus(422);
+        CarbonImmutable::setTestNow();
+        parent::tearDown();
     }
 
-    /**
-     * Test decision without a reason returns 422.
-     */
-    public function test_decision_without_reason_returns_422()
+    public function test_duration_over_resource_maximum_is_rejected(): void
     {
-        $this->actingAs($this->user1);
+        $this->actingAs($this->user1)
+            ->postJson('/api/bookings', [
+                'resource_id' => $this->resource->id,
+                'start_at' => '2026-03-02 10:00:00',
+                'end_at' => '2026-03-02 13:00:00',
+                'purpose' => 'Too long',
+            ])
+            ->assertStatus(422);
+    }
 
-        // Create a pending booking
-        $booking = Booking::factory()->create([
+    public function test_second_request_for_the_same_slot_is_waitlisted(): void
+    {
+        $first = $this->actingAs($this->user1)->postJson('/api/bookings', [
             'resource_id' => $this->resource->id,
-            'user_id' => $this->user1->id,
-            'start_at' => now()->addDay(1)->format('Y-m-d H:i:s'),
-            'end_at' => now()->addDay(1)->addHours(1)->format('Y-m-d H:i:s'),
-            'status' => BookingStatus::Pending,
+            'start_at' => '2026-03-02 10:00:00',
+            'end_at' => '2026-03-02 11:00:00',
+            'purpose' => 'First',
         ]);
 
-        // Try to decide without a reason
-        $response = $this->patchJson("/api/bookings/{$booking->id}/decision", [
-            'decision' => 'approve',
-            // 'reason' is missing
+        $first->assertCreated()->assertJsonPath('data.status', 'pending');
+
+        $second = $this->actingAs($this->user2)->postJson('/api/bookings', [
+            'resource_id' => $this->resource->id,
+            'start_at' => '2026-03-02 10:00:00',
+            'end_at' => '2026-03-02 11:00:00',
+            'purpose' => 'Second',
         ]);
 
-        // Should return 422 validation error
-        $response->assertStatus(422);
+        $second->assertCreated()
+            ->assertJsonPath('data.status', 'waitlisted')
+            ->assertJsonPath('data.waitlist_position', 1);
     }
 
-    /**
-     * Test audit log cannot be updated or deleted.
-     */
-    public function test_audit_log_cannot_be_updated_or_deleted()
+    public function test_touching_slots_do_not_conflict(): void
     {
-        $this->actingAs($this->user1);
-
-        // Create a booking and decision
-        $booking = Booking::factory()->create([
-            'resource_id' => $this->resource->id,
-            'user_id' => $this->user1->id,
-            'start_at' => now()->addDay(1)->format('Y-m-d H:i:s'),
-            'end_at' => now()->addDay(1)->addHours(1)->format('Y-m-d H:i:s'),
-            'status' => BookingStatus::Pending,
-        ]);
-
-        // Try to update audit log
-        $auditLog = \App\Models\AuditLog::first();
-
-        $response = $this->patchJson("/api/audit-logs/{$auditLog->id}", [
-            'action' => 'modified',
-        ]);
-
-        // Should fail (audit logs are append-only)
-        $response->assertStatus(403); // Or some appropriate error
-    }
-
-    /**
-     * Test user cannot read another user's booking.
-     */
-    public function test_user_cannot_read_another_users_booking()
-    {
-        $this->actingAs($this->user1);
-
-        // Create booking for user2
-        $booking = Booking::factory()->create([
-            'resource_id' => $this->resource->id,
-            'user_id' => $this->user2->id,
-            'start_at' => now()->addDay(1)->format('Y-m-d H:i:s'),
-            'end_at' => now()->addDay(1)->addHours(1)->format('Y-m-d H:i:s'),
+        $this->makeBooking($this->resource, $this->user2, [
+            'start_at' => '2026-03-02 10:00:00',
+            'end_at' => '2026-03-02 11:00:00',
             'status' => BookingStatus::Approved,
         ]);
 
-        // User1 tries to view user2's booking
-        $response = $this->getJson("/api/bookings/{$booking->id}");
-
-        // Should be denied (403) unless user1 is admin or manager
-        $response->assertStatus(403);
+        $this->actingAs($this->user1)
+            ->postJson('/api/bookings', [
+                'resource_id' => $this->resource->id,
+                'start_at' => '2026-03-02 11:00:00',
+                'end_at' => '2026-03-02 12:00:00',
+            ])
+            ->assertCreated()
+            ->assertJsonPath('data.status', 'pending');
     }
 
-    /**
-     * Test late-return flag and system-suggested incidents.
-     */
-    public function test_late_return_flag_and_system_suggested_incidents()
+    public function test_decision_requires_a_reason(): void
     {
-        $this->actingAs($this->user1);
+        $booking = $this->makeBooking($this->resource, $this->user1);
 
-        // Create a checked-in booking
-        $booking = Booking::factory()->create([
-            'resource_id' => $this->resource->id,
+        $this->actingAs($this->manager)
+            ->patchJson("/api/bookings/{$booking->id}/decision", ['decision' => 'approve'])
+            ->assertStatus(422)
+            ->assertJsonValidationErrors('reason');
+    }
+
+    public function test_manager_cannot_decide_a_resource_they_do_not_manage(): void
+    {
+        $otherManager = $this->makeUser(Role::Manager);
+        $booking = $this->makeBooking($this->resource, $this->user1);
+
+        $this->actingAs($otherManager)
+            ->patchJson("/api/bookings/{$booking->id}/decision", [
+                'decision' => 'approve',
+                'reason' => 'Looks fine.',
+            ])
+            ->assertStatus(403);
+    }
+
+    public function test_manager_cannot_change_a_final_decision(): void
+    {
+        $booking = $this->makeBooking($this->resource, $this->user1, [
+            'status' => BookingStatus::Approved,
+            'decided_by' => $this->manager->id,
+        ]);
+
+        $this->actingAs($this->manager)
+            ->patchJson("/api/bookings/{$booking->id}/decision", [
+                'decision' => 'reject',
+                'reason' => 'Changed my mind.',
+            ])
+            ->assertStatus(422);
+
+        $this->assertSame(BookingStatus::Approved, $booking->fresh()->status);
+    }
+
+    public function test_owner_override_is_explicitly_audited(): void
+    {
+        $booking = $this->makeBooking($this->resource, $this->user1);
+
+        $this->actingAs($this->manager)
+            ->patchJson("/api/bookings/{$booking->id}/decision", [
+                'decision' => 'approve',
+                'reason' => 'Eligible and free.',
+            ])
+            ->assertOk();
+
+        $this->actingAs($this->owner)
+            ->patchJson("/api/bookings/{$booking->id}/decision", [
+                'decision' => 'reject',
+                'reason' => 'The requester did not include the required project brief.',
+            ])
+            ->assertOk()
+            ->assertJsonPath('data.status', 'rejected');
+
+        $audit = AuditLog::query()
+            ->where('booking_id', $booking->id)
+            ->where('action', 'booking_rejected')
+            ->firstOrFail();
+
+        $this->assertTrue((bool) $audit->meta['owner_override']);
+        $this->assertStringContainsString('Owner override', (string) $audit->reason);
+        $this->assertDatabaseHas('notifications', [
             'user_id' => $this->user1->id,
-            'start_at' => now()->subDay(1)->format('Y-m-d H:i:s'),
-            'end_at' => now()->subHours(1)->format('Y-m-d H:i:s'), // End was 1 hour ago
-            'status' => BookingStatus::CheckedIn,
+            'type' => 'booking_rejected',
         ]);
-
-        // Create condition report for return
-        $report = \App\Models\ConditionReport::create([
-            'booking_id' => $booking->id,
-            'type' => 'return',
-            'condition' => 'damaged',
-            'notes' => 'Scratch on the side',
-            'reported_by' => $this->user1->id,
-        ]);
-
-        // Call return - should set is_late = true since now > end_at
-        $response = $this->postJson("/api/bookings/{$booking->id}/return");
-
-        // Should set is_late flag
-        $this->assertTrue(true); // Placeholder - will assert actual behavior
-
-        // Should create a damage incident suggested by system
-        $this->assertTrue(true); // Placeholder
     }
 
-    /**
-     * Test timeline contains every step with actor, time and reason.
-     */
-    public function test_timeline_contains_every_step()
+    public function test_cancelling_an_approved_booking_offers_the_slot_to_the_waitlist(): void
     {
-        $this->actingAs($this->user1);
-
-        // Create a booking
-        $booking = Booking::factory()->create([
-            'resource_id' => $this->resource->id,
-            'user_id' => $this->user1->id,
-            'start_at' => now()->addDay(1)->format('Y-m-d H:i:s'),
-            'end_at' => now()->addDay(1)->addHours(2)->format('Y-m-d H:i:s'),
-            'status' => BookingStatus::Pending,
+        $approved = $this->makeBooking($this->resource, $this->user1, [
+            'status' => BookingStatus::Approved,
         ]);
 
-        // Make a decision
-        $booking->status = BookingStatus::Approved;
-        $booking->decision_reason = 'Eligible and no conflicts';
-        $booking->decided_by = $this->user1->id;
-        $booking->save();
+        $this->actingAs($this->user2)->postJson('/api/bookings', [
+            'resource_id' => $this->resource->id,
+            'start_at' => '2026-03-02 10:00:00',
+            'end_at' => '2026-03-02 11:00:00',
+        ])->assertCreated()->assertJsonPath('data.status', 'waitlisted');
 
-        // Check timeline endpoint
-        $response = $this->getJson("/api/bookings/{$booking->id}/timeline");
+        $waitlisted = Booking::query()->where('user_id', $this->user2->id)->firstOrFail();
 
-        // Should return audit entries
-        $response->assertStatus(200)
-            ->assertJsonCount(2, 'data'); // At least 2 entries: creation + decision
+        $this->actingAs($this->user1)
+            ->postJson("/api/bookings/{$approved->id}/cancel", ['reason' => 'Schedule changed.'])
+            ->assertOk();
+
+        $waitlisted->refresh();
+        $this->assertSame(BookingStatus::Pending, $waitlisted->status);
+        $this->assertNotNull($waitlisted->confirm_by);
+        $this->assertDatabaseHas('audit_logs', [
+            'booking_id' => $waitlisted->id,
+            'action' => 'waitlist_offered',
+        ]);
+        $this->assertDatabaseHas('notifications', [
+            'user_id' => $this->user2->id,
+            'type' => 'waitlist_offer',
+        ]);
+
+        $this->actingAs($this->user2)
+            ->postJson("/api/bookings/{$waitlisted->id}/confirm")
+            ->assertOk()
+            ->assertJsonPath('data.status', 'approved');
     }
 
-    /**
-     * Test concurrency: two simultaneous requests for the same slot.
-     */
-    public function test_concurrency_same_slot()
+    public function test_extending_into_an_approved_booking_is_rejected(): void
     {
-        $this->actingAs($this->user1);
-
-        // Fire two simultaneous requests for the same slot
-        $response1 = $this->postJson('/api/bookings', [
-            'resource_id' => $this->resource->id,
-            'start_at' => now()->addDay(1)->format('Y-m-d H:i:s'),
-            'end_at' => now()->addDay(1)->addHours(2)->format('Y-m-d H:i:s'),
+        $first = $this->makeBooking($this->resource, $this->user1, [
+            'start_at' => '2026-03-02 10:00:00',
+            'end_at' => '2026-03-02 11:00:00',
+            'status' => BookingStatus::Approved,
         ]);
 
-        $response2 = $this->postJson('/api/bookings', [
-            'resource_id' => $this->resource->id,
-            'start_at' => now()->addDay(1)->format('Y-m-d H:i:s'),
-            'end_at' => now()->addDay(1)->addHours(2)->format('Y-m-d H:i:s'),
+        $this->makeBooking($this->resource, $this->user2, [
+            'start_at' => '2026-03-02 11:00:00',
+            'end_at' => '2026-03-02 12:00:00',
+            'status' => BookingStatus::Approved,
         ]);
 
-        // One should be approvable, one waitlisted
-        // This tests that exactly one approvable booking and one waitlisted result
-        $this->assertTrue(true); // Placeholder
+        $this->actingAs($this->user1)
+            ->patchJson("/api/bookings/{$first->id}/extend", ['end_at' => '2026-03-02 12:00:00'])
+            ->assertStatus(422);
+    }
+
+    public function test_booking_timeline_is_visible_to_the_requester(): void
+    {
+        $created = $this->actingAs($this->user1)->postJson('/api/bookings', [
+            'resource_id' => $this->resource->id,
+            'start_at' => '2026-03-02 10:00:00',
+            'end_at' => '2026-03-02 11:00:00',
+            'purpose' => 'Timeline test',
+        ])->assertCreated();
+
+        $booking = Booking::query()->findOrFail($created->json('data.id'));
+
+        $this->actingAs($this->manager)
+            ->patchJson("/api/bookings/{$booking->id}/decision", [
+                'decision' => 'approve',
+                'reason' => 'Free slot and eligible.',
+            ])
+            ->assertOk();
+
+        $this->actingAs($this->user1)
+            ->getJson("/api/bookings/{$booking->id}/timeline")
+            ->assertOk()
+            ->assertJsonCount(2, 'data')
+            ->assertJsonPath('data.0.label', 'Request submitted')
+            ->assertJsonPath('data.1.label', 'Request approved');
+    }
+
+    public function test_user_cannot_read_another_users_booking(): void
+    {
+        $booking = $this->makeBooking($this->resource, $this->user2);
+
+        $this->actingAs($this->user1)
+            ->getJson("/api/bookings/{$booking->id}")
+            ->assertStatus(403);
+    }
+
+    public function test_manager_workspace_only_returns_assigned_bookings(): void
+    {
+        $otherResource = $this->makeResource($this->owner);
+        $this->makeBooking($this->resource, $this->user1);
+        $this->makeBooking($otherResource, $this->user2);
+
+        $this->actingAs($this->manager)
+            ->getJson('/api/manager/requests')
+            ->assertOk()
+            ->assertJsonCount(1, 'data');
+    }
+
+    public function test_dashboard_summary_is_scoped_to_the_signed_in_user(): void
+    {
+        $this->makeBooking($this->resource, $this->user1, ['status' => BookingStatus::Approved]);
+        $this->makeBooking($this->resource, $this->user2);
+
+        $this->actingAs($this->user1)
+            ->getJson('/api/dashboard')
+            ->assertOk()
+            ->assertJsonPath('data.total_bookings', 1)
+            ->assertJsonPath('data.upcoming_bookings', 1);
+    }
+
+    public function test_user_cannot_access_manager_or_owner_routes(): void
+    {
+        $this->actingAs($this->user1)->getJson('/api/manager/requests')->assertStatus(403);
+        $this->actingAs($this->user1)->getJson('/api/owner/resources')->assertStatus(403);
     }
 }

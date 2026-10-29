@@ -11,11 +11,15 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as CredentialsRouteImport } from './routes/credentials'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
+import { Route as IncidentsRouteImport } from './routes/incidents'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ManagerRouteImport } from './routes/manager'
+import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as OwnerRouteImport } from './routes/owner'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as MyBookingsIndexRouteImport } from './routes/my-bookings.index'
 import { Route as MyBookingsBookingIdRouteImport } from './routes/my-bookings.$bookingId'
@@ -32,6 +36,11 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CredentialsRoute = CredentialsRouteImport.update({
+  id: '/credentials',
+  path: '/credentials',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -40,6 +49,11 @@ const DashboardRoute = DashboardRouteImport.update({
 const HowItWorksRoute = HowItWorksRouteImport.update({
   id: '/how-it-works',
   path: '/how-it-works',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IncidentsRoute = IncidentsRouteImport.update({
+  id: '/incidents',
+  path: '/incidents',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -52,9 +66,19 @@ const ManagerRoute = ManagerRouteImport.update({
   path: '/manager',
   getParentRoute: () => rootRouteImport,
 } as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OwnerRoute = OwnerRouteImport.update({
   id: '/owner',
   path: '/owner',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RegisterRoute = RegisterRouteImport.update({
@@ -86,11 +110,15 @@ const ResourcesResourceIdRoute = ResourcesResourceIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/credentials': typeof CredentialsRoute
   '/dashboard': typeof DashboardRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/incidents': typeof IncidentsRoute
   '/login': typeof LoginRoute
   '/manager': typeof ManagerRoute
+  '/notifications': typeof NotificationsRoute
   '/owner': typeof OwnerRoute
+  '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/my-bookings/$bookingId': typeof MyBookingsBookingIdRoute
   '/resources/$resourceId': typeof ResourcesResourceIdRoute
@@ -100,11 +128,15 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/credentials': typeof CredentialsRoute
   '/dashboard': typeof DashboardRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/incidents': typeof IncidentsRoute
   '/login': typeof LoginRoute
   '/manager': typeof ManagerRoute
+  '/notifications': typeof NotificationsRoute
   '/owner': typeof OwnerRoute
+  '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/my-bookings/$bookingId': typeof MyBookingsBookingIdRoute
   '/resources/$resourceId': typeof ResourcesResourceIdRoute
@@ -115,11 +147,15 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/credentials': typeof CredentialsRoute
   '/dashboard': typeof DashboardRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/incidents': typeof IncidentsRoute
   '/login': typeof LoginRoute
   '/manager': typeof ManagerRoute
+  '/notifications': typeof NotificationsRoute
   '/owner': typeof OwnerRoute
+  '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/my-bookings/$bookingId': typeof MyBookingsBookingIdRoute
   '/resources/$resourceId': typeof ResourcesResourceIdRoute
@@ -131,11 +167,15 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/credentials'
     | '/dashboard'
     | '/how-it-works'
+    | '/incidents'
     | '/login'
     | '/manager'
+    | '/notifications'
     | '/owner'
+    | '/profile'
     | '/register'
     | '/my-bookings/$bookingId'
     | '/resources/$resourceId'
@@ -145,11 +185,15 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/credentials'
     | '/dashboard'
     | '/how-it-works'
+    | '/incidents'
     | '/login'
     | '/manager'
+    | '/notifications'
     | '/owner'
+    | '/profile'
     | '/register'
     | '/my-bookings/$bookingId'
     | '/resources/$resourceId'
@@ -159,11 +203,15 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/credentials'
     | '/dashboard'
     | '/how-it-works'
+    | '/incidents'
     | '/login'
     | '/manager'
+    | '/notifications'
     | '/owner'
+    | '/profile'
     | '/register'
     | '/my-bookings/$bookingId'
     | '/resources/$resourceId'
@@ -174,11 +222,15 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  CredentialsRoute: typeof CredentialsRoute
   DashboardRoute: typeof DashboardRoute
   HowItWorksRoute: typeof HowItWorksRoute
+  IncidentsRoute: typeof IncidentsRoute
   LoginRoute: typeof LoginRoute
   ManagerRoute: typeof ManagerRoute
+  NotificationsRoute: typeof NotificationsRoute
   OwnerRoute: typeof OwnerRoute
+  ProfileRoute: typeof ProfileRoute
   RegisterRoute: typeof RegisterRoute
   MyBookingsBookingIdRoute: typeof MyBookingsBookingIdRoute
   ResourcesResourceIdRoute: typeof ResourcesResourceIdRoute
@@ -202,6 +254,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/credentials': {
+      id: '/credentials'
+      path: '/credentials'
+      fullPath: '/credentials'
+      preLoaderRoute: typeof CredentialsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dashboard': {
       id: '/dashboard'
       path: '/dashboard'
@@ -214,6 +273,13 @@ declare module '@tanstack/react-router' {
       path: '/how-it-works'
       fullPath: '/how-it-works'
       preLoaderRoute: typeof HowItWorksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/incidents': {
+      id: '/incidents'
+      path: '/incidents'
+      fullPath: '/incidents'
+      preLoaderRoute: typeof IncidentsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -230,11 +296,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManagerRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/owner': {
       id: '/owner'
       path: '/owner'
       fullPath: '/owner'
       preLoaderRoute: typeof OwnerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/register': {
@@ -278,11 +358,15 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  CredentialsRoute: CredentialsRoute,
   DashboardRoute: DashboardRoute,
   HowItWorksRoute: HowItWorksRoute,
+  IncidentsRoute: IncidentsRoute,
   LoginRoute: LoginRoute,
   ManagerRoute: ManagerRoute,
+  NotificationsRoute: NotificationsRoute,
   OwnerRoute: OwnerRoute,
+  ProfileRoute: ProfileRoute,
   RegisterRoute: RegisterRoute,
   MyBookingsBookingIdRoute: MyBookingsBookingIdRoute,
   ResourcesResourceIdRoute: ResourcesResourceIdRoute,

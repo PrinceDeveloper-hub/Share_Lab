@@ -33,14 +33,14 @@ export const AuthField = ({
     <div>
       <label
         htmlFor={id}
-        className="block text-sm font-semibold text-(--charcoal)"
+        className="block text-[0.8125rem] font-medium text-(--charcoal)"
       >
         {label}
       </label>
       <div className="relative mt-2">
         {Icon ? (
           <Icon
-            className="pointer-events-none absolute left-3.5 top-1/2 h-[1.05rem] w-[1.05rem] -translate-y-1/2 text-(--taupe)"
+            className="pointer-events-none absolute left-3.5 top-1/2 h-[1.05rem] w-[1.05rem] -translate-y-1/2 text-(--bronze)"
             aria-hidden="true"
           />
         ) : null}
@@ -49,12 +49,12 @@ export const AuthField = ({
           aria-invalid={error ? 'true' : undefined}
           aria-describedby={describedBy || undefined}
           className={cn(
-            'h-11 w-full rounded-xl border bg-[rgba(255,252,247,0.88)] px-3.5 text-sm text-(--charcoal) shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] outline-none transition placeholder:text-(--muted) focus:border-[rgba(75,47,31,0.45)] focus:ring-4 focus:ring-[rgba(75,47,31,0.1)]',
+            'h-11 w-full rounded-[0.5rem] border bg-(--surface) px-3.5 text-sm text-(--charcoal) outline-none transition-colors placeholder:text-[rgba(113,104,95,0.66)] hover:border-(--border-strong) focus:border-(--espresso) focus:ring-2 focus:ring-[rgba(81,53,34,0.14)]',
             Icon ? 'pl-11' : '',
             trailing ? 'pr-12' : '',
             error
-              ? 'border-[rgba(180,77,66,0.55)] bg-[rgba(180,77,66,0.035)]'
-              : 'border-[rgba(82,59,45,0.16)]',
+              ? 'border-[rgba(169,72,60,0.55)] bg-[rgba(169,72,60,0.035)]'
+              : 'border-(--border-subtle)',
             className,
           )}
           {...props}

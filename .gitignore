@@ -1,0 +1,12 @@
+# Docker Compose environment (contains secrets)
+.env
+.env.*
+!.env.example
+
+# Local test artefacts
+*.sqlite
+
+# Playwright
+sharelab/test-results/
+sharelab/playwright-report/
+sharelab/e2e/.auth/

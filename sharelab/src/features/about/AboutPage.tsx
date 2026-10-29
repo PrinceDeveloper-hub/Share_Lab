@@ -175,7 +175,7 @@ export const AboutPage = () => {
             </div>
 
             <div className="relative mx-auto w-full max-w-lg lg:max-w-none">
-              <div className="overflow-hidden rounded-[2rem] border border-[rgba(255,255,255,0.7)] bg-[rgba(255,252,247,0.6)] p-2.5 shadow-(--shadow-lg)">
+              <div className="overflow-hidden rounded-(--radius-panel) border border-[rgba(255,255,255,0.7)] bg-[rgba(255,252,247,0.6)] p-2.5 shadow-(--shadow-lg)">
                 <div className="relative overflow-hidden rounded-[1.55rem]">
                   <img
                     src="https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=1400&q=80"
@@ -220,7 +220,7 @@ export const AboutPage = () => {
                   <span className="font-display text-xs font-bold tracking-[0.16em] text-(--taupe)">
                     {problem.number}
                   </span>
-                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[rgba(75,47,31,0.07)]">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[rgba(81,53,34,0.07)]">
                     <problem.icon className="h-4 w-4 text-(--espresso)" aria-hidden="true" />
                   </span>
                 </div>
@@ -298,9 +298,9 @@ export const AboutPage = () => {
           {audiences.map((audience) => (
             <div
               key={audience.title}
-              className="flex h-full flex-col gap-4 rounded-[1.35rem] border border-(--border-subtle) bg-[rgba(255,252,247,0.66)] p-6 transition-all duration-300 hover:-translate-y-1 hover:bg-(--cream) hover:shadow-(--shadow-md)"
+              className="flex h-full flex-col gap-4 rounded-(--radius-lg) border border-(--border-subtle) bg-(--surface) p-6 transition-all duration-300 hover:-translate-y-1 hover:bg-(--cream) hover:shadow-(--shadow-md)"
             >
-              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[rgba(75,47,31,0.075)]">
+              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[rgba(81,53,34,0.075)]">
                 <audience.icon className="h-5 w-5 text-(--espresso)" aria-hidden="true" />
               </span>
               <div>
@@ -367,7 +367,7 @@ export const AboutPage = () => {
       </section>
 
       <section className="page-shell py-16 sm:py-20">
-        <div className="flex flex-col items-start justify-between gap-6 rounded-[2rem] border border-(--border-subtle) bg-(--cream) px-6 py-8 shadow-soft sm:flex-row sm:items-center sm:px-8">
+        <div className="flex flex-col items-start justify-between gap-6 rounded-(--radius-panel) border border-(--border-subtle) bg-(--cream) px-6 py-8 shadow-soft sm:flex-row sm:items-center sm:px-8">
           <div>
             <h2 className="text-2xl font-semibold tracking-tight text-(--charcoal) sm:text-3xl">
               Start with what your work needs.

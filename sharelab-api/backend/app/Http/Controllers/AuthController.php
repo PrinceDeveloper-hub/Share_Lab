@@ -52,7 +52,7 @@ class AuthController extends Controller
      */
     public function refresh(Request $request): JsonResponse
     {
-        $token = $request->cookie((string) config('jwt.refresh_cookie', 'sharelab_refresh'));
+        $token = $request->cookie((string) config('jwt.refresh_cookie', 'sl_refresh'));
 
         if (! is_string($token) || $token === '') {
             return $this->unauthenticatedResponse();

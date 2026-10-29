@@ -17,46 +17,51 @@ export const ResourceCard = ({ resource, className }: ResourceCardProps) => {
   return (
     <article
       className={cn(
-        'group flex h-full flex-col overflow-hidden rounded-[1.35rem] border border-(--border-subtle) bg-[rgba(255,252,247,0.72)] shadow-soft backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-[rgba(82,59,45,0.2)] hover:shadow-(--shadow-md)',
+        'group flex h-full flex-col overflow-hidden rounded-(--radius-lg) border border-(--border-subtle) bg-(--surface) transition-[border-color,box-shadow,transform] duration-300 hover:-translate-y-0.5 hover:border-(--border-strong) hover:shadow-(--shadow-md)',
         className,
       )}
     >
-      <div className="relative aspect-[4/3] overflow-hidden bg-(--soft-beige)">
+      {/* Fixed 3:2 media ratio keeps every card in the grid aligned. */}
+      <div className="relative aspect-[3/2] w-full overflow-hidden bg-(--surface-sunken)">
         {imageFailed ? (
-          <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(145deg,var(--soft-beige),var(--cream))]">
-            <FlaskConical className="h-10 w-10 text-[rgba(75,47,31,0.32)]" aria-hidden="true" />
+          <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(150deg,var(--soft-beige),var(--surface))]">
+            <FlaskConical className="h-8 w-8 text-[rgba(81,53,34,0.28)]" aria-hidden="true" />
           </div>
         ) : (
           <img
             src={getResourceImage(resource)}
             alt={`${resource.name} at ${resource.location}`}
-            className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.035]"
+            width={960}
+            height={640}
+            sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 92vw"
+            className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
             loading="lazy"
             decoding="async"
             onError={() => setImageFailed(true)}
           />
         )}
+
         <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-2 p-3">
-          <span className="rounded-full bg-[rgba(255,252,247,0.92)] px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-(--espresso) shadow-sm backdrop-blur">
+          <span className="rounded-[0.35rem] bg-[rgba(255,252,247,0.94)] px-2 py-1 text-[0.625rem] font-semibold uppercase tracking-[0.1em] text-(--espresso)">
             {resource.category}
           </span>
           <span
             className={cn(
-              'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.12em] shadow-sm backdrop-blur',
+              'inline-flex items-center gap-1.5 rounded-[0.35rem] px-2 py-1 text-[0.625rem] font-semibold uppercase tracking-[0.1em]',
               isActive
-                ? 'bg-[rgba(56,118,83,0.92)] text-white'
-                : 'bg-[rgba(48,34,25,0.88)] text-(--cream)',
+                ? 'bg-[rgba(53,107,76,0.92)] text-white'
+                : 'bg-[rgba(34,24,18,0.88)] text-(--cream)',
             )}
           >
-            <span className="h-1.5 w-1.5 rounded-full bg-current" aria-hidden="true" />
-            {isActive ? 'Active' : 'Inactive'}
+            <span className="h-1 w-1 rounded-full bg-current" aria-hidden="true" />
+            {isActive ? 'Active' : 'Paused'}
           </span>
         </div>
       </div>
 
       <div className="flex flex-1 flex-col gap-3 p-5">
         <div>
-          <h3 className="text-lg font-semibold leading-snug text-(--charcoal)">
+          <h3 className="font-display text-[1.0625rem] font-semibold leading-snug tracking-[-0.015em] text-(--charcoal)">
             <Link
               to="/resources/$resourceId"
               params={{ resourceId: String(resource.id) }}
@@ -65,40 +70,43 @@ export const ResourceCard = ({ resource, className }: ResourceCardProps) => {
               {resource.name}
             </Link>
           </h3>
-          <p className="mt-1.5 inline-flex items-center gap-1.5 text-xs font-medium text-(--muted)">
-            <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
+          <p className="mt-1 inline-flex items-center gap-1.5 text-xs text-(--muted)">
+            <MapPin className="h-3.5 w-3.5 text-(--bronze)" aria-hidden="true" />
             {resource.location}
           </p>
         </div>
 
         {resource.description ? (
-          <p className="line-clamp-2 text-sm leading-relaxed text-(--muted)">
+          <p className="line-clamp-2 text-[0.8125rem] leading-relaxed text-(--muted)">
             {resource.description}
           </p>
         ) : null}
 
-        <div className="flex flex-wrap gap-2 text-[0.7rem] font-medium text-(--muted)">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-[rgba(75,47,31,0.055)] px-2.5 py-1">
-            <Clock3 className="h-3.5 w-3.5" aria-hidden="true" />
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[0.75rem] text-(--muted)">
+          <span className="inline-flex items-center gap-1.5">
+            <Clock3 className="h-3.5 w-3.5 text-(--bronze)" aria-hidden="true" />
             Up to {resource.max_hours_per_booking}h per booking
           </span>
           {resource.rules ? (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-[rgba(183,121,50,0.1)] px-2.5 py-1 text-(--warning)">
+            <span className="inline-flex items-center gap-1.5 text-(--bronze-deep)">
               <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
               Requirements apply
             </span>
           ) : null}
         </div>
 
-        <div className="mt-auto flex items-center justify-between gap-3 border-t border-(--border-subtle) pt-4">
-          <span className="text-xs text-(--muted)">Weekly cap: {resource.weekly_cap_hours}h</span>
+        <div className="mt-auto flex items-center justify-between gap-3 border-t border-(--border-subtle) pt-3.5">
+          <span className="text-[0.75rem] text-(--muted)">Weekly cap {resource.weekly_cap_hours}h</span>
           <Link
             to="/resources/$resourceId"
             params={{ resourceId: String(resource.id) }}
-            className="inline-flex items-center gap-1 text-sm font-semibold text-(--espresso) transition-colors hover:text-(--deep-brown)"
+            className="inline-flex items-center gap-1 text-[0.8125rem] font-semibold text-(--espresso) transition-colors hover:text-(--bronze-deep)"
           >
-            View resource
-            <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
+            View details
+            <ArrowUpRight
+              className="h-3.5 w-3.5 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+              aria-hidden="true"
+            />
           </Link>
         </div>
       </div>

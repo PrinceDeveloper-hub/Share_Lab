@@ -189,7 +189,7 @@ export const HowItWorksPage = () => {
               </div>
             </div>
 
-            <div className="relative overflow-hidden rounded-[2rem] border border-(--border-subtle) bg-(--cream) p-6 shadow-(--shadow-md) sm:p-8">
+            <div className="relative overflow-hidden rounded-(--radius-panel) border border-(--border-subtle) bg-(--cream) p-6 shadow-(--shadow-md) sm:p-8">
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <p className="text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-(--muted)">
@@ -238,20 +238,20 @@ export const HowItWorksPage = () => {
               className="grid grid-cols-[2.75rem_minmax(0,1fr)] gap-4 sm:grid-cols-[4rem_minmax(0,1fr)] sm:gap-6"
             >
               <div className="relative flex justify-center">
-                <span className="relative z-10 flex h-11 w-11 items-center justify-center rounded-full border border-[rgba(75,47,31,0.16)] bg-(--cream) font-display text-sm font-bold text-(--espresso) shadow-(--shadow-xs) sm:h-14 sm:w-14 sm:text-base">
+                <span className="relative z-10 flex h-11 w-11 items-center justify-center rounded-full border border-[rgba(81,53,34,0.16)] bg-(--cream) font-display text-sm font-bold text-(--espresso) shadow-(--shadow-xs) sm:h-14 sm:w-14 sm:text-base">
                   {step.number}
                 </span>
                 {index < steps.length - 1 ? (
                   <span
                     aria-hidden="true"
-                    className="absolute -bottom-4 top-11 w-px bg-[rgba(82,59,45,0.18)] sm:-bottom-6 sm:top-14"
+                    className="absolute -bottom-4 top-11 w-px bg-[rgba(81,53,34,0.18)] sm:-bottom-6 sm:top-14"
                   />
                 ) : null}
               </div>
 
-              <div className="rounded-[1.35rem] border border-(--border-subtle) bg-[rgba(255,252,247,0.66)] p-5 shadow-(--shadow-xs) sm:p-6">
+              <div className="rounded-(--radius-lg) border border-(--border-subtle) bg-(--surface) p-5 shadow-(--shadow-xs) sm:p-6">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[rgba(75,47,31,0.075)]">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[rgba(81,53,34,0.075)]">
                     <step.icon className="h-4 w-4 text-(--espresso)" aria-hidden="true" />
                   </span>
                   <span className="text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-(--muted)">
@@ -289,9 +289,9 @@ export const HowItWorksPage = () => {
             {notes.map((note) => (
               <div
                 key={note.title}
-                className="flex h-full flex-col gap-4 rounded-[1.35rem] border border-(--border-subtle) bg-(--cream) p-6"
+                className="flex h-full flex-col gap-4 rounded-(--radius-lg) border border-(--border-subtle) bg-(--cream) p-6"
               >
-                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[rgba(75,47,31,0.075)]">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[rgba(81,53,34,0.075)]">
                   <note.icon className="h-5 w-5 text-(--espresso)" aria-hidden="true" />
                 </span>
                 <div>
@@ -304,7 +304,7 @@ export const HowItWorksPage = () => {
             ))}
           </div>
 
-          <div className="mt-5 rounded-[1.35rem] border border-[rgba(183,121,50,0.22)] bg-[rgba(183,121,50,0.06)] p-5 text-sm leading-relaxed text-(--muted)">
+          <div className="mt-5 rounded-(--radius-lg) border border-[rgba(154,107,34,0.22)] bg-[rgba(154,107,34,0.06)] p-5 text-sm leading-relaxed text-(--muted)">
             <strong className="font-semibold text-(--charcoal)">A note on availability:</strong>{' '}
             a listing’s “Active” status means it is published — it does not guarantee an open slot.
             The server evaluates conflicts, eligibility, duration, and weekly caps when a request is
@@ -335,7 +335,7 @@ export const HowItWorksPage = () => {
             {faqs.map((faq) => (
               <details
                 key={faq.question}
-                className="group rounded-2xl border border-(--border-subtle) bg-[rgba(255,252,247,0.66)] open:bg-(--cream)"
+                className="group rounded-2xl border border-(--border-subtle) bg-(--surface) open:bg-(--cream)"
               >
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 [&::-webkit-details-marker]:hidden">
                   <span className="text-sm font-semibold text-(--charcoal) sm:text-base">
@@ -356,7 +356,7 @@ export const HowItWorksPage = () => {
       </section>
 
       <section className="page-shell pb-20">
-        <div className="flex flex-col items-start justify-between gap-6 rounded-[2rem] border border-(--border-subtle) bg-[rgba(233,217,198,0.34)] px-6 py-8 sm:flex-row sm:items-center sm:px-8">
+        <div className="flex flex-col items-start justify-between gap-6 rounded-(--radius-panel) border border-(--border-subtle) bg-[rgba(233,217,198,0.34)] px-6 py-8 sm:flex-row sm:items-center sm:px-8">
           <div>
             <h2 className="text-2xl font-semibold tracking-tight text-(--charcoal) sm:text-3xl">
               Ready to start with a real listing?

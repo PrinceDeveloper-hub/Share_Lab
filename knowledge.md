@@ -1,86 +1,136 @@
-# ShareLab knowledge
+# ShareLab — project knowledge
 
-ShareLab is a campus "labs & makerspace share idle equipment" app. Two packages:
-a Laravel 11 JSON API (`sharelab-api`) and a React 19 + Vite + TanStack Router
-frontend (`sharelab`). Everything runs over a warm-beige / espresso glassmorphism
-design system.
+ShareLab is a campus equipment/makerspace sharing app: catalogue, credential
+verification, booking requests with fairness rules, manager decisions,
+check-in/return condition reports, incidents, notifications and audit trail.
+Core principle: **humans decide** — automation only recommends; every
+decision records a reason.
+
+## Repo layout
+
+- `sharelab/` — frontend. React 19 + Vite 8 + TanStack Router/Query +
+  Tailwind v4. Path alias `#/*` → `./src/*`.
+  - `src/routes/` — file-based routes; generated tree lives in `routeTree.gen.ts`
+  - `src/features/` — admin, auth, bookings, check-in-return, credentials,
+    dashboard, home, how-it-works, incidents, manager, notifications, owner,
+    profile, resources, about
+  - `src/components/{auth,glass,home,layout,navigation,resources,ui}`
+  - `src/lib/` — `api-client.ts` (axios + envelope + 401 refresh),
+    `auth.ts`, per-domain API modules (`resources.ts`, `bookings`…), `utils`
+  - `src/hooks/` — TanStack Query hooks; **`useAuth.ts` is the real one**,
+    `use-auth.ts` is only a re-export shim
+  - `src/styles/` — `tokens.css` (design tokens), `base.css`, `fonts.css`
+- `sharelab-api/backend/` — **the actual API**. Laravel 11, custom JWT
+  guard (`app/Auth/JwtGuard.php`), guards on `api`, no Sanctum tokens.
+- `sharelab-api/` (root) — a Laravel 13 + Inertia + Fortify/teams/wayfinder
+  starter-kit scaffold. It is *not* the ShareLab API (no `routes/api.php`,
+  no ShareLab controllers). Do not edit it for product work.
 
 ## Commands
 
-### Frontend (`sharelab`)
-- Dev: `pnpm dev` (Vite on port 3000)
-- Build: `pnpm build`
-- Lint: `pnpm lint`
-- Format: `pnpm format`
-- Check: `pnpm check` (prettier)
-- Route generation: `pnpm generate-routes`
+Frontend (`cd sharelab`), pnpm only:
+- `pnpm dev` — Vite on port 3000; proxies `/api` and `/storage` to
+  `http://localhost:8000`
+- `pnpm build`, `pnpm preview`
+- `pnpm lint` (eslint), `pnpm check` (prettier --check), `pnpm format`
+- `pnpm generate-routes` (`tsr generate`); dev/build also regenerate
+- There is no frontend test runner configured.
 
-### Backend (`sharelab-api/backend`)
-- Install: `composer install`
-- Dev: `composer dev` (serves artisan + pail + queue + vite concurrently)
-- Test: `php artisan test` (runs `vendor/bin/phpunit` via composer script)
-- Lint: `vendor/bin/pint --parallel`
-- Lint check: `vendor/bin/pint --parallel --test`
-- Typecheck/static analysis: `vendor/bin/phpstan analyse`
-- Seed: `php artisan db:seed`
+Backend (`cd sharelab-api/backend`):
+- `composer install`, then `cp .env.example .env && php artisan key:generate`
+- `php artisan migrate --seed` (MariaDB database `sharelab`, utf8mb4)
+- `php artisan serve` → API at `http://127.0.0.1:8000/api`
+- `php artisan test` — PHPUnit; tests use DB `sharelab_test` (real MariaDB,
+  not sqlite), array cache, array mailer
+- `vendor/bin/pint --parallel` (or `--test` to check only)
+- `composer dev` runs serve + queue + pail + vite together
 
-### Monorepo root
-- `pnpm` is the package manager for the frontend; use it, not npm.
+## API conventions
 
-## Architecture
+- Envelope: `{ data, message, errors, meta }` (paginated lists add
+  `page`, `per_page`, `total`, `last_page` in `meta`)
+- Never return Eloquent models or raw arrays — use API Resources under
+  `app/Http/Resources/`
+- Status codes: 200, 201, 204, 401, 403, 404, 409 (conflict), 422, 429
+  (login is throttled 10/min)
+- Auth is **JWT in HttpOnly cookies** (`sharelab_access`,
+  `sharelab_refresh`; TTLs `JWT_ACCESS_TTL=15`, `JWT_REFRESH_TTL=10080`).
+  Frontend uses `withCredentials` and silently retries once via
+  `POST /api/refresh` on 401, then emits `sharelab:auth-expired`.
+  Global middleware alias `jwt.auth` = `JwtCookieMiddleware`.
+- Authorization: `role:` middleware (aliases `role:owner`, `role:manager`)
+  plus Policies. Role is never trusted from the client.
+- All timestamps are ISO-8601 UTC.
 
-Monorepo: `sharelab/` (frontend) + `sharelab-api/` (Laravel backend).
+## Domain rules
 
-### Backend layout
-- `routes/api.php` - all API routes under `auth:sanctum` (except `/login`, `/logout`, `/me`, `/resources` which are public-ish, and the inline closure routes for incidents/notifications/admin)
-- `app/Http/Controllers/Api/` - thin controllers, translate HTTP <-> DTO, always return API Resources
-- `app/Http/Requests/` - FormRequests for validation + authorization
-- `app/Http/Resources/` - JsonResource envelope `{ data, message, errors, meta }`
-- `app/Services/BookingService.php` - core booking use-case logic
-- `app/Enums/` - backed enums: Role, BookingStatus, CredentialStatus, IncidentStatus, ConditionType
-- `app/Models/` - Eloquent models (User, Resource, Booking, UserCredential, ResourceRequirement, Incident, ConditionReport, Notification, AuditLog)
-- `app/Policies/` - authorization policies (BookingPolicy, ResourcePolicy, UserPolicy)
-- `app/Providers/AppServiceProvider.php` - only provider in use
-- `database/migrations/` - all tables with foreign keys
-- `database/seeders/DatabaseSeeder.php` - 5 accounts, 6 resources, sample bookings
-- `tests/` - PHPUnit/Pest unit + feature tests
+- Roles: user, owner, manager, admin. `RoleMiddleware` does an exact
+  string match on `users.role`, so `role:owner` and `role:manager` are
+  mutually exclusive; broader access is granted in Policies/controllers.
+- Eligibility: every `requires_verification` requirement needs a VERIFIED
+  `user_credentials` row.
+- Booking: max hours per booking; weekly cap sums
+  approved/checked_in/returned hours in the ISO week (UTC) of the start;
+  overlap test `existing.start_at < new.end_at AND existing.end_at > new.start_at`
+  with `lockForUpdate()` — touching slots do not conflict. Overlap creates
+  a waitlisted booking rather than an error.
+- Priority = hours used in the last 30 days (lower is better), earlier
+  request time breaks ties.
+- Cancel of an approved booking promotes the top waitlisted request with
+  `confirm_by = now + 24h`; `POST /api/bookings/{id}/confirm` approves it
+  after re-checking conflicts.
+- Check-in window: 30 minutes before start through end of slot; condition
+  report required. Return sets `is_late` and creates
+  `suggested_by_system` damage/delay incidents that stay suggestions until
+  a manager confirms.
+- `AuditLog` is append-only (model blocks update/delete).
+- Uploads: pdf/jpg/png/webp, max 5 MB, private disk, served through a
+  signed short-lived route (`GET /api/credentials/{id}/download`).
+- Backend service layers live in `app/Services/{Auth,Booking,Condition,
+  Credential,Eligibility,Incident,Notification,Resource,Audit}/` plus
+  `app/Services/BookingService.php`.
+- Seeder: 5 demo accounts (`user1@sharelab.test`, `user2@sharelab.test`,
+  `manager@sharelab.test`, `owner@sharelab.test`, `admin@sharelab.test`;
+  password `password` for all), 6 resources (3D Printer requires "3D
+  Printer Training"), manager assigned to every resource, sample
+  credentials/bookings/audit rows. Reseeding purges the older
+  `user@user.com` style demo accounts and their records.
 
-### Frontend layout (`sharelab/src`)
-- `src/routes/` - TanStack file-based routes (`__root.tsx`, `index.tsx`)
-- `src/features/` - feature areas: admin, bookings, check-in-return, dashboard, home, incidents, manager, owner, resources
-- `src/components/` -glass/layout/navigation/ui/shared
-- `src/lib/` - api-client.ts, auth.ts (hooks), query-client.ts, utils.ts
-- `src/styles/` - tokens.css (CSS vars), tailwind config, global CSS
+## Frontend conventions and gotchas
 
-### Data flow
-Frontend <-> `sharelab-api` (JSON) over Sanctum. All responses go through API
-Resources (envelope). The frontend hooks (`useAuth`, `useBookings`) call the API.
+- Design system: warm beige + espresso glassmorphism. Use tokens from
+  `src/styles/tokens.css` (ivory, cream, soft-beige, sand, taupe, espresso,
+  deep-brown, charcoal, muted, success, warning, error) rather than raw hex.
+- Reuse the glass surface (`components/glass/GlassPanel.tsx`) and the
+  `--glass-*` variables in `tokens.css` instead of hand-rolling blur,
+  borders and shadows.
+- Typography: Manrope headings, Inter body.
+- Status badges always pair a color with an icon.
+- TanStack Router routes are file-based; run `pnpm generate-routes` after
+  adding/renaming a route file.
+- Keep API calls in `src/lib/*` modules and data fetching in
+  `src/hooks/*`; components should not call axios directly.
+- Windows checkout contains both `use-auth.ts` and `useAuth.ts` (case
+  collision) — import `useAuth.ts`.
+- Verification for UI work: `pnpm lint` + `pnpm build` (no test suite).
 
-## Backend rules (adhered to by code)
-- Response envelope: `{ data, message, errors, meta }`
-- Every response goes through an API Resource; never return Eloquent models or raw arrays from controllers
-- Status codes: 200, 201, 204, 401, 403, 404, 409, 422, 429
-- Timestamps are ISO-8601 UTC
-- Role is never trusted from the client; server-side verification is via Policies + `role:` middleware
-- Enums: Role (user/owner/manager/admin), BookingStatus (pending/waitlisted/approved/rejected/cancelled/checked_in/returned), CredentialStatus (pending/verified/rejected), IncidentStatus (open/resolved), ConditionType (checkin/return)
-- Condition severity order (used by return/incident logic): excellent > good > fair > damaged
-- Conflict test: `existing.start_at < new.end_at AND existing.end_at > new.start_at` against approved/checked_in bookings, `lockForUpdate()`; touching slots (end == start) do NOT conflict
-- Weekly cap sums approved/checked_in/returned hours in the ISO week (UTC) of start
-- Priority score = hours used in last 30 days (lower = higher priority); earlier request time breaks ties
-- Waitlist promotion: on cancel of approved booking, top-ranked eligible waitlisted request gets the slot with `confirm_by = now + 24h`
-- Check-in window: default 30 min before start to end of slot; owner only, approved only, condition report required
-- Return: checked_in only; is_late = now > end_at; worse return condition than check-in -> system-suggested damage incident (`suggested_by_system = true`, unconfirmed until manager confirms)
-- AuditLog is append-only (booted blockers on updating/deleting)
-- Upload validation: mimes pdf/jpg/png/webp, max 5 MB, stored on private disk
+## Deployment
 
-## Notes
-- `settings` are managed via `config/` files: auth, sanctum/cors, database, etc.
-- `.env` lives in `sharelab-api/backend/.env` (gitignored); DB config goes ONLY there
-- Demo accounts (password "password"): user1@sharelab.test, user2@sharelab.test, owner@sharelab.test, manager@sharelab.test, admin@sharelab.test
-- Six seeded resources: 3D Printer (3D Printer Training), Oscilloscope, Camera Kit, Meeting Room, Laser Cutter, Soldering Station
-- Frontend uses CSS variables from `src/styles/tokens.css` (Warm Beige + Espresso glassmorphism) and Tailwind config extends those token names
-- Glass components use: `rgba(255,249,241,.76)` bg, `rgba(255,255,255,.62)` border, `blur(16px) saturate(115%)` backdrop
-- Frontend route generation: `tsr generate` via `@tanstack/router-cli`
-- Frontend TS config: strict, bundler moduleResolution, verbatimModuleSyntax, noEmit
-- Frontend: tailwind v4 via `@tailwindcss/vite`; backend: tailwind v3 (config exists in `sharelab-api/backend/tailwind.config.js`)
-- Public entrypoints (frontend build output goes to Laravel `public/`)
+Docker Compose stack at the project root: `web` (nginx serving the built SPA
+and proxying `/api`), `api` (PHP 8.3-FPM Laravel image, `sharelab-api/backend/Dockerfile`)
+and `db` (MariaDB 11). Same-origin, so the JWT cookies stay first-party.
+
+- `cp .env.example .env` and set `APP_KEY`, `JWT_SECRET`, DB passwords, `APP_URL`
+- `docker compose up -d --build` — the API entrypoint migrates and caches config/routes/views
+- Seed once: `docker compose run --rm -e SEED_DATABASE=1 api php artisan db:seed --force`
+- Full runbook: `DEPLOYMENT.md`
+
+## Environment notes
+
+- Backend env file is `sharelab-api/backend/.env` (gitignored); DB config
+  belongs only there. Ship `DB_PASSWORD=` blank in `.env.example`.
+- Needs MariaDB running with `sharelab` (and `sharelab_test` for tests).
+- JWT signing uses `JWT_SECRET`, falling back to `APP_KEY`
+  (`config/jwt.php`), so `php artisan key:generate` is enough locally.
+- Do not commit generated build output (`sharelab/dist`, `sharelab-api/public/build`),
+  `node_modules`, `vendor`, or `.env` files.

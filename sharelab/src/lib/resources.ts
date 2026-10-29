@@ -1,11 +1,23 @@
 import { api } from './api-client'
-import type { ApiResponse } from './api-client'
+import type { ApiResponse, User } from './api-client'
 
 export interface ResourceOwner {
   id: number
   name: string
   email?: string
   role?: string
+}
+
+export interface ResourceRequirement {
+  id: number
+  name: string
+  requires_verification: boolean
+}
+
+export interface AvailabilityWindow {
+  weekday: number
+  start: string
+  end: string
 }
 
 export interface Resource {
@@ -17,20 +29,33 @@ export interface Resource {
   rules: string | null
   max_hours_per_booking: number
   weekly_cap_hours: number
+  availability_windows?: AvailabilityWindow[] | null
+  image_url?: string | null
   status: 'active' | 'inactive'
   owner?: ResourceOwner | null
+  requirements?: ResourceRequirement[]
+  managers?: User[]
+  can_manage?: boolean
+  created_at?: string
+}
+
+export interface ResourceEligibilityChecklistItem {
+  name: string
+  status: string
 }
 
 export interface ResourceEligibility {
   qualifies: boolean
   missing: string[]
-  checklist: { name: string; status: string }[]
+  checklist: ResourceEligibilityChecklistItem[]
   message: string
 }
 
-export type ResourceDetailResponse = ApiResponse<Resource> & {
+export type ResourceDetail = Resource & {
   eligibility?: ResourceEligibility | null
 }
+
+export type ResourceDetailResponse = ApiResponse<ResourceDetail>
 
 export interface ResourceListFilters {
   q?: string
@@ -38,6 +63,35 @@ export interface ResourceListFilters {
   status?: string
   page?: number
   perPage?: number
+  sort?: string
+  direction?: 'asc' | 'desc'
+  ownerId?: number
+}
+
+export interface AvailabilitySlot {
+  start_at: string
+  end_at: string
+  available: boolean
+  reason: string | null
+}
+
+export interface ResourceAvailability {
+  date: string
+  slots: AvailabilitySlot[]
+  message: string | null
+}
+
+export interface ResourcePayload {
+  name: string
+  category: string
+  location: string
+  description?: string | null
+  rules?: string | null
+  max_hours_per_booking: number
+  weekly_cap_hours: number
+  status?: 'active' | 'inactive'
+  availability_windows?: AvailabilityWindow[]
+  requirements?: Array<{ name: string; requires_verification: boolean }>
 }
 
 const compactParams = (filters: ResourceListFilters) => {
@@ -48,6 +102,9 @@ const compactParams = (filters: ResourceListFilters) => {
   if (filters.status && filters.status !== 'all') params.status = filters.status
   if (filters.page) params.page = filters.page
   if (filters.perPage) params.per_page = filters.perPage
+  if (filters.sort) params.sort = filters.sort
+  if (filters.direction) params.direction = filters.direction
+  if (filters.ownerId) params.owner_id = filters.ownerId
 
   return params
 }
@@ -59,40 +116,44 @@ export const fetchResources = async (
 }
 
 export const fetchResource = async (resourceId: number): Promise<ResourceDetailResponse> => {
-  return api.get<Resource>(`/resources/${resourceId}`)
+  return api.get<ResourceDetail>(`/resources/${resourceId}`)
 }
 
-const categoryImages: { match: RegExp; src: string }[] = [
-  {
-    match: /3d|print|fab/i,
-    src: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=1200&q=80',
-  },
-  {
-    match: /electronic|test|solder|circuit/i,
-    src: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80',
-  },
-  {
-    match: /photo|media|studio|camera/i,
-    src: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1200&q=80',
-  },
-  {
-    match: /study|meeting|room|space/i,
-    src: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80',
-  },
-  {
-    match: /fabrication|laser|cnc|workshop/i,
-    src: 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1200&q=80',
-  },
-  {
-    match: /bio|chem|laboratory|science/i,
-    src: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=1200&q=80',
-  },
+export const fetchResourceAvailability = async (
+  resourceId: number,
+  date: string,
+): Promise<ApiResponse<ResourceAvailability>> => {
+  return api.get<ResourceAvailability>(`/resources/${resourceId}/availability`, {
+    params: { date },
+  })
+}
+
+export const fetchResourceEligibility = async (
+  resourceId: number,
+): Promise<ApiResponse<ResourceEligibility>> => {
+  return api.get<ResourceEligibility>(`/resources/${resourceId}/eligibility`)
+}
+
+const localResourceImages: { match: RegExp; src: string }[] = [
+  { match: /3d|print/i, src: '/images/resources/3d-printer.webp' },
+  { match: /oscillo|electronic|test|probe/i, src: '/images/resources/oscilloscope.webp' },
+  { match: /solder|circuit/i, src: '/images/resources/soldering-station.webp' },
+  { match: /camera|photo|media|studio/i, src: '/images/resources/camera-kit.webp' },
+  { match: /meeting|room|study|space/i, src: '/images/resources/meeting-room.webp' },
+  { match: /laser|fabrication|cnc|workshop/i, src: '/images/resources/laser-cutter.webp' },
 ]
 
-const fallbackImage =
-  'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80'
+const fallbackImage = '/images/resources/laser-cutter.webp'
 
-export const getResourceImage = (resource: Pick<Resource, 'name' | 'category'>) => {
+/**
+ * Prefer an uploaded/seeded image, then a bundled local image. No remote
+ * placeholder URLs are used, so catalogue cards keep working offline.
+ */
+export const getResourceImage = (
+  resource: Pick<Resource, 'name' | 'category'> & { image_url?: string | null },
+) => {
+  if (resource.image_url) return resource.image_url
+
   const source = `${resource.category} ${resource.name}`
-  return categoryImages.find((entry) => entry.match.test(source))?.src ?? fallbackImage
+  return localResourceImages.find((entry) => entry.match.test(source))?.src ?? fallbackImage
 }

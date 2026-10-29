@@ -2,47 +2,39 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Resource;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ResourceUpdateRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
     public function authorize(): bool
     {
-        // Only owners and admins can update resources
-        return $this->user() && in_array($this->user()->role, ['owner', 'manager', 'admin']);
+        $resource = $this->route('resource');
+
+        return $resource instanceof Resource
+            && $this->user() !== null
+            && (int) $resource->owner_id === (int) $this->user()->getKey();
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>
-     */
     public function rules(): array
     {
         return [
-            'name' => 'sometimes|required|string|max:255',
-            'description' => 'sometimes|nullable|string',
-            'category' => 'sometimes|required|string|in:3d-printer,oscilloscope,camera-kit,pcr-cycler,laser-cutter,meeting-room',
-            'status' => 'sometimes|required|in:available,booked,maintenance',
-        ];
-    }
-
-    /**
-     * Get the error messages for the defined validation rules.
-     *
-     * @return array<string, string>
-     */
-    public function messages(): array
-    {
-        return [
-            'name.string' => 'The resource name must be a string.',
-            'category.in' => 'The category must be one of the available types.',
-            'status.in' => 'The status must be one of: available, booked, or maintenance.',
+            'name' => ['sometimes', 'required', 'string', 'max:255'],
+            'category' => ['sometimes', 'required', 'string', 'max:120'],
+            'location' => ['sometimes', 'required', 'string', 'max:255'],
+            'description' => ['sometimes', 'nullable', 'string', 'max:5000'],
+            'rules' => ['sometimes', 'nullable', 'string', 'max:5000'],
+            'max_hours_per_booking' => ['sometimes', 'required', 'integer', 'min:1', 'max:24'],
+            'weekly_cap_hours' => ['sometimes', 'required', 'integer', 'min:1', 'max:168'],
+            'status' => ['sometimes', 'in:active,inactive'],
+            'availability_windows' => ['sometimes', 'array'],
+            'availability_windows.*.weekday' => ['required_with:availability_windows', 'integer', 'between:1,7'],
+            'availability_windows.*.start' => ['required_with:availability_windows', 'date_format:H:i'],
+            'availability_windows.*.end' => ['required_with:availability_windows', 'date_format:H:i'],
+            'requirements' => ['sometimes', 'array'],
+            'requirements.*.name' => ['required_with:requirements', 'string', 'max:255'],
+            'requirements.*.requires_verification' => ['sometimes', 'boolean'],
+            'image' => ['sometimes', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
         ];
     }
 }

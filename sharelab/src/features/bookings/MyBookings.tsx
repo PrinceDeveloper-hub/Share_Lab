@@ -72,10 +72,10 @@ export const MyBookings = () => {
     <div className="mx-auto max-w-5xl">
       <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="font-editorial text-[2.4rem] font-semibold leading-[1.03] tracking-[-0.035em] text-[var(--charcoal)] sm:text-[3rem]">
+          <h1 className="font-display text-[2.4rem] font-semibold leading-[1.03] tracking-[-0.035em] text-(--charcoal) sm:text-[3rem]">
             Your requests
           </h1>
-          <p className="mt-2 max-w-xl text-sm leading-relaxed text-[var(--muted)] sm:text-base">
+          <p className="mt-2 max-w-xl text-sm leading-relaxed text-(--muted) sm:text-base">
             Track decisions, waitlist positions, and every handover — from the
             first request to the final return.
           </p>
@@ -91,7 +91,7 @@ export const MyBookings = () => {
       {cancelMutation.isError ? (
         <p
           role="alert"
-          className="mt-5 rounded-xl border border-[rgba(180,77,66,0.18)] bg-[rgba(180,77,66,0.06)] px-4 py-3 text-sm text-[var(--error)]"
+          className="mt-5 rounded-xl border border-[rgba(169,72,60,0.18)] bg-[rgba(169,72,60,0.06)] px-4 py-3 text-sm text-(--error)"
         >
           {getApiErrorMessage(
             cancelMutation.error,
@@ -100,7 +100,7 @@ export const MyBookings = () => {
         </p>
       ) : null}
 
-      <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-b border-[var(--border-subtle)] pb-3">
+      <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-b border-(--border-subtle) pb-3">
         <div
           role="group"
           aria-label="Filter requests"
@@ -116,10 +116,10 @@ export const MyBookings = () => {
                 aria-pressed={active}
                 onClick={() => setView(filter)}
                 className={cn(
-                  'inline-flex min-h-11 items-center gap-2 rounded-full px-4 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--ivory)]',
+                  'inline-flex min-h-11 items-center gap-2 rounded-full px-4 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring) focus-visible:ring-offset-2 focus-visible:ring-offset-(--ivory)',
                   active
-                    ? 'bg-[var(--espresso)] text-white shadow-[0_10px_24px_-16px_rgba(75,47,31,0.8)]'
-                    : 'text-[var(--muted)] hover:bg-[rgba(75,47,31,0.06)] hover:text-[var(--espresso)]',
+                    ? 'bg-(--espresso) text-white shadow-[0_10px_24px_-16px_rgba(81,53,34,0.8)]'
+                    : 'text-(--muted) hover:bg-[rgba(81,53,34,0.06)] hover:text-(--espresso)',
                 )}
               >
                 {filterLabels[filter]}
@@ -128,7 +128,7 @@ export const MyBookings = () => {
                     'rounded-full px-2 py-0.5 text-[0.65rem] font-semibold',
                     active
                       ? 'bg-white/15 text-white'
-                      : 'bg-[rgba(75,47,31,0.07)]',
+                      : 'bg-[rgba(81,53,34,0.07)]',
                   )}
                 >
                   {counts[filter]}
@@ -138,7 +138,7 @@ export const MyBookings = () => {
           })}
         </div>
         <p
-          className="text-xs font-medium text-[var(--muted)]"
+          className="text-xs font-medium text-(--muted)"
           aria-live="polite"
         >
           {filteredBookings.length}{' '}
@@ -152,29 +152,29 @@ export const MyBookings = () => {
           {[0, 1, 2].map((item) => (
             <div
               key={item}
-              className="flex animate-pulse gap-4 rounded-[1.35rem] border border-[var(--border-subtle)] bg-[rgba(255,252,247,0.7)] p-5"
+              className="flex animate-pulse gap-4 rounded-(--radius-lg) border border-(--border-subtle) bg-[rgba(255,252,247,0.7)] p-5"
             >
-              <span className="h-11 w-11 shrink-0 rounded-full bg-[rgba(75,47,31,0.08)]" />
+              <span className="h-11 w-11 shrink-0 rounded-full bg-[rgba(81,53,34,0.08)]" />
               <div className="flex-1 space-y-3">
-                <span className="block h-3 w-1/2 rounded-full bg-[rgba(75,47,31,0.08)]" />
-                <span className="block h-2.5 w-2/3 rounded-full bg-[rgba(75,47,31,0.06)]" />
-                <span className="block h-2.5 w-1/3 rounded-full bg-[rgba(75,47,31,0.06)]" />
+                <span className="block h-3 w-1/2 rounded-full bg-[rgba(81,53,34,0.08)]" />
+                <span className="block h-2.5 w-2/3 rounded-full bg-[rgba(81,53,34,0.06)]" />
+                <span className="block h-2.5 w-1/3 rounded-full bg-[rgba(81,53,34,0.06)]" />
               </div>
             </div>
           ))}
         </div>
       ) : isError ? (
-        <div className="mt-5 rounded-[1.35rem] border border-[rgba(180,77,66,0.18)] bg-[rgba(180,77,66,0.06)] p-6">
+        <div className="mt-5 rounded-(--radius-lg) border border-[rgba(169,72,60,0.18)] bg-[rgba(169,72,60,0.06)] p-6">
           <div className="flex items-start gap-3">
             <ShieldAlert
-              className="mt-0.5 h-5 w-5 shrink-0 text-[var(--error)]"
+              className="mt-0.5 h-5 w-5 shrink-0 text-(--error)"
               aria-hidden="true"
             />
             <div>
-              <h2 className="font-semibold text-[var(--charcoal)]">
+              <h2 className="font-semibold text-(--charcoal)">
                 Your requests could not be loaded
               </h2>
-              <p className="mt-1 text-sm text-[var(--muted)]">
+              <p className="mt-1 text-sm text-(--muted)">
                 Refresh the page to try again. If the problem continues, contact
                 your lab manager.
               </p>
@@ -182,17 +182,17 @@ export const MyBookings = () => {
           </div>
         </div>
       ) : bookingsList.length === 0 ? (
-        <div className="mt-5 rounded-[1.5rem] border border-dashed border-[rgba(82,59,45,0.2)] bg-[rgba(233,217,198,0.16)] px-6 py-12 text-center">
-          <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[rgba(75,47,31,0.07)]">
+        <div className="mt-5 rounded-(--radius-lg) border border-dashed border-(--border-strong) bg-(--surface) px-6 py-12 text-center">
+          <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[rgba(81,53,34,0.07)]">
             <FlaskConical
-              className="h-5 w-5 text-[var(--espresso)]"
+              className="h-5 w-5 text-(--espresso)"
               aria-hidden="true"
             />
           </span>
-          <h2 className="mt-4 font-editorial text-[1.55rem] font-semibold text-[var(--charcoal)]">
+          <h2 className="mt-4 font-display text-[1.375rem] font-semibold tracking-[-0.02em] text-(--charcoal)">
             Nothing booked yet.
           </h2>
-          <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-[var(--muted)]">
+          <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-(--muted)">
             Browse the catalogue, check the requirements, and request a window
             that fits your work.
           </p>
@@ -201,11 +201,11 @@ export const MyBookings = () => {
           </Button>
         </div>
       ) : filteredBookings.length === 0 ? (
-        <div className="mt-5 rounded-[1.35rem] border border-dashed border-[rgba(82,59,45,0.2)] bg-[rgba(255,252,247,0.55)] px-6 py-10 text-center">
-          <h2 className="font-editorial text-xl font-semibold text-[var(--charcoal)]">
+        <div className="mt-5 rounded-(--radius-lg) border border-dashed border-[rgba(81,53,34,0.2)] bg-(--surface) px-6 py-10 text-center">
+          <h2 className="font-display text-xl font-semibold text-(--charcoal)">
             No requests in this view.
           </h2>
-          <p className="mt-2 text-sm text-[var(--muted)]">
+          <p className="mt-2 text-sm text-(--muted)">
             {view === 'history'
               ? 'Completed and cancelled requests will appear here.'
               : 'You have no open requests right now.'}
@@ -221,7 +221,7 @@ export const MyBookings = () => {
       ) : (
         <ul className="mt-5 space-y-3">
           {filteredBookings.map((booking) => {
-            const resource = resourcesById.get(booking.resource_id)
+            const resource = booking.resource ?? resourcesById.get(booking.resource_id)
             const status = bookingStatusDetails[booking.status]
             const StatusIcon = status.icon
             const canCancel = ['pending', 'approved', 'waitlisted'].includes(
@@ -229,7 +229,7 @@ export const MyBookings = () => {
             )
             const cancelling =
               cancelMutation.isPending &&
-              cancelMutation.variables === booking.id
+              cancelMutation.variables.bookingId === booking.id
 
             const handleCancel = () => {
               if (
@@ -237,14 +237,14 @@ export const MyBookings = () => {
                   'Cancel this request? This cannot be undone, and the time will be released.',
                 )
               ) {
-                cancelMutation.mutate(booking.id)
+                cancelMutation.mutate({ bookingId: booking.id })
               }
             }
 
             return (
               <li
                 key={booking.id}
-                className="rounded-[1.35rem] border border-[var(--border-subtle)] bg-[rgba(255,252,247,0.82)] p-5 shadow-[var(--shadow-sm)] backdrop-blur-sm sm:p-6"
+                className="rounded-(--radius-lg) border border-(--border-subtle) bg-(--surface) p-5 shadow-soft sm:p-6"
               >
                 <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
                   <div className="flex min-w-0 gap-4">
@@ -263,18 +263,18 @@ export const MyBookings = () => {
                           <Link
                             to="/resources/$resourceId"
                             params={{ resourceId: String(resource.id) }}
-                            className="rounded-sm text-lg font-semibold text-[var(--charcoal)] transition-colors hover:text-[var(--espresso)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
+                            className="rounded-sm text-lg font-semibold text-(--charcoal) transition-colors hover:text-(--espresso) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring)"
                           >
                             {resource.name}
                           </Link>
                         ) : (
-                          <h2 className="text-lg font-semibold text-[var(--charcoal)]">
+                          <h2 className="text-lg font-semibold text-(--charcoal)">
                             Request #{booking.id}
                           </h2>
                         )}
                         <span
                           className={cn(
-                            'inline-flex items-center rounded-full px-2.5 py-1 text-[0.68rem] font-semibold',
+                            'inline-flex items-center rounded-[0.35rem] px-2 py-0.5 text-[0.6875rem] font-semibold',
                             status.tone,
                           )}
                         >
@@ -287,25 +287,25 @@ export const MyBookings = () => {
                       </div>
 
                       {resourcesLoading && !resource ? (
-                        <span className="mt-1 block h-2.5 w-40 animate-pulse rounded-full bg-[rgba(75,47,31,0.07)]" />
+                        <span className="mt-1 block h-2.5 w-40 animate-pulse rounded-full bg-[rgba(81,53,34,0.07)]" />
                       ) : resource ? (
-                        <p className="mt-1 text-xs font-medium text-[var(--muted)]">
+                        <p className="mt-1 text-xs font-medium text-(--muted)">
                           {resource.category} · {resource.location}
                         </p>
                       ) : null}
 
-                      <p className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-[var(--charcoal)]">
+                      <p className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-(--charcoal)">
                         <CalendarDays
-                          className="h-4 w-4 text-[var(--taupe)]"
+                          className="h-4 w-4 text-(--taupe)"
                           aria-hidden="true"
                         />
                         {formatBookingWindow(booking)}
                       </p>
 
                       {booking.purpose ? (
-                        <p className="mt-2 flex items-start gap-1.5 text-sm leading-relaxed text-[var(--muted)]">
+                        <p className="mt-2 flex items-start gap-1.5 text-sm leading-relaxed text-(--muted)">
                           <MessageSquareText
-                            className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[var(--taupe)]"
+                            className="mt-0.5 h-3.5 w-3.5 shrink-0 text-(--taupe)"
                             aria-hidden="true"
                           />
                           {booking.purpose}
@@ -313,8 +313,8 @@ export const MyBookings = () => {
                       ) : null}
 
                       {booking.decision_reason ? (
-                        <p className="mt-3 rounded-xl bg-[rgba(75,47,31,0.045)] px-3 py-2 text-xs leading-relaxed text-[var(--muted)]">
-                          <span className="font-semibold text-[var(--charcoal)]">
+                        <p className="mt-3 rounded-xl bg-[rgba(81,53,34,0.045)] px-3 py-2 text-xs leading-relaxed text-(--muted)">
+                          <span className="font-semibold text-(--charcoal)">
                             Manager note:
                           </span>{' '}
                           {booking.decision_reason}
@@ -324,6 +324,18 @@ export const MyBookings = () => {
                   </div>
 
                   <div className="flex shrink-0 flex-wrap items-center gap-2 sm:flex-col sm:items-stretch">
+                    <Button asChild>
+                      <Link
+                        to="/my-bookings/$bookingId"
+                        params={{ bookingId: String(booking.id) }}
+                      >
+                        Open record
+                        <ArrowUpRight
+                          className="h-3.5 w-3.5"
+                          aria-hidden="true"
+                        />
+                      </Link>
+                    </Button>
                     {resource ? (
                       <Button asChild variant="outline">
                         <Link
@@ -331,17 +343,13 @@ export const MyBookings = () => {
                           params={{ resourceId: String(resource.id) }}
                         >
                           View resource
-                          <ArrowUpRight
-                            className="h-3.5 w-3.5"
-                            aria-hidden="true"
-                          />
                         </Link>
                       </Button>
                     ) : null}
                     {canCancel ? (
                       <Button
                         variant="ghost"
-                        className="text-[var(--error)] hover:bg-[rgba(180,77,66,0.07)] hover:text-[var(--error)]"
+                        className="text-(--error) hover:bg-[rgba(169,72,60,0.07)] hover:text-(--error)"
                         onClick={handleCancel}
                         disabled={cancelMutation.isPending}
                       >

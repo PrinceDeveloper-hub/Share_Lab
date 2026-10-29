@@ -2,65 +2,60 @@
 
 namespace App\Policies;
 
+use App\Enums\Role;
 use App\Models\Booking;
+use App\Models\Resource;
 use App\Models\User;
-use App\Enums\BookingStatus;
-use Illuminate\Auth\Access\HandlesAuthorization;
 
 class BookingPolicy
 {
-    use HandlesAuthorization;
-
-    /**
-     * Determine whether the user can view the booking.
-     */
     public function view(User $user, Booking $booking): bool
     {
-        return $user->role->isAdmin() ||
-               $user->id === $booking->user_id ||
-               $booking->resource->managers->contains($user->id);
+        $booking->loadMissing('resource.managers');
+
+        return (int) $booking->user_id === (int) $user->id
+            || (int) $booking->resource?->owner_id === (int) $user->id
+            || $booking->resource?->managers->contains($user->id) === true;
     }
 
-    /**
-     * Determine whether the user can create a booking.
-     */
     public function create(User $user, Resource $resource): bool
     {
-        return $user->role->isUser() || $user->role->isManager() || $user->role->isOwner();
+        return in_array($user->role, [Role::User, Role::Manager, Role::Owner], true);
     }
 
-    /**
-     * Determine whether the user can decide on a booking.
-     */
     public function decide(User $user, Booking $booking): bool
     {
-        return $user->role->isAdmin() ||
-               $user->id === $booking->resource->owner_id ||
-               $booking->resource->managers->contains($user->id);
+        $booking->loadMissing('resource.managers');
+
+        if ($booking->resource === null) {
+            return false;
+        }
+
+        return ($user->role === Role::Owner && (int) $booking->resource->owner_id === (int) $user->id)
+            || ($user->role === Role::Manager && $booking->resource->managers->contains($user->id));
     }
 
-    /**
-     * Determine whether the user can cancel a booking.
-     */
     public function cancel(User $user, Booking $booking): bool
     {
-        return $user->id === $booking->user_id ||
-               $booking->resource->managers->contains($user->id);
+        $booking->loadMissing('resource.managers');
+
+        return (int) $booking->user_id === (int) $user->id
+            || ($booking->resource && (int) $booking->resource->owner_id === (int) $user->id)
+            || ($user->role === Role::Manager && $booking->resource?->managers->contains($user->id) === true);
     }
 
-    /**
-     * Determine whether the user can check in.
-     */
     public function checkIn(User $user, Booking $booking): bool
     {
-        return $user->id === $booking->user_id && $booking->status === BookingStatus::Approved;
+        return (int) $booking->user_id === (int) $user->id;
     }
 
-    /**
-     * Determine whether the user can return items.
-     */
     public function returnItems(User $user, Booking $booking): bool
     {
-        return $user->id === $booking->user_id && $booking->status === BookingStatus::CheckedIn;
+        return (int) $booking->user_id === (int) $user->id;
+    }
+
+    public function extend(User $user, Booking $booking): bool
+    {
+        return (int) $booking->user_id === (int) $user->id;
     }
 }

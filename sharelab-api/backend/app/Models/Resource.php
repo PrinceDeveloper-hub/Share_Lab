@@ -17,12 +17,17 @@ class Resource extends Model
         'rules',
         'max_hours_per_booking',
         'weekly_cap_hours',
+        'availability_windows',
+        'image_path',
         'status',
     ];
 
     protected $casts = [
         'description' => 'string',
         'rules' => 'string',
+        'availability_windows' => 'array',
+        'max_hours_per_booking' => 'integer',
+        'weekly_cap_hours' => 'integer',
     ];
 
     /**

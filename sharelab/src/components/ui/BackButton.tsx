@@ -30,7 +30,7 @@ export const BackButton = ({
       type="button"
       onClick={goBack}
       className={cn(
-        'inline-flex h-10 items-center gap-2 rounded-full px-3 text-sm font-semibold text-(--muted) transition-colors hover:bg-[rgba(75,47,31,0.06)] hover:text-(--espresso) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring) focus-visible:ring-offset-2 focus-visible:ring-offset-(--ivory)',
+        'inline-flex h-10 items-center gap-2 rounded-full px-3 text-sm font-semibold text-(--muted) transition-colors hover:bg-[rgba(81,53,34,0.06)] hover:text-(--espresso) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring) focus-visible:ring-offset-2 focus-visible:ring-offset-(--ivory)',
         className,
       )}
     >

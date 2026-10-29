@@ -115,7 +115,7 @@ class JwtGuard implements Guard
             return trim($matches[1]);
         }
 
-        $cookie = $this->request->cookie((string) config('jwt.access_cookie', 'sharelab_access'));
+        $cookie = $this->request->cookie((string) config('jwt.access_cookie', 'sl_access'));
 
         return is_string($cookie) && $cookie !== '' ? $cookie : null;
     }

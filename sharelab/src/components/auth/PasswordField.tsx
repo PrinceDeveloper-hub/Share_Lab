@@ -44,7 +44,7 @@ export const PasswordField = ({
         <button
           type="button"
           onClick={() => setVisible((current) => !current)}
-          className="flex h-11 w-11 items-center justify-center rounded-xl text-(--muted) transition-colors hover:bg-[rgba(75,47,31,0.06)] hover:text-(--espresso) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring)"
+          className="flex h-9 w-9 items-center justify-center rounded-[0.4rem] text-(--muted) transition-colors hover:bg-(--soft-beige) hover:text-(--espresso) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring)"
           aria-label={visible ? 'Hide password' : 'Show password'}
           aria-pressed={visible}
           disabled={disabled}

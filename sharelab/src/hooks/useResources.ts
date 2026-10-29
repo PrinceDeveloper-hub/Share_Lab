@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { fetchResource, fetchResources } from '../lib/resources'
+import {
+  fetchResource,
+  fetchResourceAvailability,
+  fetchResourceEligibility,
+  fetchResources,
+} from '../lib/resources'
 import type { ResourceListFilters } from '../lib/resources'
 
 export const useDebouncedValue = <TValue,>(value: TValue, delay = 300) => {
@@ -41,5 +46,23 @@ export const useResource = (resourceId: number) => {
     queryFn: () => fetchResource(resourceId),
     enabled: Number.isFinite(resourceId) && resourceId > 0,
     staleTime: 60_000,
+  })
+}
+
+export const useResourceAvailability = (resourceId: number, date: string) => {
+  return useQuery({
+    queryKey: ['resource', resourceId, 'availability', date],
+    queryFn: () => fetchResourceAvailability(resourceId, date),
+    enabled: Number.isFinite(resourceId) && resourceId > 0 && Boolean(date),
+    staleTime: 15_000,
+  })
+}
+
+export const useResourceEligibility = (resourceId: number, enabled = true) => {
+  return useQuery({
+    queryKey: ['resource', resourceId, 'eligibility'],
+    queryFn: () => fetchResourceEligibility(resourceId),
+    enabled: enabled && Number.isFinite(resourceId) && resourceId > 0,
+    staleTime: 15_000,
   })
 }

@@ -2,8 +2,6 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import {
   AlertTriangle,
-  ChevronLeft,
-  ChevronRight,
   Clock3,
   FlaskConical,
   RotateCcw,
@@ -16,9 +14,11 @@ import { SiteLayout } from '../../components/layout/SiteLayout'
 import { ResourceCard } from '../../components/resources/ResourceCard'
 import { ResourceCardSkeleton } from '../../components/resources/ResourceCardSkeleton'
 import { Button } from '../../components/ui/button'
+import { Pagination } from '../../components/ui/pagination'
 import { usePageMeta } from '../../hooks/usePageMeta'
 import {
   useDebouncedValue,
+  usePrefetchResources,
   useResourceCategories,
   useResources,
 } from '../../hooks/useResources'
@@ -46,12 +46,16 @@ const sortLabels: Record<SortOption, string> = {
   cap: 'Longest single booking',
 }
 
-const filterLabel = 'text-[0.6875rem] font-semibold uppercase tracking-[0.12em] text-(--muted)'
+const filterLabel =
+  'text-[0.6875rem] font-semibold uppercase tracking-[0.12em] text-(--muted)'
 
 const selectClass =
-  'mt-2 h-10 w-full cursor-pointer rounded-[0.5rem] border border-(--border-subtle) bg-(--surface) px-3 text-[0.8125rem] text-(--charcoal) transition-colors hover:border-(--border-strong) focus:border-(--espresso) focus:outline-none focus:ring-2 focus:ring-[rgba(81,53,34,0.14)]'
+  'mt-2 h-10 w-full cursor-pointer rounded-[0.5rem] border border-(--border-subtle) bg-(--surface) px-3 text-[0.8125rem] text-(--charcoal) transition-colors hover:border-(--border-strong) focus:border-(--espresso) focus:outline-none focus:ring-2 focus:ring-(--tint-3)'
 
-const ResourcesPage = ({ initialSearch, onSearchChange }: ResourcesPageProps) => {
+const ResourcesPage = ({
+  initialSearch,
+  onSearchChange,
+}: ResourcesPageProps) => {
   usePageMeta({
     title: 'Resources — ShareLab',
     description:
@@ -61,7 +65,9 @@ const ResourcesPage = ({ initialSearch, onSearchChange }: ResourcesPageProps) =>
   const [search, setSearch] = useState(initialSearch?.q ?? '')
   const [category, setCategory] = useState(initialSearch?.category ?? 'all')
   const [status, setStatus] = useState(initialSearch?.status ?? 'all')
-  const [sort, setSort] = useState<SortOption>(initialSearch?.sort ?? 'catalogue')
+  const [sort, setSort] = useState<SortOption>(
+    initialSearch?.sort ?? 'catalogue',
+  )
   const [page, setPage] = useState(initialSearch?.page ?? 1)
   const debouncedSearch = useDebouncedValue(search.trim(), 350)
   const resultsTopRef = useRef<HTMLDivElement>(null)
@@ -74,12 +80,14 @@ const ResourcesPage = ({ initialSearch, onSearchChange }: ResourcesPageProps) =>
     perPage: 9,
   })
   const categoriesQuery = useResourceCategories()
+  const prefetchResources = usePrefetchResources()
 
   const resources = resourcesQuery.data?.data ?? []
   const meta = resourcesQuery.data?.meta
   const total = meta?.total ?? resources.length
   const lastPage = meta?.last_page ?? 1
-  const isFiltering = search.trim() !== debouncedSearch || resourcesQuery.isFetching
+  const isFiltering =
+    search.trim() !== debouncedSearch || resourcesQuery.isFetching
 
   const firstFilterRun = useRef(true)
 
@@ -111,9 +119,9 @@ const ResourcesPage = ({ initialSearch, onSearchChange }: ResourcesPageProps) =>
 
   const categoryOptions = useMemo(() => {
     if (categoriesQuery.data?.length) return categoriesQuery.data
-    return Array.from(new Set(resources.map((resource) => resource.category))).sort((a, b) =>
-      a.localeCompare(b),
-    )
+    return Array.from(
+      new Set(resources.map((resource) => resource.category)),
+    ).sort((a, b) => a.localeCompare(b))
   }, [categoriesQuery.data, resources])
 
   const sortedResources = useMemo(() => {
@@ -125,19 +133,17 @@ const ResourcesPage = ({ initialSearch, onSearchChange }: ResourcesPageProps) =>
       case 'location':
         return items.sort((a, b) => a.location.localeCompare(b.location))
       case 'cap':
-        return items.sort((a, b) => b.max_hours_per_booking - a.max_hours_per_booking)
+        return items.sort(
+          (a, b) => b.max_hours_per_booking - a.max_hours_per_booking,
+        )
       default:
         return items
     }
   }, [resources, sort])
 
-  const pageNumbers = useMemo(() => {
-    const start = Math.max(1, Math.min(page - 2, Math.max(1, lastPage - 4)))
-    const end = Math.min(lastPage, start + 4)
-    return Array.from({ length: end - start + 1 }, (_, index) => start + index)
-  }, [page, lastPage])
-
-  const hasActiveFilters = Boolean(search || category !== 'all' || status !== 'all')
+  const hasActiveFilters = Boolean(
+    search || category !== 'all' || status !== 'all',
+  )
 
   const resetFilters = () => {
     setSearch('')
@@ -151,7 +157,9 @@ const ResourcesPage = ({ initialSearch, onSearchChange }: ResourcesPageProps) =>
     const target = Math.min(Math.max(1, nextPage), lastPage)
     setPage(target)
 
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const reduceMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)',
+    ).matches
     window.requestAnimationFrame(() => {
       resultsTopRef.current?.scrollIntoView({
         behavior: reduceMotion ? 'auto' : 'smooth',
@@ -160,7 +168,8 @@ const ResourcesPage = ({ initialSearch, onSearchChange }: ResourcesPageProps) =>
     })
   }
 
-  const resultRangeStart = total === 0 ? 0 : (page - 1) * (meta?.per_page ?? 9) + 1
+  const resultRangeStart =
+    total === 0 ? 0 : (page - 1) * (meta?.per_page ?? 9) + 1
   const resultRangeEnd = Math.min(page * (meta?.per_page ?? 9), total)
 
   return (
@@ -170,7 +179,10 @@ const ResourcesPage = ({ initialSearch, onSearchChange }: ResourcesPageProps) =>
           <nav aria-label="Breadcrumb" className="mb-7">
             <ol className="flex items-center gap-2 text-[0.75rem] text-(--muted)">
               <li>
-                <Link to="/" className="transition-colors hover:text-(--espresso)">
+                <Link
+                  to="/"
+                  className="transition-colors hover:text-(--espresso)"
+                >
                   Home
                 </Link>
               </li>
@@ -186,17 +198,21 @@ const ResourcesPage = ({ initialSearch, onSearchChange }: ResourcesPageProps) =>
           <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
               <span className="eyebrow">
-                <span aria-hidden="true" className="h-px w-6 bg-(--bronze-deep)" />
+                <span
+                  aria-hidden="true"
+                  className="h-px w-6 bg-(--bronze-deep)"
+                />
                 The catalogue
               </span>
               <h1 className="display-lg mt-4">Find shared campus resources.</h1>
               <p className="lede mt-4 text-[0.9375rem] sm:text-base">
-                Search the live catalogue, compare locations and booking limits, and open a listing
-                to review the requirements that apply before you request a slot.
+                Search the live catalogue, compare locations and booking limits,
+                and open a listing to review the requirements that apply before
+                you request a slot.
               </p>
             </div>
 
-            <dl className="flex shrink-0 divide-x divide-[rgba(81,53,34,0.14)] rounded-(--radius-md) border border-[rgba(81,53,34,0.14)] bg-[rgba(255,252,247,0.6)]">
+            <dl className="flex shrink-0 divide-x divide-(--tint-3) rounded-(--radius-md) border border-(--tint-3) bg-(--surface-muted)">
               <div className="px-5 py-3">
                 <dd className="font-display text-[1.5rem] font-semibold leading-none tracking-[-0.03em] text-(--charcoal) tabular-nums">
                   {resourcesQuery.isSuccess ? total : '—'}
@@ -236,7 +252,7 @@ const ResourcesPage = ({ initialSearch, onSearchChange }: ResourcesPageProps) =>
                   value={search}
                   onChange={(event) => setSearch(event.target.value)}
                   placeholder="Search by name — printer, oscilloscope, camera, room…"
-                  className="h-11 w-full rounded-[0.5rem] border border-(--border-subtle) bg-(--ivory) pl-10 pr-10 text-sm text-(--charcoal) placeholder:text-[rgba(113,104,95,0.72)] transition-colors hover:border-(--border-strong) focus:border-(--espresso) focus:bg-(--surface) focus:outline-none focus:ring-2 focus:ring-[rgba(81,53,34,0.14)]"
+                  className="h-11 w-full rounded-[0.5rem] border border-(--border-subtle) bg-(--ivory) pl-10 pr-10 text-sm text-(--charcoal) placeholder:text-(--muted) transition-colors hover:border-(--border-strong) focus:border-(--espresso) focus:bg-(--surface) focus:outline-none focus:ring-2 focus:ring-(--tint-3)"
                 />
                 {search ? (
                   <button
@@ -250,14 +266,22 @@ const ResourcesPage = ({ initialSearch, onSearchChange }: ResourcesPageProps) =>
                 ) : null}
               </div>
               {hasActiveFilters ? (
-                <Button type="button" variant="secondary" onClick={resetFilters} className="shrink-0">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={resetFilters}
+                  className="shrink-0"
+                >
                   <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
                   Clear filters
                 </Button>
               ) : null}
             </div>
           </form>
-          <p className="mt-3 flex items-start gap-2 text-[0.75rem] leading-relaxed text-(--muted)" aria-live="polite">
+          <p
+            className="mt-3 flex items-start gap-2 text-[0.75rem] leading-relaxed text-(--muted)"
+            aria-live="polite"
+          >
             {isFiltering ? (
               <>
                 <span className="mt-1.5 h-1.5 w-1.5 shrink-0 animate-pulse rounded-full bg-(--warning)" />
@@ -265,9 +289,13 @@ const ResourcesPage = ({ initialSearch, onSearchChange }: ResourcesPageProps) =>
               </>
             ) : (
               <>
-                <ShieldCheck className="mt-0.5 h-3.5 w-3.5 shrink-0 text-(--bronze)" aria-hidden="true" />
-                Listing status shows whether a resource is published. Exact time-slot availability
-                is checked when a booking request is submitted.
+                <ShieldCheck
+                  className="mt-0.5 h-3.5 w-3.5 shrink-0 text-(--bronze)"
+                  aria-hidden="true"
+                />
+                Listing status shows whether a resource is published. Exact
+                time-slot availability is checked when a booking request is
+                submitted.
               </>
             )}
           </p>
@@ -282,40 +310,52 @@ const ResourcesPage = ({ initialSearch, onSearchChange }: ResourcesPageProps) =>
             className="mb-6 rounded-(--radius-lg) border border-(--border-subtle) bg-(--surface) p-5 lg:sticky lg:top-24 lg:mb-0"
           >
             <div className="flex items-center gap-2 pb-4">
-              <SlidersHorizontal className="h-4 w-4 text-(--bronze-deep)" aria-hidden="true" />
-              <h2 className="text-[0.8125rem] font-semibold text-(--charcoal)">Refine results</h2>
+              <SlidersHorizontal
+                className="h-4 w-4 text-(--bronze-deep)"
+                aria-hidden="true"
+              />
+              <h2 className="text-[0.8125rem] font-semibold text-(--charcoal)">
+                Refine results
+              </h2>
             </div>
 
             <fieldset className="border-0 p-0">
               <legend className={filterLabel}>Category</legend>
               <div className="mt-2 flex flex-col">
-                {[{ label: 'All categories', value: 'all' }, ...categoryOptions.map((option) => ({ label: option, value: option }))].map(
-                  (option) => {
-                    const active = category === option.value
+                {[
+                  { label: 'All categories', value: 'all' },
+                  ...categoryOptions.map((option) => ({
+                    label: option,
+                    value: option,
+                  })),
+                ].map((option) => {
+                  const active = category === option.value
 
-                    return (
-                      <button
-                        key={option.value}
-                        type="button"
-                        aria-pressed={active}
-                        onClick={() => setCategory(option.value)}
-                        className={cn(
-                          'flex min-h-9 items-center border-l-2 py-1.5 pl-3 pr-2 text-left text-[0.8125rem] transition-colors',
-                          active
-                            ? 'border-(--espresso) bg-(--soft-beige) font-semibold text-(--espresso)'
-                            : 'border-transparent text-(--muted-strong) hover:border-(--border-strong) hover:text-(--charcoal)',
-                        )}
-                      >
-                        {option.label}
-                      </button>
-                    )
-                  },
-                )}
+                  return (
+                    <button
+                      key={option.value}
+                      type="button"
+                      aria-pressed={active}
+                      onClick={() => setCategory(option.value)}
+                      className={cn(
+                        'flex min-h-9 items-center border-l-2 py-1.5 pl-3 pr-2 text-left text-[0.8125rem] transition-colors',
+                        active
+                          ? 'border-(--espresso) bg-(--soft-beige) font-semibold text-(--espresso)'
+                          : 'border-transparent text-(--muted-strong) hover:border-(--border-strong) hover:text-(--charcoal)',
+                      )}
+                    >
+                      {option.label}
+                    </button>
+                  )
+                })}
               </div>
               {categoriesQuery.isLoading ? (
                 <div className="mt-2 space-y-1.5" aria-hidden="true">
                   {Array.from({ length: 3 }).map((_, index) => (
-                    <div key={index} className="h-8 animate-pulse rounded-[0.35rem] bg-(--soft-beige)" />
+                    <div
+                      key={index}
+                      className="h-8 animate-pulse rounded-[0.35rem] bg-(--soft-beige)"
+                    />
                   ))}
                 </div>
               ) : null}
@@ -376,10 +416,16 @@ const ResourcesPage = ({ initialSearch, onSearchChange }: ResourcesPageProps) =>
           <section aria-labelledby="results-heading" className="min-w-0">
             <div className="mb-5 flex flex-wrap items-baseline justify-between gap-3 border-b border-(--border-subtle) pb-4">
               <div>
-                <h2 id="results-heading" className="font-display text-[1.125rem] font-semibold tracking-[-0.02em] text-(--charcoal)">
+                <h2
+                  id="results-heading"
+                  className="font-display text-[1.125rem] font-semibold tracking-[-0.02em] text-(--charcoal)"
+                >
                   Resource catalogue
                 </h2>
-                <p className="mt-1 font-mono text-[0.6875rem] tracking-[0.02em] text-(--muted)" aria-live="polite">
+                <p
+                  className="mt-1 font-mono text-[0.6875rem] tracking-[0.02em] text-(--muted)"
+                  aria-live="polite"
+                >
                   {resourcesQuery.isLoading
                     ? 'Loading resources…'
                     : resourcesQuery.isError
@@ -399,7 +445,10 @@ const ResourcesPage = ({ initialSearch, onSearchChange }: ResourcesPageProps) =>
             </div>
 
             {resourcesQuery.isLoading ? (
-              <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3" aria-label="Loading resources">
+              <div
+                className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3"
+                aria-label="Loading resources"
+              >
                 {Array.from({ length: 6 }).map((_, index) => (
                   <ResourceCardSkeleton key={index} />
                 ))}
@@ -407,20 +456,26 @@ const ResourcesPage = ({ initialSearch, onSearchChange }: ResourcesPageProps) =>
             ) : resourcesQuery.isError ? (
               <div
                 role="alert"
-                className="rounded-(--radius-lg) border border-[rgba(169,72,60,0.24)] bg-(--surface) p-6 sm:p-8"
+                className="rounded-(--radius-lg) border border-(--error-tint) bg-(--surface) p-6 sm:p-8"
               >
-                <span className="flex h-10 w-10 items-center justify-center rounded-[0.5rem] bg-[rgba(169,72,60,0.1)]">
-                  <AlertTriangle className="h-[1.15rem] w-[1.15rem] text-(--error)" aria-hidden="true" />
+                <span className="flex h-10 w-10 items-center justify-center rounded-[0.5rem] bg-(--error-tint)">
+                  <AlertTriangle
+                    className="h-[1.15rem] w-[1.15rem] text-(--error)"
+                    aria-hidden="true"
+                  />
                 </span>
                 <h3 className="mt-4 font-display text-[1.125rem] font-semibold text-(--charcoal)">
                   We couldn’t load the catalogue
                 </h3>
                 <p className="mt-2 max-w-xl text-[0.8125rem] leading-relaxed text-(--muted)">
-                  The ShareLab API did not respond. Check that the backend is running and that the
-                  API URL is configured, then try again. No results are being hidden.
+                  The ShareLab API did not respond. Check that the backend is
+                  running and that the API URL is configured, then try again. No
+                  results are being hidden.
                 </p>
                 <div className="mt-5 flex flex-wrap gap-2">
-                  <Button onClick={() => void resourcesQuery.refetch()}>Try again</Button>
+                  <Button onClick={() => void resourcesQuery.refetch()}>
+                    Try again
+                  </Button>
                   <Button variant="secondary" onClick={resetFilters}>
                     Reset filters
                   </Button>
@@ -429,16 +484,23 @@ const ResourcesPage = ({ initialSearch, onSearchChange }: ResourcesPageProps) =>
             ) : sortedResources.length === 0 ? (
               <div className="rounded-(--radius-lg) border border-dashed border-(--border-strong) bg-(--surface) px-6 py-14 text-center">
                 <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-[0.55rem] bg-(--soft-beige)">
-                  <FlaskConical className="h-[1.15rem] w-[1.15rem] text-(--espresso)" aria-hidden="true" />
+                  <FlaskConical
+                    className="h-[1.15rem] w-[1.15rem] text-(--espresso)"
+                    aria-hidden="true"
+                  />
                 </span>
                 <h3 className="mt-4 font-display text-[1.125rem] font-semibold text-(--charcoal)">
                   No resources match your search
                 </h3>
                 <p className="mx-auto mt-2 max-w-md text-[0.8125rem] leading-relaxed text-(--muted)">
-                  Try a broader search term, a different category, or clear the status filter to see
-                  the full catalogue again.
+                  Try a broader search term, a different category, or clear the
+                  status filter to see the full catalogue again.
                 </p>
-                <Button className="mt-5" variant="secondary" onClick={resetFilters}>
+                <Button
+                  className="mt-5"
+                  variant="secondary"
+                  onClick={resetFilters}
+                >
                   <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
                   Clear all filters
                 </Button>
@@ -451,55 +513,34 @@ const ResourcesPage = ({ initialSearch, onSearchChange }: ResourcesPageProps) =>
               </div>
             )}
 
-            {lastPage > 1 && !resourcesQuery.isError ? (
-              <nav aria-label="Catalogue pagination" className="mt-8 flex flex-wrap items-center justify-between gap-3">
-                <Button
-                  type="button"
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => goToPage(page - 1)}
-                  disabled={page <= 1 || resourcesQuery.isFetching}
-                >
-                  <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-                  Previous
-                </Button>
-
-                <div className="flex items-center gap-1">
-                  {pageNumbers.map((pageNumber) => (
-                    <button
-                      key={pageNumber}
-                      type="button"
-                      onClick={() => goToPage(pageNumber)}
-                      aria-label={`Go to page ${pageNumber}`}
-                      aria-current={pageNumber === page ? 'page' : undefined}
-                      className={cn(
-                        'flex h-9 min-w-9 items-center justify-center rounded-[0.4rem] border px-2 font-mono text-[0.8125rem] transition-colors',
-                        pageNumber === page
-                          ? 'border-(--espresso) bg-(--espresso) text-(--cream)'
-                          : 'border-(--border-subtle) text-(--muted-strong) hover:border-(--border-strong) hover:text-(--espresso)',
-                      )}
-                    >
-                      {pageNumber}
-                    </button>
-                  ))}
-                </div>
-
-                <Button
-                  type="button"
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => goToPage(page + 1)}
-                  disabled={page >= lastPage || resourcesQuery.isFetching}
-                >
-                  Next
-                  <ChevronRight className="h-4 w-4" aria-hidden="true" />
-                </Button>
-              </nav>
+            {!resourcesQuery.isError ? (
+              <Pagination
+                className="mt-8"
+                label="Catalogue pagination"
+                page={page}
+                lastPage={lastPage}
+                total={total}
+                perPage={meta?.per_page ?? 9}
+                isFetching={resourcesQuery.isFetching}
+                onPageChange={goToPage}
+                onPrefetch={(nextPage) =>
+                  void prefetchResources({
+                    q: debouncedSearch,
+                    category,
+                    status,
+                    page: nextPage,
+                    perPage: 9,
+                  })
+                }
+              />
             ) : null}
 
             <div className="mt-10 flex flex-col items-start justify-between gap-3 rounded-(--radius-md) border border-(--border-subtle) bg-(--soft-beige) px-5 py-4 text-[0.8125rem] text-(--muted-strong) sm:flex-row sm:items-center">
               <span className="inline-flex items-center gap-2">
-                <Clock3 className="h-4 w-4 shrink-0 text-(--espresso)" aria-hidden="true" />
+                <Clock3
+                  className="h-4 w-4 shrink-0 text-(--espresso)"
+                  aria-hidden="true"
+                />
                 Booking limits and weekly caps are shown on each listing.
               </span>
               <Link

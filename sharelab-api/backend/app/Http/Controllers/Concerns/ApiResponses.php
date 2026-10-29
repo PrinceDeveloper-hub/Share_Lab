@@ -28,18 +28,22 @@ trait ApiResponses
         ], $status);
     }
 
-    protected function paginated(LengthAwarePaginator $paginator, string $resourceClass, string $message): JsonResponse
-    {
+    protected function paginated(
+        LengthAwarePaginator $paginator,
+        string $resourceClass,
+        string $message,
+        array $meta = [],
+    ): JsonResponse {
         return $this->ok(
             $resourceClass::collection($paginator->getCollection())->resolve(),
             $message,
             200,
-            [
+            array_merge([
                 'page' => $paginator->currentPage(),
                 'per_page' => $paginator->perPage(),
                 'total' => $paginator->total(),
                 'last_page' => $paginator->lastPage(),
-            ],
+            ], $meta),
         );
     }
 

@@ -117,6 +117,7 @@ export interface TimelineEntry {
 
 export interface BookingListFilters {
   status?: BookingStatus | 'all'
+  view?: 'all' | 'open' | 'history'
   resource_id?: number
   from?: string
   to?: string
@@ -134,6 +135,7 @@ export interface ConditionReportPayload {
 const compactParams = (filters: BookingListFilters) => {
   const params: Record<string, string | number> = {}
   if (filters.status && filters.status !== 'all') params.status = filters.status
+  if (filters.view && filters.view !== 'all') params.view = filters.view
   if (filters.resource_id) params.resource_id = filters.resource_id
   if (filters.from) params.from = filters.from
   if (filters.to) params.to = filters.to
@@ -163,7 +165,9 @@ export const getBookings = async (): Promise<Booking[]> => {
   return response.data
 }
 
-export const fetchBooking = async (bookingId: number): Promise<ApiResponse<Booking>> => {
+export const fetchBooking = async (
+  bookingId: number,
+): Promise<ApiResponse<Booking>> => {
   return api.get<Booking>(`/bookings/${bookingId}`)
 }
 
@@ -193,18 +197,24 @@ export const cancelBooking = async (
   bookingId: number,
   reason?: string,
 ): Promise<ApiResponse<Booking>> => {
-  return api.post<{ reason?: string }, Booking>(`/bookings/${bookingId}/cancel`, {
-    reason,
-  })
+  return api.post<{ reason?: string }, Booking>(
+    `/bookings/${bookingId}/cancel`,
+    {
+      reason,
+    },
+  )
 }
 
 export const extendBooking = async (
   bookingId: number,
   endAt: string,
 ): Promise<ApiResponse<Booking>> => {
-  return api.patch<{ end_at: string }, Booking>(`/bookings/${bookingId}/extend`, {
-    end_at: endAt,
-  })
+  return api.patch<{ end_at: string }, Booking>(
+    `/bookings/${bookingId}/extend`,
+    {
+      end_at: endAt,
+    },
+  )
 }
 
 export const confirmWaitlistOffer = async (

@@ -306,7 +306,7 @@ export const Home = () => {
             description="Four checkpoints keep students, resource owners and managers aligned at every stage."
           />
 
-          <ol className="mt-10 grid gap-px overflow-hidden rounded-(--radius-lg) border border-[rgba(81,53,34,0.12)] bg-[rgba(81,53,34,0.12)] sm:grid-cols-2 lg:grid-cols-4">
+          <ol className="mt-10 grid gap-px overflow-hidden rounded-(--radius-lg) border border-(--tint-3) bg-(--tint-3) sm:grid-cols-2 lg:grid-cols-4">
             {workflow.map((item, index) => (
               <motion.li
                 key={item.step}

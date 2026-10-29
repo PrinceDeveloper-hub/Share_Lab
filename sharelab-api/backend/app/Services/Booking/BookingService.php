@@ -27,8 +27,7 @@ class BookingService
         private readonly WaitlistService $waitlist,
         private readonly AuditService $audit,
         private readonly NotificationService $notifications,
-    ) {
-    }
+    ) {}
 
     public function paginateForUser(User $user, array $filters): LengthAwarePaginator
     {
@@ -178,7 +177,7 @@ class BookingService
                 ? [BookingStatus::Pending, BookingStatus::Waitlisted, BookingStatus::Approved]
                 : [BookingStatus::Pending, BookingStatus::Waitlisted];
 
-            if (!in_array($previousStatus, $decidableFrom, true)) {
+            if (! in_array($previousStatus, $decidableFrom, true)) {
                 throw ValidationException::withMessages([
                     'booking' => 'This request has already reached a final decision.',
                 ]);
@@ -242,7 +241,7 @@ class BookingService
             $booking = Booking::query()->with('resource')->lockForUpdate()->findOrFail($booking->id);
             $oldStatus = $booking->status;
 
-            if (!in_array($oldStatus, [
+            if (! in_array($oldStatus, [
                 BookingStatus::Pending,
                 BookingStatus::Waitlisted,
                 BookingStatus::Approved,
@@ -289,7 +288,7 @@ class BookingService
         return DB::transaction(function () use ($actor, $booking, $newEnd): Booking {
             $booking = Booking::query()->with(['resource.requirements', 'user'])->lockForUpdate()->findOrFail($booking->id);
 
-            if (!in_array($booking->status, [BookingStatus::Approved, BookingStatus::CheckedIn], true)) {
+            if (! in_array($booking->status, [BookingStatus::Approved, BookingStatus::CheckedIn], true)) {
                 throw ValidationException::withMessages(['booking' => 'Only approved or checked-in bookings can be extended.']);
             }
 
@@ -409,6 +408,7 @@ class BookingService
             ->sum(function (Booking $booking) use ($weekStart, $weekEnd): float {
                 $start = CarbonImmutable::parse($booking->start_at);
                 $end = CarbonImmutable::parse($booking->end_at);
+
                 return max(0, $start->max($weekStart)->diffInMinutes($end->min($weekEnd)) / 60);
             });
 
@@ -452,21 +452,50 @@ class BookingService
             ->count() + 1;
     }
 
+    /**
+     * Counts for the dashboard tabs, kept off the paginated payload so the
+     * list stays small while the badges stay accurate across pages.
+     */
+    public function statusCounts(User $user): array
+    {
+        $rows = Booking::query()
+            ->where('user_id', $user->id)
+            ->selectRaw('status, count(*) as aggregate')
+            ->groupBy('status')
+            ->pluck('aggregate', 'status');
+
+        $open = ['pending', 'waitlisted', 'approved', 'checked_in'];
+        $history = ['returned', 'rejected', 'cancelled'];
+
+        return [
+            'all' => (int) $rows->sum(),
+            'open' => (int) $rows->only($open)->sum(),
+            'history' => (int) $rows->only($history)->sum(),
+            'pending' => (int) ($rows['pending'] ?? 0),
+        ];
+    }
+
     private function applyFilters($query, array $filters): void
     {
-        if (!empty($filters['status']) && $filters['status'] !== 'all') {
+        if (! empty($filters['status']) && $filters['status'] !== 'all') {
             $query->where('status', $filters['status']);
         }
 
-        if (!empty($filters['resource_id'])) {
+        if (! empty($filters['view']) && $filters['view'] !== 'all') {
+            $query->whereIn('status', $filters['view'] === 'history'
+                ? ['returned', 'rejected', 'cancelled']
+                : ['pending', 'waitlisted', 'approved', 'checked_in']);
+        }
+
+        if (! empty($filters['resource_id'])) {
             $query->where('resource_id', (int) $filters['resource_id']);
         }
 
-        if (!empty($filters['from'])) {
+        if (! empty($filters['from'])) {
             $query->where('end_at', '>=', $filters['from']);
         }
 
-        if (!empty($filters['to'])) {
+        if (! empty($filters['to'])) {
             $query->where('start_at', '<=', $filters['to']);
         }
     }

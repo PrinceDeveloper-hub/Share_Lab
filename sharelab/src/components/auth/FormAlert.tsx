@@ -26,11 +26,11 @@ export const FormAlert = ({
       className={cn(
         'flex items-start gap-2.5 rounded-xl border px-3.5 py-3 text-xs leading-relaxed',
         variant === 'error' &&
-          'border-[rgba(169,72,60,0.2)] bg-[rgba(169,72,60,0.07)] text-(--error)',
+          'border-(--error-tint) bg-(--error-tint-soft) text-(--error)',
         variant === 'success' &&
-          'border-[rgba(53,107,76,0.2)] bg-[rgba(53,107,76,0.07)] text-(--success)',
+          'border-(--success-tint) bg-(--success-tint-soft) text-(--success)',
         variant === 'info' &&
-          'border-[rgba(81,53,34,0.12)] bg-[rgba(81,53,34,0.045)] text-(--muted)',
+          'border-(--tint-3) bg-(--tint-1) text-(--muted)',
         className,
       )}
     >

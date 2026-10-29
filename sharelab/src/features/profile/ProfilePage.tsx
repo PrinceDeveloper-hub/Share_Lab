@@ -178,7 +178,7 @@ export const ProfilePage = () => {
                 ) : null}
 
                 {profileSaved ? (
-                  <p className="flex items-center gap-2 rounded-xl bg-[rgba(53,107,76,0.08)] px-3 py-2 text-sm font-medium text-(--success)">
+                  <p className="flex items-center gap-2 rounded-xl bg-(--success-tint-soft) px-3 py-2 text-sm font-medium text-(--success)">
                     <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
                     Profile updated.
                   </p>
@@ -262,7 +262,7 @@ export const ProfilePage = () => {
               ) : null}
 
               {passwordSaved ? (
-                <p className="flex items-center gap-2 rounded-xl bg-[rgba(53,107,76,0.08)] px-3 py-2 text-sm font-medium text-(--success)">
+                <p className="flex items-center gap-2 rounded-xl bg-(--success-tint-soft) px-3 py-2 text-sm font-medium text-(--success)">
                   <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
                   Password updated.
                 </p>
@@ -283,7 +283,7 @@ export const ProfilePage = () => {
 
         <aside className="space-y-4">
           <SectionCard>
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-(--espresso) font-display text-xl font-semibold text-white">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-(--espresso) font-display text-xl font-semibold text-(--accent-contrast)">
               {profile?.name.split(' ')
                 .map((part) => part[0])
                 .slice(0, 2)
@@ -299,7 +299,7 @@ export const ProfilePage = () => {
             </p>
             <p
               className={cn(
-                'mt-3 inline-flex items-center gap-1.5 rounded-full bg-[rgba(81,53,34,0.07)] px-2.5 py-1 text-[0.68rem] font-semibold text-(--espresso)',
+                'mt-3 inline-flex items-center gap-1.5 rounded-full bg-(--tint-2) px-2.5 py-1 text-[0.68rem] font-semibold text-(--espresso)',
               )}
             >
               <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />

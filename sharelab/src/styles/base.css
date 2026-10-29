@@ -23,7 +23,6 @@
   html {
     min-height: 100%;
     -webkit-text-size-adjust: 100%;
-    color-scheme: light;
     scrollbar-color: var(--border-strong) transparent;
     text-rendering: optimizeLegibility;
   }
@@ -102,8 +101,8 @@
   }
 
   ::selection {
-    background: rgba(81, 53, 34, 0.16);
-    color: var(--deep-brown);
+    background: var(--tint-3);
+    color: var(--charcoal);
   }
 
   :focus-visible {

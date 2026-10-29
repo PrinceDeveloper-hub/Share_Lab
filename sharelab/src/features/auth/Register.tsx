@@ -165,7 +165,7 @@ export const Register = ({ redirect }: RegisterProps) => {
             key={benefit}
             className="flex items-start gap-2 text-[0.76rem] leading-relaxed text-(--muted)"
           >
-            <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[rgba(53,107,76,0.12)] text-(--success)">
+            <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-(--success-tint) text-(--success)">
               <Check
                 className="h-2.5 w-2.5"
                 strokeWidth={3}
@@ -304,13 +304,13 @@ export const Register = ({ redirect }: RegisterProps) => {
         By creating an account you agree to the campus resource-use policy.
       </p>
 
-      <div className="mt-5 border-t border-[rgba(81,53,34,0.1)] pt-5">
+      <div className="mt-5 border-t border-(--tint-2) pt-5">
         <p className="text-center text-sm text-(--muted)">
           Already have an account?{' '}
           <Link
             to="/login"
             search={{ redirect }}
-            className="inline-flex min-h-11 items-center rounded-sm px-1 font-semibold text-(--espresso) underline decoration-[rgba(81,53,34,0.28)] underline-offset-4 transition-colors hover:text-(--deep-brown) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring)"
+            className="inline-flex min-h-11 items-center rounded-sm px-1 font-semibold text-(--espresso) underline decoration-(--tint-3) underline-offset-4 transition-colors hover:text-(--espresso-hover) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring)"
           >
             Sign in
           </Link>

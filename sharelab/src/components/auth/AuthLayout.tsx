@@ -1,13 +1,9 @@
 import type { ReactNode } from 'react'
 import { Link } from '@tanstack/react-router'
 import { motion, useReducedMotion } from 'framer-motion'
-import {
-  ArrowUpRight,
-  FlaskConical,
-  LockKeyhole,
-  ShieldCheck,
-} from 'lucide-react'
+import { ArrowUpRight, LockKeyhole, ShieldCheck } from 'lucide-react'
 import { BackButton } from '../ui/BackButton'
+import { BrandMark } from '../layout/BrandMark'
 
 export interface AuthLayoutProps {
   children: ReactNode
@@ -31,7 +27,7 @@ const copy = {
 
 const TrustLine = ({ children }: { children: ReactNode }) => (
   <span className="inline-flex items-center gap-2 text-[0.7rem] font-medium text-(--muted)">
-    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[rgba(53,107,76,0.1)] text-(--success)">
+    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-(--success-tint) text-(--success)">
       <ShieldCheck className="h-3 w-3" aria-hidden="true" />
     </span>
     {children}
@@ -77,12 +73,10 @@ export const AuthLayout = ({ children, mode }: AuthLayoutProps) => {
               aria-label="ShareLab home"
               className="hidden w-fit items-center gap-3 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-4 focus-visible:ring-offset-transparent lg:inline-flex"
             >
-              <span className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-white/10 shadow-[0_12px_32px_-14px_rgba(0,0,0,0.7)] backdrop-blur-md">
-                <FlaskConical
-                  className="h-5 w-5 text-(--cream)"
-                  aria-hidden="true"
-                />
-              </span>
+              <BrandMark
+                className="h-11 w-11 rounded-full border border-white/20 bg-white/10 p-1.5 shadow-[0_12px_32px_-14px_rgba(0,0,0,0.7)] backdrop-blur-md"
+                iconClassName="h-5 w-5 text-white"
+              />
               <span className="flex flex-col leading-none">
                 <span className="font-display text-lg font-bold tracking-tight text-white">
                   ShareLab
@@ -129,12 +123,10 @@ export const AuthLayout = ({ children, mode }: AuthLayoutProps) => {
                 aria-label="ShareLab home"
                 className="inline-flex min-h-11 items-center gap-2.5 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring) focus-visible:ring-offset-4 focus-visible:ring-offset-(--ivory) lg:hidden"
               >
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-(--espresso) shadow-[0_10px_24px_-12px_rgba(81,53,34,0.8)]">
-                  <FlaskConical
-                    className="h-4 w-4 text-(--cream)"
-                    aria-hidden="true"
-                  />
-                </span>
+                <BrandMark
+                  className="h-9 w-9 rounded-full bg-(--surface) p-1 ring-1 ring-(--border-subtle)"
+                  iconClassName="h-4 w-4 text-(--espresso)"
+                />
                 <span className="font-display text-base font-bold tracking-tight text-(--charcoal)">
                   ShareLab
                 </span>
@@ -169,7 +161,7 @@ export const AuthLayout = ({ children, mode }: AuthLayoutProps) => {
                 <div className="relative overflow-hidden rounded-(--radius-lg) border border-(--border-subtle) bg-(--surface) p-6 shadow-(--shadow-md) sm:p-8">
                   <div
                     aria-hidden="true"
-                    className="pointer-events-none absolute inset-x-8 top-0 h-px bg-[linear-gradient(90deg,transparent,rgba(81,53,34,0.24),transparent)]"
+                    className="pointer-events-none absolute inset-x-8 top-0 h-px bg-[linear-gradient(90deg,transparent,var(--tint-3),transparent)]"
                   />
                   {children}
                 </div>
@@ -178,7 +170,7 @@ export const AuthLayout = ({ children, mode }: AuthLayoutProps) => {
                   <TrustLine>HttpOnly session cookies</TrustLine>
                   <span
                     aria-hidden="true"
-                    className="hidden h-3 w-px bg-[rgba(81,53,34,0.18)] sm:block"
+                    className="hidden h-3 w-px bg-(--tint-3) sm:block"
                   />
                   <TrustLine>Role-aware access</TrustLine>
                 </div>

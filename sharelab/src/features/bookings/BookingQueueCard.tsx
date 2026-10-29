@@ -119,7 +119,7 @@ export const BookingQueueCard = ({
                   : ''}
               </span>
               {priorityLabel(booking.priority_score) ? (
-                <span className="inline-flex items-center gap-1 rounded-full bg-[rgba(154,107,34,0.09)] px-2.5 py-1 text-[0.66rem] font-semibold text-(--warning)">
+                <span className="inline-flex items-center gap-1 rounded-full bg-(--warning-tint) px-2.5 py-1 text-[0.66rem] font-semibold text-(--warning)">
                   <Sparkles className="h-3 w-3" aria-hidden="true" />
                   {priorityLabel(booking.priority_score)}
                 </span>
@@ -156,7 +156,7 @@ export const BookingQueueCard = ({
             ) : null}
 
             {booking.recommendation ? (
-              <div className="mt-3 rounded-xl border border-[rgba(154,107,34,0.16)] bg-[rgba(154,107,34,0.05)] px-3 py-2">
+              <div className="mt-3 rounded-xl border border-(--warning-tint) bg-(--warning-tint-soft) px-3 py-2">
                 <p className="text-[0.64rem] font-semibold uppercase tracking-[0.1em] text-(--warning)">
                   {booking.recommendation.decision === 'approve'
                     ? 'Recommended: approve'
@@ -171,7 +171,7 @@ export const BookingQueueCard = ({
             ) : null}
 
             {booking.decision_reason ? (
-              <p className="mt-3 rounded-xl bg-[rgba(81,53,34,0.045)] px-3 py-2 text-xs leading-relaxed text-(--muted)">
+              <p className="mt-3 rounded-xl bg-(--tint-1) px-3 py-2 text-xs leading-relaxed text-(--muted)">
                 <span className="font-semibold text-(--charcoal)">Decision note:</span>{' '}
                 {booking.decision_reason}
               </p>
@@ -199,7 +199,7 @@ export const BookingQueueCard = ({
               </Button>
               <Button
                 variant="ghost"
-                className="text-(--error) hover:bg-[rgba(169,72,60,0.07)] hover:text-(--error)"
+                className="text-(--error) hover:bg-(--error-tint-soft) hover:text-(--error)"
                 onClick={() => openDecision('reject')}
               >
                 <XCircle className="h-4 w-4" aria-hidden="true" />
@@ -245,7 +245,7 @@ export const BookingQueueCard = ({
           </Field>
 
           {decisionMutation.isError ? (
-            <p role="alert" className="rounded-xl bg-[rgba(169,72,60,0.06)] px-3 py-2 text-sm text-(--error)">
+            <p role="alert" className="rounded-xl bg-(--error-tint-soft) px-3 py-2 text-sm text-(--error)">
               {getApiErrorMessage(decisionMutation.error, 'The decision could not be saved.')}
             </p>
           ) : null}

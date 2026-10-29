@@ -9,19 +9,19 @@
 :root {
   color-scheme: light;
 
-  /* Core palette */
-  --ivory: #f8f5ef; /* page background */
-  --cream: #fffcf7; /* cards, elevated surfaces */
-  --surface: #fffcf7;
-  --surface-sunken: #f2ece1;
-  --soft-beige: #efe6d9; /* secondary background */
-  --sand: #e4d9cb; /* borders */
+  /* Core palette — warm editorial campus system */
+  --ivory: #f6f0e7; /* page background */
+  --cream: #fffbf5; /* cards, elevated surfaces */
+  --surface: #fffbf5;
+  --surface-sunken: #f1e8dc;
+  --soft-beige: #efe4d5; /* secondary background */
+  --sand: #e5d8c9; /* borders */
   --taupe: #a78260; /* muted bronze */
-  --bronze: #a78260;
-  --bronze-deep: #8c6849;
-  --espresso: #513522; /* primary accent */
-  --espresso-hover: #452c1c;
-  --deep-brown: #221812; /* footer, dark bands */
+  --bronze: #b78b62;
+  --bronze-deep: #8f6a49;
+  --espresso: #4b2e1d; /* primary accent */
+  --espresso-hover: #3d2517;
+  --deep-brown: #281a12; /* footer, dark bands */
   --charcoal: #292521; /* primary text */
   --muted: #71685f; /* secondary text */
   --muted-strong: #544c44;
@@ -71,13 +71,15 @@
   --radius-pill: 9999px;
 
   /* Borders */
-  --border-subtle: #e4d9cb;
-  --border-strong: #d3c3af;
+  --border-subtle: #e5d8c9;
+  --border-strong: #d2bfac;
 
   /* Elevation — quiet, warm, never heavy */
   --shadow-xs: 0 1px 2px rgba(41, 37, 33, 0.04);
-  --shadow-sm: 0 1px 2px rgba(41, 37, 33, 0.04), 0 8px 24px -18px rgba(41, 37, 33, 0.28);
-  --shadow-md: 0 2px 4px rgba(41, 37, 33, 0.03), 0 20px 44px -30px rgba(41, 37, 33, 0.32);
+  --shadow-sm:
+    0 1px 2px rgba(41, 37, 33, 0.04), 0 8px 24px -18px rgba(41, 37, 33, 0.28);
+  --shadow-md:
+    0 2px 4px rgba(41, 37, 33, 0.03), 0 20px 44px -30px rgba(41, 37, 33, 0.32);
   --shadow-lg: 0 30px 70px -40px rgba(34, 24, 18, 0.45);
   --ring: rgba(81, 53, 34, 0.45);
 
@@ -103,6 +105,121 @@
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --transition-fast: 150ms var(--ease-out);
   --transition-base: 250ms var(--ease-out);
+
+  /*
+   * Theme-aware semantic tints. Components reference these instead of the
+   * hard-coded warm rgba values so dark mode can re-balance contrast without
+   * touching every page.
+   */
+  --accent-contrast: #ffffff;
+  --on-dark: #fffcf7;
+  --on-dark-muted: rgba(255, 249, 241, 0.7);
+
+  --tint-1: rgba(81, 53, 34, 0.035);
+  --tint-2: rgba(81, 53, 34, 0.07);
+  --tint-3: rgba(81, 53, 34, 0.14);
+  --tint-4: rgba(81, 53, 34, 0.24);
+  --ring-soft: rgba(81, 53, 34, 0.14);
+  --surface-translucent: rgba(255, 252, 247, 0.86);
+  --surface-muted: rgba(255, 252, 247, 0.6);
+  --surface-band: rgba(248, 245, 239, 0.64);
+  --header-bg: rgba(248, 245, 239, 0.88);
+  --beige-tint-1: rgba(233, 217, 198, 0.16);
+  --beige-tint-2: rgba(233, 217, 198, 0.28);
+  --beige-tint-3: rgba(233, 217, 198, 0.34);
+
+  --success-tint: rgba(53, 107, 76, 0.12);
+  --success-tint-soft: rgba(53, 107, 76, 0.07);
+  --success-line: rgba(53, 107, 76, 0.22);
+  --warning-tint: rgba(154, 107, 34, 0.12);
+  --warning-tint-soft: rgba(154, 107, 34, 0.05);
+  --warning-line: rgba(154, 107, 34, 0.22);
+  --error-tint: rgba(169, 72, 60, 0.1);
+  --error-tint-soft: rgba(169, 72, 60, 0.06);
+  --error-line: rgba(169, 72, 60, 0.2);
+}
+
+/*
+ * Dark theme. Applied through <html data-theme="dark"> by the theme provider;
+ * the "system" setting resolves to this block through the same attribute.
+ * The palette stays warm — espresso paper, cream ink — rather than switching
+ * to a cold neutral system.
+ */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --ivory: #14100c;
+  --cream: #f8f1e6;
+  --surface: #1e1712;
+  --surface-sunken: #191310;
+  --soft-beige: #271e17;
+  --sand: #382b21;
+  --taupe: #c9a481;
+  --bronze: #d3af87;
+  --bronze-deep: #e0c3a1;
+  --espresso: #e4cbaf;
+  --espresso-hover: #f0dcc5;
+  --deep-brown: #0d0907;
+  --charcoal: #f3e9db;
+  --muted: #b0a08f;
+  --muted-strong: #cdbcaa;
+  --success: #8cc8a5;
+  --warning: #dfb577;
+  --error: #e2928a;
+
+  --border-subtle: #382b21;
+  --border-strong: #4b3a2c;
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-sm:
+    0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px -18px rgba(0, 0, 0, 0.7);
+  --shadow-md:
+    0 2px 4px rgba(0, 0, 0, 0.4), 0 20px 44px -30px rgba(0, 0, 0, 0.8);
+  --shadow-lg: 0 30px 70px -40px rgba(0, 0, 0, 0.85);
+  --ring: rgba(224, 198, 169, 0.6);
+
+  --overlay-scrim: rgba(8, 5, 3, 0.7);
+  --glass-light: rgba(34, 26, 21, 0.82);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 10px 30px -18px rgba(0, 0, 0, 0.75);
+  --glass-dark: rgba(15, 11, 8, 0.78);
+  --glass-dark-border: rgba(255, 255, 255, 0.1);
+
+  --sidebar-bg: #0f0b08;
+
+  --badge-pending: rgba(223, 181, 119, 0.18);
+  --badge-approved: rgba(140, 200, 165, 0.18);
+  --badge-rejected: rgba(226, 146, 138, 0.18);
+  --badge-checked-in: rgba(224, 198, 169, 0.14);
+  --badge-returned: rgba(179, 164, 149, 0.14);
+  --badge-cancelled: rgba(179, 164, 149, 0.1);
+
+  --accent-contrast: #1b130f;
+  --on-dark: #fffcf7;
+  --on-dark-muted: rgba(255, 249, 241, 0.7);
+
+  --tint-1: rgba(255, 249, 241, 0.035);
+  --tint-2: rgba(255, 249, 241, 0.07);
+  --tint-3: rgba(255, 249, 241, 0.12);
+  --tint-4: rgba(255, 249, 241, 0.2);
+  --ring-soft: rgba(224, 198, 169, 0.22);
+  --surface-translucent: rgba(34, 26, 21, 0.88);
+  --surface-muted: rgba(255, 249, 241, 0.045);
+  --surface-band: rgba(255, 249, 241, 0.03);
+  --header-bg: rgba(23, 17, 13, 0.9);
+  --beige-tint-1: rgba(255, 249, 241, 0.04);
+  --beige-tint-2: rgba(255, 249, 241, 0.07);
+  --beige-tint-3: rgba(255, 249, 241, 0.1);
+
+  --success-tint: rgba(140, 200, 165, 0.16);
+  --success-tint-soft: rgba(140, 200, 165, 0.08);
+  --success-line: rgba(140, 200, 165, 0.3);
+  --warning-tint: rgba(223, 181, 119, 0.16);
+  --warning-tint-soft: rgba(223, 181, 119, 0.07);
+  --warning-line: rgba(223, 181, 119, 0.3);
+  --error-tint: rgba(226, 146, 138, 0.16);
+  --error-tint-soft: rgba(226, 146, 138, 0.08);
+  --error-line: rgba(226, 146, 138, 0.32);
 }
 
 /*

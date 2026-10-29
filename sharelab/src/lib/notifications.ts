@@ -11,23 +11,30 @@ export interface AppNotification {
 }
 
 export const fetchNotifications = async (
-  perPage = 50,
+  perPage = 12,
+  page = 1,
 ): Promise<ApiResponse<AppNotification[]>> => {
   return api.get<AppNotification[]>('/notifications', {
-    params: { per_page: perPage },
+    params: { per_page: perPage, page },
   })
 }
 
-export const fetchUnreadNotificationCount = async (): Promise<ApiResponse<{ unread: number }>> => {
+export const fetchUnreadNotificationCount = async (): Promise<
+  ApiResponse<{ unread: number }>
+> => {
   return api.get<{ unread: number }>('/notifications/unread-count')
 }
 
 export const markNotificationRead = async (
   notificationId: number,
 ): Promise<ApiResponse<AppNotification>> => {
-  return api.patch<undefined, AppNotification>(`/notifications/${notificationId}/read`)
+  return api.patch<undefined, AppNotification>(
+    `/notifications/${notificationId}/read`,
+  )
 }
 
-export const markAllNotificationsRead = async (): Promise<ApiResponse<{ updated: number }>> => {
+export const markAllNotificationsRead = async (): Promise<
+  ApiResponse<{ updated: number }>
+> => {
   return api.patch<undefined, { updated: number }>('/notifications/read-all')
 }

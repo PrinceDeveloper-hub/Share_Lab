@@ -98,7 +98,8 @@ const compactParams = (filters: ResourceListFilters) => {
   const params: Record<string, string | number> = {}
 
   if (filters.q?.trim()) params.q = filters.q.trim()
-  if (filters.category && filters.category !== 'all') params.category = filters.category
+  if (filters.category && filters.category !== 'all')
+    params.category = filters.category
   if (filters.status && filters.status !== 'all') params.status = filters.status
   if (filters.page) params.page = filters.page
   if (filters.perPage) params.per_page = filters.perPage
@@ -115,7 +116,9 @@ export const fetchResources = async (
   return api.get<Resource[]>('/resources', { params: compactParams(filters) })
 }
 
-export const fetchResource = async (resourceId: number): Promise<ResourceDetailResponse> => {
+export const fetchResource = async (
+  resourceId: number,
+): Promise<ResourceDetailResponse> => {
   return api.get<ResourceDetail>(`/resources/${resourceId}`)
 }
 
@@ -123,9 +126,12 @@ export const fetchResourceAvailability = async (
   resourceId: number,
   date: string,
 ): Promise<ApiResponse<ResourceAvailability>> => {
-  return api.get<ResourceAvailability>(`/resources/${resourceId}/availability`, {
-    params: { date },
-  })
+  return api.get<ResourceAvailability>(
+    `/resources/${resourceId}/availability`,
+    {
+      params: { date },
+    },
+  )
 }
 
 export const fetchResourceEligibility = async (
@@ -135,13 +141,39 @@ export const fetchResourceEligibility = async (
 }
 
 const localResourceImages: { match: RegExp; src: string }[] = [
-  { match: /3d|print/i, src: '/images/resources/3d-printer.webp' },
-  { match: /oscillo|electronic|test|probe/i, src: '/images/resources/oscilloscope.webp' },
-  { match: /solder|circuit/i, src: '/images/resources/soldering-station.webp' },
-  { match: /camera|photo|media|studio/i, src: '/images/resources/camera-kit.webp' },
-  { match: /meeting|room|study|space/i, src: '/images/resources/meeting-room.webp' },
-  { match: /laser|fabrication|cnc|workshop/i, src: '/images/resources/laser-cutter.webp' },
+  {
+    match: /3d|print|resin|fdm|prototype/i,
+    src: '/images/resources/3d-printer.webp',
+  },
+  {
+    match: /solder|circuit|rework|repair/i,
+    src: '/images/resources/soldering-station.webp',
+  },
+  {
+    match: /oscillo|electronic|test|probe|signal|research/i,
+    src: '/images/resources/oscilloscope.webp',
+  },
+  {
+    match: /camera|photo|media|studio|documentary|podcast/i,
+    src: '/images/resources/camera-kit.webp',
+  },
+  {
+    match: /meeting|room|study|space|seminar|library|pod/i,
+    src: '/images/resources/meeting-room.webp',
+  },
+  {
+    match: /laser|fabrication|cnc|workshop|maker/i,
+    src: '/images/resources/laser-cutter.webp',
+  },
 ]
+
+/** Category-level fallback keeps every seeded listing paired with a fitting image. */
+const categoryImages: Record<string, string | undefined> = {
+  Fabrication: '/images/resources/laser-cutter.webp',
+  Electronics: '/images/resources/oscilloscope.webp',
+  Media: '/images/resources/camera-kit.webp',
+  Study: '/images/resources/meeting-room.webp',
+}
 
 const fallbackImage = '/images/resources/laser-cutter.webp'
 
@@ -155,5 +187,9 @@ export const getResourceImage = (
   if (resource.image_url) return resource.image_url
 
   const source = `${resource.category} ${resource.name}`
-  return localResourceImages.find((entry) => entry.match.test(source))?.src ?? fallbackImage
+  return (
+    localResourceImages.find((entry) => entry.match.test(source))?.src ??
+    categoryImages[resource.category] ??
+    fallbackImage
+  )
 }

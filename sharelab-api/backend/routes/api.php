@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CredentialController;
@@ -23,9 +24,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest:api')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])
-        ->middleware('throttle:' . config('auth.login_throttle', '10,1'));
+        ->middleware('throttle:'.config('auth.login_throttle', '10,1'));
     Route::post('/register', [AuthController::class, 'register'])
-        ->middleware('throttle:' . config('auth.register_throttle', '10,1'));
+        ->middleware('throttle:'.config('auth.register_throttle', '10,1'));
 });
 
 Route::post('/refresh', [AuthController::class, 'refresh'])->middleware('throttle:30,1');
@@ -90,6 +91,12 @@ Route::middleware('jwt.auth')->group(function () {
         Route::get('/owner/resources/{resource}/managers', [ResourceController::class, 'managerIndex']);
         Route::post('/owner/resources/{resource}/managers', [ResourceController::class, 'managerStore']);
         Route::delete('/owner/resources/{resource}/managers/{manager}', [ResourceController::class, 'managerDestroy']);
+    });
+
+    Route::middleware('role:admin')->group(function () {
+        Route::get('/admin/dashboard', [AdminController::class, 'overview']);
+        Route::get('/admin/users', [AdminController::class, 'users']);
+        Route::get('/admin/audit', [AdminController::class, 'audit']);
     });
 
     Route::middleware('role:manager')->group(function () {

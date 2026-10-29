@@ -90,9 +90,9 @@ type IncidentValues = z.infer<typeof incidentSchema>
 type ExtendValues = z.infer<typeof extendSchema>
 
 const incidentTone = {
-  open: 'bg-[rgba(154,107,34,0.12)] text-(--warning)',
-  confirmed: 'bg-[rgba(169,72,60,0.1)] text-(--error)',
-  resolved: 'bg-[rgba(53,107,76,0.12)] text-(--success)',
+  open: 'bg-(--warning-tint) text-(--warning)',
+  confirmed: 'bg-(--error-tint) text-(--error)',
+  resolved: 'bg-(--success-tint) text-(--success)',
 } as const
 
 const toLocalInputValue = (iso: string | null | undefined) => {
@@ -121,10 +121,10 @@ const ConditionSummary = ({
   if (!report) return null
 
   return (
-    <div className="rounded-2xl border border-(--border-subtle) bg-[rgba(255,252,247,0.64)] p-4">
+    <div className="rounded-2xl border border-(--border-subtle) bg-(--surface-muted) p-4">
       <div className="flex items-center justify-between gap-3">
         <p className="text-sm font-semibold text-(--charcoal)">{title}</p>
-        <span className="rounded-full bg-[rgba(81,53,34,0.07)] px-2.5 py-1 text-[0.66rem] font-semibold capitalize text-(--espresso)">
+        <span className="rounded-full bg-(--tint-2) px-2.5 py-1 text-[0.66rem] font-semibold capitalize text-(--espresso)">
           {report.condition}
         </span>
       </div>
@@ -137,7 +137,7 @@ const ConditionSummary = ({
 }
 
 const IncidentSummary = ({ incident }: { incident: Incident }) => (
-  <li className="rounded-2xl border border-(--border-subtle) bg-[rgba(255,252,247,0.64)] p-4">
+  <li className="rounded-2xl border border-(--border-subtle) bg-(--surface-muted) p-4">
     <div className="flex flex-wrap items-center justify-between gap-2">
       <p className="text-sm font-semibold capitalize text-(--charcoal)">
         {incident.type.replace('_', ' ')} incident
@@ -158,7 +158,7 @@ const IncidentSummary = ({ incident }: { incident: Incident }) => (
       </p>
     ) : null}
     {incident.resolution_note ? (
-      <p className="mt-2 rounded-xl bg-[rgba(81,53,34,0.045)] px-3 py-2 text-xs leading-relaxed text-(--muted)">
+      <p className="mt-2 rounded-xl bg-(--tint-1) px-3 py-2 text-xs leading-relaxed text-(--muted)">
         <span className="font-semibold text-(--charcoal)">Resolution:</span>{' '}
         {incident.resolution_note}
       </p>
@@ -407,14 +407,14 @@ export const BookingDetail = ({ bookingId }: { bookingId: string }) => {
               : ''}
           </span>
           {canManage && booking.user ? (
-            <span className="inline-flex items-center gap-2 rounded-full border border-(--border-subtle) bg-[rgba(255,252,247,0.7)] px-3 py-1.5 text-xs font-medium text-(--muted)">
+            <span className="inline-flex items-center gap-2 rounded-full border border-(--border-subtle) bg-(--surface-muted) px-3 py-1.5 text-xs font-medium text-(--muted)">
               <UserRound className="h-3.5 w-3.5" aria-hidden="true" />
               Requested by {booking.user.name}
               {booking.user.email ? ` · ${booking.user.email}` : ''}
             </span>
           ) : null}
           {booking.is_late ? (
-            <span className="rounded-full bg-[rgba(169,72,60,0.1)] px-3 py-1.5 text-xs font-semibold text-(--error)">
+            <span className="rounded-full bg-(--error-tint) px-3 py-1.5 text-xs font-semibold text-(--error)">
               Returned late
             </span>
           ) : null}
@@ -422,7 +422,7 @@ export const BookingDetail = ({ bookingId }: { bookingId: string }) => {
       ) : null}
 
       {booking.is_offer && booking.confirm_by ? (
-        <div className="mt-6 rounded-(--radius-lg) border border-[rgba(53,107,76,0.25)] bg-[rgba(53,107,76,0.07)] p-5">
+        <div className="mt-6 rounded-(--radius-lg) border border-(--success-tint) bg-(--success-tint-soft) p-5">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex gap-3">
               <BadgeCheck className="mt-0.5 h-5 w-5 shrink-0 text-(--success)" aria-hidden="true" />
@@ -495,7 +495,7 @@ export const BookingDetail = ({ bookingId }: { bookingId: string }) => {
                     <Link
                       to="/resources/$resourceId"
                       params={{ resourceId: String(booking.resource.id) }}
-                      className="font-semibold underline decoration-[rgba(81,53,34,0.25)] underline-offset-4 hover:decoration-(--espresso)"
+                      className="font-semibold underline decoration-(--tint-3) underline-offset-4 hover:decoration-(--espresso)"
                     >
                       {booking.resource.name}
                     </Link>
@@ -507,7 +507,7 @@ export const BookingDetail = ({ bookingId }: { bookingId: string }) => {
             </div>
 
             {booking.decision_reason ? (
-              <div className="mt-5 rounded-2xl bg-[rgba(81,53,34,0.045)] p-4">
+              <div className="mt-5 rounded-2xl bg-(--tint-1) p-4">
                 <p className="text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-(--muted)">
                   Decision note
                 </p>
@@ -518,7 +518,7 @@ export const BookingDetail = ({ bookingId }: { bookingId: string }) => {
             ) : null}
 
             {booking.recommendation ? (
-              <div className="mt-4 rounded-2xl border border-[rgba(154,107,34,0.18)] bg-[rgba(154,107,34,0.05)] p-4">
+              <div className="mt-4 rounded-2xl border border-(--warning-tint) bg-(--warning-tint-soft) p-4">
                 <p className="text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-(--warning)">
                   Priority recommendation
                 </p>
@@ -636,7 +636,7 @@ export const BookingDetail = ({ bookingId }: { bookingId: string }) => {
                         aria-hidden="true"
                       />
                     ) : null}
-                    <span className="relative z-10 mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-(--border-subtle) bg-(--cream)">
+                    <span className="relative z-10 mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-(--border-subtle) bg-(--surface)">
                       <span className="h-1.5 w-1.5 rounded-full bg-(--espresso)" />
                     </span>
                     <div className="min-w-0 flex-1">
@@ -676,7 +676,7 @@ export const BookingDetail = ({ bookingId }: { bookingId: string }) => {
                   </Button>
                   <Button
                     variant="ghost"
-                    className="text-(--error) hover:bg-[rgba(169,72,60,0.07)] hover:text-(--error)"
+                    className="text-(--error) hover:bg-(--error-tint-soft) hover:text-(--error)"
                     onClick={() => openDecision('reject')}
                   >
                     <XCircle className="h-4 w-4" aria-hidden="true" />
@@ -702,7 +702,7 @@ export const BookingDetail = ({ bookingId }: { bookingId: string }) => {
               {booking.permissions?.cancel ? (
                 <Button
                   variant="ghost"
-                  className="text-(--error) hover:bg-[rgba(169,72,60,0.07)] hover:text-(--error)"
+                  className="text-(--error) hover:bg-(--error-tint-soft) hover:text-(--error)"
                   disabled={cancelMutation.isPending}
                   onClick={() => {
                     if (
@@ -737,7 +737,7 @@ export const BookingDetail = ({ bookingId }: { bookingId: string }) => {
             </div>
           </SectionCard>
 
-          <div className="rounded-(--radius-md) border border-[rgba(154,107,34,0.18)] bg-[rgba(154,107,34,0.05)] p-4">
+          <div className="rounded-(--radius-md) border border-(--warning-tint) bg-(--warning-tint-soft) p-4">
             <div className="flex gap-2.5">
               <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-(--warning)" aria-hidden="true" />
               <div>
@@ -852,7 +852,7 @@ export const BookingDetail = ({ bookingId }: { bookingId: string }) => {
               id="condition-photo"
               type="file"
               accept="image/jpeg,image/png,image/webp"
-              className="block w-full cursor-pointer rounded-xl border border-(--border-subtle) bg-(--surface) px-3 py-2.5 text-sm text-(--muted) file:mr-3 file:rounded-full file:border-0 file:bg-(--espresso) file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white"
+              className="block w-full cursor-pointer rounded-xl border border-(--border-subtle) bg-(--surface) px-3 py-2.5 text-sm text-(--muted) file:mr-3 file:rounded-full file:border-0 file:bg-(--espresso) file:px-4 file:py-2 file:text-sm file:font-semibold file:text-(--accent-contrast)"
               {...activeConditionForm.register('photo')}
             />
           </Field>

@@ -5,6 +5,9 @@ export interface GlassPanelProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: 'light' | 'strong' | 'subtle'
 }
 
+const sheen =
+  'before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-[linear-gradient(90deg,transparent,var(--glass-border),transparent)] before:content-[""]'
+
 export const GlassPanel = ({
   className,
   children,
@@ -13,17 +16,18 @@ export const GlassPanel = ({
 }: GlassPanelProps) => {
   const variants = {
     subtle:
-      'bg-[rgba(255,252,247,0.5)] backdrop-blur-md border border-[rgba(81,53,34,0.1)] shadow-[0_10px_40px_rgba(81,53,34,0.06)]',
+      'border border-(--tint-2) bg-(--surface-muted) backdrop-blur-md shadow-(--shadow-xs)',
     light:
-      'bg-(--glass-light) backdrop-blur-xl saturate-110 border border-(--glass-border) shadow-(--glass-shadow)',
+      'border border-(--glass-border) bg-(--glass-light) backdrop-blur-xl backdrop-saturate-150 shadow-(--glass-shadow)',
     strong:
-      'bg-[rgba(255,255,255,0.82)] backdrop-blur-2xl saturate-115 border border-[rgba(255,255,255,0.72)] shadow-[0_16px_48px_rgba(81,53,34,0.12),inset_0_1px_0_rgba(255,255,255,0.8)]',
+      'border border-(--glass-border) bg-(--glass-light) backdrop-blur-2xl backdrop-saturate-150 shadow-(--shadow-lg)',
   }
 
   return (
     <div
       className={cn(
         'relative overflow-hidden rounded-[1rem]',
+        variant !== 'subtle' && sheen,
         variants[variant],
         className,
       )}

@@ -4,13 +4,13 @@ import { AlertTriangle, Loader2, X } from 'lucide-react'
 import { cn } from '../../lib/utils'
 
 export const inputClass =
-  'h-10 w-full rounded-[0.5rem] border border-(--border-subtle) bg-(--surface) px-3 text-sm text-(--charcoal) placeholder:text-[rgba(113,104,95,0.7)] transition-colors hover:border-(--border-strong) focus:border-(--espresso) focus:outline-none focus:ring-2 focus:ring-[rgba(81,53,34,0.14)] disabled:cursor-not-allowed disabled:opacity-60'
+  'h-10 w-full rounded-[0.5rem] border border-(--border-subtle) bg-(--surface) px-3 text-sm text-(--charcoal) placeholder:text-(--muted) transition-colors hover:border-(--border-strong) focus:border-(--espresso) focus:outline-none focus:ring-2 focus:ring-(--tint-3) disabled:cursor-not-allowed disabled:opacity-60'
 
 export const textareaClass =
-  'w-full resize-y rounded-[0.5rem] border border-(--border-subtle) bg-(--surface) px-3 py-2.5 text-sm leading-relaxed text-(--charcoal) placeholder:text-[rgba(113,104,95,0.7)] transition-colors hover:border-(--border-strong) focus:border-(--espresso) focus:outline-none focus:ring-2 focus:ring-[rgba(81,53,34,0.14)] disabled:cursor-not-allowed disabled:opacity-60'
+  'w-full resize-y rounded-[0.5rem] border border-(--border-subtle) bg-(--surface) px-3 py-2.5 text-sm leading-relaxed text-(--charcoal) placeholder:text-(--muted) transition-colors hover:border-(--border-strong) focus:border-(--espresso) focus:outline-none focus:ring-2 focus:ring-(--tint-3) disabled:cursor-not-allowed disabled:opacity-60'
 
 export const selectClass =
-  'h-10 w-full cursor-pointer rounded-[0.5rem] border border-(--border-subtle) bg-(--surface) px-3 text-sm text-(--charcoal) transition-colors hover:border-(--border-strong) focus:border-(--espresso) focus:outline-none focus:ring-2 focus:ring-[rgba(81,53,34,0.14)] disabled:cursor-not-allowed disabled:opacity-60'
+  'h-10 w-full cursor-pointer rounded-[0.5rem] border border-(--border-subtle) bg-(--surface) px-3 text-sm text-(--charcoal) transition-colors hover:border-(--border-strong) focus:border-(--espresso) focus:outline-none focus:ring-2 focus:ring-(--tint-3) disabled:cursor-not-allowed disabled:opacity-60'
 
 export const PageHeader = ({
   eyebrow,
@@ -102,7 +102,7 @@ export const ErrorNotice = ({
 }) => (
   <div
     role="alert"
-    className="rounded-(--radius-md) border border-[rgba(169,72,60,0.2)] bg-[rgba(169,72,60,0.06)] p-5"
+    className="rounded-(--radius-md) border border-(--error-tint) bg-(--error-tint-soft) p-5"
   >
     <div className="flex items-start gap-3">
       <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-(--error)" aria-hidden="true" />
@@ -113,7 +113,7 @@ export const ErrorNotice = ({
           <button
             type="button"
             onClick={onRetry}
-            className="mt-3 text-sm font-semibold text-(--espresso) underline decoration-[rgba(81,53,34,0.3)] underline-offset-4 hover:decoration-(--espresso)"
+            className="mt-3 text-sm font-semibold text-(--espresso) underline decoration-(--tint-3) underline-offset-4 hover:decoration-(--espresso)"
           >
             Try again
           </button>
@@ -156,10 +156,10 @@ export const LoadingRows = ({ rows = 3, label = 'Loading' }: { rows?: number; la
         key={index}
         className="flex animate-pulse items-center gap-4 rounded-(--radius-md) border border-(--border-subtle) bg-(--surface) p-4"
       >
-        <span className="h-10 w-10 shrink-0 rounded-full bg-[rgba(81,53,34,0.08)]" />
+        <span className="h-10 w-10 shrink-0 rounded-full bg-(--tint-2)" />
         <span className="flex-1 space-y-2">
-          <span className="block h-3 w-2/3 rounded-full bg-[rgba(81,53,34,0.08)]" />
-          <span className="block h-2.5 w-1/2 rounded-full bg-[rgba(81,53,34,0.06)]" />
+          <span className="block h-3 w-2/3 rounded-full bg-(--tint-2)" />
+          <span className="block h-2.5 w-1/2 rounded-full bg-(--tint-2)" />
         </span>
       </div>
     ))}
@@ -284,7 +284,7 @@ export const Modal = ({
             type="button"
             onClick={onClose}
             aria-label="Close dialog"
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-(--muted) transition-colors hover:bg-[rgba(81,53,34,0.07)] hover:text-(--espresso) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring)"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-(--muted) transition-colors hover:bg-(--tint-2) hover:text-(--espresso) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring)"
           >
             <X className="h-4 w-4" aria-hidden="true" />
           </button>

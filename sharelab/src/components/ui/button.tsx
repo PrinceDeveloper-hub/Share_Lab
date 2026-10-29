@@ -10,14 +10,14 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          'bg-(--espresso) text-white shadow-[0_1px_2px_rgba(34,24,18,0.2)] hover:bg-(--espresso-hover)',
+          'bg-(--espresso) text-(--accent-contrast) shadow-[0_1px_2px_rgba(34,24,18,0.2)] hover:bg-(--espresso-hover)',
         secondary:
           'border border-(--border-subtle) bg-(--surface) text-(--espresso) hover:border-(--border-strong) hover:bg-(--surface-sunken)',
         outline:
-          'border border-(--border-strong) bg-transparent text-(--espresso) hover:border-(--espresso) hover:bg-(--espresso) hover:text-white',
+          'border border-(--border-strong) bg-transparent text-(--espresso) hover:border-(--espresso) hover:bg-(--espresso) hover:text-(--accent-contrast)',
         ghost: 'text-(--muted-strong) hover:bg-(--surface-sunken) hover:text-(--espresso)',
         inverse:
-          'bg-(--cream) text-(--espresso) shadow-[0_1px_2px_rgba(0,0,0,0.18)] hover:bg-white',
+          'bg-(--cream) text-(--accent-contrast) shadow-[0_1px_2px_rgba(0,0,0,0.18)] hover:bg-white',
         danger: 'bg-(--error) text-white hover:bg-[#963f34]',
         link: 'h-auto px-0 text-(--espresso) underline-offset-4 hover:underline',
       },

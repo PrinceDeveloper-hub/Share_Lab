@@ -15,6 +15,8 @@ import {
   ShieldCheck,
 } from 'lucide-react'
 import { Button } from '../../components/ui/button'
+import { Reveal } from '../../components/ui/reveal'
+import { TiltCard } from '../../components/ui/tilt-card'
 import { useAuth } from '../../hooks/useAuth'
 import { useBookings } from '../../hooks/useBookings'
 import { usePageMeta } from '../../hooks/usePageMeta'
@@ -73,6 +75,7 @@ const QuickAction = ({
     | '/how-it-works'
     | '/manager'
     | '/owner'
+    | '/admin'
     | '/credentials'
     | '/incidents'
   icon: typeof Search
@@ -81,9 +84,9 @@ const QuickAction = ({
 }) => (
   <Link
     to={to}
-    className="group -mx-2.5 flex items-start gap-3 rounded-xl border border-transparent px-2.5 py-3 transition-colors hover:border-(--border-subtle) hover:bg-[rgba(81,53,34,0.035)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring) focus-visible:ring-offset-2 focus-visible:ring-offset-(--surface)"
+    className="group -mx-2.5 flex items-start gap-3 rounded-xl border border-transparent px-2.5 py-3 transition-colors hover:border-(--border-subtle) hover:bg-(--tint-1) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring) focus-visible:ring-offset-2 focus-visible:ring-offset-(--surface)"
   >
-    <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[rgba(81,53,34,0.07)] text-(--espresso)">
+    <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-(--tint-2) text-(--espresso)">
       <Icon className="h-4 w-4" aria-hidden="true" />
     </span>
     <span className="min-w-0 flex-1">
@@ -166,24 +169,28 @@ export const Dashboard = () => {
       value: pendingCount,
       detail: 'Awaiting a decision',
       icon: Clock3,
+      to: '/my-bookings' as const,
     },
     {
       label: 'Approved',
       value: approvedCount,
       detail: 'Ready to use',
       icon: CalendarCheck,
+      to: '/my-bookings' as const,
     },
     {
       label: 'Catalogue',
       value: resources.length,
       detail: 'Shared resources',
       icon: FlaskConical,
+      to: '/resources' as const,
     },
     {
       label: 'Returned',
       value: returnedCount,
       detail: 'On your record',
       icon: RotateCcw,
+      to: '/my-bookings' as const,
     },
   ]
 
@@ -233,6 +240,14 @@ export const Dashboard = () => {
           icon={FlaskConical}
           title="Manage your resources"
           description="Keep availability and resource rules up to date."
+        />
+      ) : null}
+      {user.role === 'admin' ? (
+        <QuickAction
+          to="/admin"
+          icon={ListOrdered}
+          title="Open the admin console"
+          description="Review accounts, booking health, and the audit trail."
         />
       ) : null}
     </>
@@ -297,7 +312,7 @@ export const Dashboard = () => {
             </div>
           </div>
 
-          <aside className="w-full rounded-(--radius-md) border border-[rgba(255,249,241,0.14)] bg-[rgba(255,249,241,0.06)] p-5 lg:w-76 lg:shrink-0">
+          <aside className="w-full rounded-(--radius-md) border border-[rgba(255,249,241,0.16)] bg-[rgba(255,249,241,0.07)] p-5 shadow-[inset_0_1px_0_rgba(255,249,241,0.14)] backdrop-blur-2xl backdrop-saturate-150 lg:w-76 lg:shrink-0">
             <p className="flex items-center gap-2 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[rgba(255,249,241,0.48)]">
               <CalendarDays className="h-3.5 w-3.5" aria-hidden="true" />
               Next on your calendar
@@ -341,235 +356,253 @@ export const Dashboard = () => {
 
       <section
         aria-label="Account overview"
-        className="mt-5 grid grid-cols-2 gap-px overflow-hidden rounded-(--radius-lg) border border-(--border-subtle) bg-(--border-subtle) shadow-soft md:grid-cols-4"
+        className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-4"
       >
-        {stats.map((stat) => (
-          <div
-            key={stat.label}
-            className="bg-[rgba(255,252,247,0.86)] p-5 backdrop-blur-sm"
-          >
-            <div className="flex items-center justify-between gap-2">
-              <p className="text-xs font-semibold text-(--muted)">
-                {stat.label}
-              </p>
-              <stat.icon
-                className="h-4 w-4 text-(--taupe)"
-                aria-hidden="true"
-              />
-            </div>
-            <p className="mt-3 font-display text-3xl font-semibold tracking-[-0.03em] text-(--charcoal)">
-              {stat.value}
-            </p>
-            <p className="mt-1 text-[0.7rem] text-(--muted)">
-              {stat.detail}
-            </p>
-          </div>
+        {stats.map((stat, index) => (
+          <Reveal key={stat.label} delay={index * 0.05} className="h-full">
+            <Link
+              to={stat.to}
+              className="group block h-full rounded-(--radius-lg) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring)"
+            >
+              <TiltCard
+                as="div"
+                className="flex h-full flex-col rounded-(--radius-lg) border border-(--border-subtle) bg-(--surface) p-5 shadow-soft transition-[border-color,box-shadow,background-color] duration-300 hover:border-(--border-strong) hover:bg-(--surface-sunken)"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <p className="text-xs font-semibold text-(--muted)">
+                    {stat.label}
+                  </p>
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-(--tint-2) text-(--espresso) transition-transform duration-300 group-hover:-translate-y-0.5">
+                    <stat.icon className="h-4 w-4" aria-hidden="true" />
+                  </span>
+                </div>
+                <p className="mt-3 font-display text-3xl font-semibold tracking-[-0.03em] text-(--charcoal) tabular-nums">
+                  {stat.value}
+                </p>
+                <p className="mt-1 flex-1 text-[0.7rem] leading-snug text-(--muted)">
+                  {stat.detail}
+                </p>
+                <span className="mt-3 inline-flex items-center gap-1 text-[0.7rem] font-semibold text-(--espresso) opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  Open
+                  <ArrowUpRight className="h-3 w-3" aria-hidden="true" />
+                </span>
+              </TiltCard>
+            </Link>
+          </Reveal>
         ))}
       </section>
 
       <div className="mt-5 grid gap-5 lg:grid-cols-[minmax(0,1.45fr)_minmax(20rem,0.75fr)]">
-        <section className="rounded-(--radius-lg) border border-(--border-subtle) bg-(--surface) p-6 shadow-soft sm:p-7">
-          <div className="flex flex-wrap items-end justify-between gap-3">
-            <div>
-              <h2 className="font-display text-[1.7rem] font-semibold leading-tight tracking-[-0.02em] text-(--charcoal)">
-                Your requests
-              </h2>
-              <p className="mt-1 text-sm text-(--muted)">
-                Every decision and handover, in one trail.
-              </p>
-            </div>
-            <Link
-              to="/my-bookings"
-              className="inline-flex min-h-11 items-center gap-1.5 rounded-full px-3 text-sm font-semibold text-(--espresso) transition-colors hover:bg-[rgba(81,53,34,0.06)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring) focus-visible:ring-offset-2 focus-visible:ring-offset-(--surface)"
-            >
-              View all
-              <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
-            </Link>
-          </div>
-
-          {bookingsLoading ? (
-            <div className="mt-6 space-y-3" role="status" aria-live="polite">
-              <span className="sr-only">Loading your requests</span>
-              {[0, 1, 2].map((item) => (
-                <div
-                  key={item}
-                  className="flex animate-pulse items-center gap-4 rounded-xl border border-(--border-subtle) bg-[rgba(255,249,241,0.45)] p-4"
-                >
-                  <span className="h-10 w-10 rounded-full bg-[rgba(81,53,34,0.08)]" />
-                  <span className="flex-1 space-y-2">
-                    <span className="block h-3 w-2/3 rounded-full bg-[rgba(81,53,34,0.08)]" />
-                    <span className="block h-2.5 w-1/2 rounded-full bg-[rgba(81,53,34,0.06)]" />
-                  </span>
-                </div>
-              ))}
-            </div>
-          ) : bookingsError ? (
-            <p className="mt-6 rounded-xl border border-[rgba(169,72,60,0.18)] bg-[rgba(169,72,60,0.06)] px-4 py-3 text-sm text-(--error)">
-              We could not load your requests. Refresh the page to try again.
-            </p>
-          ) : bookingsList.length === 0 ? (
-            <div className="mt-6 rounded-2xl border border-dashed border-[rgba(81,53,34,0.2)] bg-[rgba(233,217,198,0.16)] px-6 py-9 text-center">
-              <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[rgba(81,53,34,0.07)]">
-                <CalendarCheck
-                  className="h-5 w-5 text-(--espresso)"
-                  aria-hidden="true"
-                />
-              </span>
-              <p className="mt-4 font-display text-[1.3rem] font-semibold text-(--charcoal)">
-                Your first request starts in the catalogue.
-              </p>
-              <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-(--muted)">
-                Compare equipment and studios, check the requirements, and pick
-                a window that works for you.
-              </p>
-              <Button asChild className="mt-5">
-                <Link to="/resources">Browse resources</Link>
-              </Button>
-            </div>
-          ) : (
-            <ul className="mt-5">
-              {bookingsList.slice(0, 4).map((booking) => {
-                const resource = resourcesById.get(booking.resource_id)
-                const status = bookingStatusDetails[booking.status]
-                const StatusIcon = status.icon
-
-                return (
-                  <li
-                    key={booking.id}
-                    className="flex gap-3.5 border-t border-(--border-subtle) py-4 first:border-t-0 first:pt-2 last:pb-0 sm:gap-4"
-                  >
-                    <span
-                      className={cn(
-                        'mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full',
-                        status.tone,
-                      )}
-                    >
-                      <StatusIcon className="h-4 w-4" aria-hidden="true" />
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                        {resource ? (
-                          <Link
-                            to="/resources/$resourceId"
-                            params={{ resourceId: String(resource.id) }}
-                            className="rounded-sm font-semibold text-(--charcoal) transition-colors hover:text-(--espresso) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring)"
-                          >
-                            {resource.name}
-                          </Link>
-                        ) : (
-                          <p className="font-semibold text-(--charcoal)">
-                            Booking #{booking.id}
-                          </p>
-                        )}
-                        <span
-                          className={cn(
-                            'inline-flex items-center rounded-full px-2 py-0.5 text-[0.65rem] font-semibold',
-                            status.tone,
-                          )}
-                        >
-                          {status.label}
-                          {booking.status === 'waitlisted' &&
-                          booking.waitlist_position
-                            ? ` · #${booking.waitlist_position}`
-                            : ''}
-                        </span>
-                      </div>
-                      <p className="mt-1.5 inline-flex flex-wrap items-center gap-x-1.5 text-xs font-medium text-(--muted)">
-                        <Clock3 className="h-3.5 w-3.5" aria-hidden="true" />
-                        {formatBookingWindow(booking)}
-                      </p>
-                      {booking.purpose ? (
-                        <p className="mt-1.5 line-clamp-1 text-sm text-(--muted)">
-                          “{booking.purpose}”
-                        </p>
-                      ) : null}
-                    </div>
-                  </li>
-                )
-              })}
-            </ul>
-          )}
-        </section>
-
-        <div className="grid gap-5">
-          <section className="rounded-(--radius-lg) border border-(--border-subtle) bg-(--surface) p-6 shadow-soft">
-            <h2 className="font-display text-[1.5rem] font-semibold leading-tight tracking-[-0.02em] text-(--charcoal)">
-              Quick actions
-            </h2>
-            <div className="mt-3 grid">{quickActions}</div>
-          </section>
-
-          <section className="rounded-(--radius-lg) border border-(--border-subtle) bg-(--surface) p-6 shadow-soft">
-            <div className="flex items-center justify-between gap-3">
-              <h2 className="font-display text-[1.5rem] font-semibold leading-tight tracking-[-0.02em] text-(--charcoal)">
-                From the catalogue
-              </h2>
+        <Reveal className="min-w-0">
+          <section className="h-full rounded-(--radius-lg) border border-(--border-subtle) bg-(--surface) p-6 shadow-soft sm:p-7">
+            <div className="flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <h2 className="font-display text-[1.7rem] font-semibold leading-tight tracking-[-0.02em] text-(--charcoal)">
+                  Your requests
+                </h2>
+                <p className="mt-1 text-sm text-(--muted)">
+                  Every decision and handover, in one trail.
+                </p>
+              </div>
               <Link
-                to="/resources"
-                aria-label="Browse all resources"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full text-(--muted) transition-colors hover:bg-[rgba(81,53,34,0.06)] hover:text-(--espresso) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring)"
+                to="/my-bookings"
+                className="inline-flex min-h-11 items-center gap-1.5 rounded-full px-3 text-sm font-semibold text-(--espresso) transition-colors hover:bg-(--tint-2) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring) focus-visible:ring-offset-2 focus-visible:ring-offset-(--surface)"
               >
-                <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                View all
+                <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
               </Link>
             </div>
 
-            {resourcesLoading ? (
-              <div className="mt-4 space-y-2" role="status" aria-live="polite">
-                <span className="sr-only">Loading resources</span>
+            {bookingsLoading ? (
+              <div className="mt-6 space-y-3" role="status" aria-live="polite">
+                <span className="sr-only">Loading your requests</span>
                 {[0, 1, 2].map((item) => (
                   <div
                     key={item}
-                    className="flex animate-pulse items-center gap-3 py-2"
+                    className="flex animate-pulse items-center gap-4 rounded-xl border border-(--border-subtle) bg-(--surface-muted) p-4"
                   >
-                    <span className="h-12 w-14 rounded-lg bg-[rgba(81,53,34,0.08)]" />
+                    <span className="h-10 w-10 rounded-full bg-(--tint-2)" />
                     <span className="flex-1 space-y-2">
-                      <span className="block h-2.5 w-2/3 rounded-full bg-[rgba(81,53,34,0.08)]" />
-                      <span className="block h-2 w-1/2 rounded-full bg-[rgba(81,53,34,0.06)]" />
+                      <span className="block h-3 w-2/3 rounded-full bg-(--tint-2)" />
+                      <span className="block h-2.5 w-1/2 rounded-full bg-(--tint-2)" />
                     </span>
                   </div>
                 ))}
               </div>
-            ) : resources.length === 0 ? (
-              <p className="mt-4 text-sm text-(--muted)">
-                The catalogue is being prepared. Check back shortly.
+            ) : bookingsError ? (
+              <p className="mt-6 rounded-xl border border-(--error-tint) bg-(--error-tint-soft) px-4 py-3 text-sm text-(--error)">
+                We could not load your requests. Refresh the page to try again.
               </p>
+            ) : bookingsList.length === 0 ? (
+              <div className="mt-6 rounded-2xl border border-dashed border-(--tint-3) bg-(--beige-tint-1) px-6 py-9 text-center">
+                <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-(--tint-2)">
+                  <CalendarCheck
+                    className="h-5 w-5 text-(--espresso)"
+                    aria-hidden="true"
+                  />
+                </span>
+                <p className="mt-4 font-display text-[1.3rem] font-semibold text-(--charcoal)">
+                  Your first request starts in the catalogue.
+                </p>
+                <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-(--muted)">
+                  Compare equipment and studios, check the requirements, and
+                  pick a window that works for you.
+                </p>
+                <Button asChild className="mt-5">
+                  <Link to="/resources">Browse resources</Link>
+                </Button>
+              </div>
             ) : (
-              <ul className="mt-3 space-y-1">
-                {resources.slice(0, 3).map((resource) => (
-                  <li key={resource.id}>
-                    <Link
-                      to="/resources/$resourceId"
-                      params={{ resourceId: String(resource.id) }}
-                      className="group -mx-2 flex items-center gap-3 rounded-xl px-2 py-2 transition-colors hover:bg-[rgba(81,53,34,0.035)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring)"
+              <ul className="mt-5">
+                {bookingsList.slice(0, 4).map((booking) => {
+                  const resource = resourcesById.get(booking.resource_id)
+                  const status = bookingStatusDetails[booking.status]
+                  const StatusIcon = status.icon
+
+                  return (
+                    <li
+                      key={booking.id}
+                      className="flex gap-3.5 border-t border-(--border-subtle) py-4 first:border-t-0 first:pt-2 last:pb-0 sm:gap-4"
                     >
-                      <span className="h-12 w-14 shrink-0 overflow-hidden rounded-lg bg-(--soft-beige)">
-                        <img
-                          src={getResourceImage(resource)}
-                          alt=""
-                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                          loading="lazy"
-                          decoding="async"
-                        />
+                      <span
+                        className={cn(
+                          'mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full',
+                          status.tone,
+                        )}
+                      >
+                        <StatusIcon className="h-4 w-4" aria-hidden="true" />
                       </span>
-                      <span className="min-w-0 flex-1">
-                        <span className="block truncate text-sm font-semibold text-(--charcoal)">
-                          {resource.name}
-                        </span>
-                        <span className="mt-0.5 block truncate text-xs text-(--muted)">
-                          {resource.category} · {resource.location}
-                        </span>
-                      </span>
-                      <ArrowUpRight
-                        className="h-4 w-4 shrink-0 text-(--taupe) transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-                        aria-hidden="true"
-                      />
-                    </Link>
-                  </li>
-                ))}
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                          {resource ? (
+                            <Link
+                              to="/resources/$resourceId"
+                              params={{ resourceId: String(resource.id) }}
+                              className="rounded-sm font-semibold text-(--charcoal) transition-colors hover:text-(--espresso) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring)"
+                            >
+                              {resource.name}
+                            </Link>
+                          ) : (
+                            <p className="font-semibold text-(--charcoal)">
+                              Booking #{booking.id}
+                            </p>
+                          )}
+                          <span
+                            className={cn(
+                              'inline-flex items-center rounded-full px-2 py-0.5 text-[0.65rem] font-semibold',
+                              status.tone,
+                            )}
+                          >
+                            {status.label}
+                            {booking.status === 'waitlisted' &&
+                            booking.waitlist_position
+                              ? ` · #${booking.waitlist_position}`
+                              : ''}
+                          </span>
+                        </div>
+                        <p className="mt-1.5 inline-flex flex-wrap items-center gap-x-1.5 text-xs font-medium text-(--muted)">
+                          <Clock3 className="h-3.5 w-3.5" aria-hidden="true" />
+                          {formatBookingWindow(booking)}
+                        </p>
+                        {booking.purpose ? (
+                          <p className="mt-1.5 line-clamp-1 text-sm text-(--muted)">
+                            “{booking.purpose}”
+                          </p>
+                        ) : null}
+                      </div>
+                    </li>
+                  )
+                })}
               </ul>
             )}
           </section>
-        </div>
+        </Reveal>
+
+        <Reveal className="min-w-0" delay={0.08}>
+          <div className="grid content-start gap-5">
+            <section className="rounded-(--radius-lg) border border-(--border-subtle) bg-(--surface) p-6 shadow-soft">
+              <h2 className="font-display text-[1.5rem] font-semibold leading-tight tracking-[-0.02em] text-(--charcoal)">
+                Quick actions
+              </h2>
+              <div className="mt-3 grid">{quickActions}</div>
+            </section>
+
+            <section className="rounded-(--radius-lg) border border-(--border-subtle) bg-(--surface) p-6 shadow-soft">
+              <div className="flex items-center justify-between gap-3">
+                <h2 className="font-display text-[1.5rem] font-semibold leading-tight tracking-[-0.02em] text-(--charcoal)">
+                  From the catalogue
+                </h2>
+                <Link
+                  to="/resources"
+                  aria-label="Browse all resources"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full text-(--muted) transition-colors hover:bg-(--tint-2) hover:text-(--espresso) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring)"
+                >
+                  <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
+              </div>
+
+              {resourcesLoading ? (
+                <div
+                  className="mt-4 space-y-2"
+                  role="status"
+                  aria-live="polite"
+                >
+                  <span className="sr-only">Loading resources</span>
+                  {[0, 1, 2].map((item) => (
+                    <div
+                      key={item}
+                      className="flex animate-pulse items-center gap-3 py-2"
+                    >
+                      <span className="h-12 w-14 rounded-lg bg-(--tint-2)" />
+                      <span className="flex-1 space-y-2">
+                        <span className="block h-2.5 w-2/3 rounded-full bg-(--tint-2)" />
+                        <span className="block h-2 w-1/2 rounded-full bg-(--tint-2)" />
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              ) : resources.length === 0 ? (
+                <p className="mt-4 text-sm text-(--muted)">
+                  The catalogue is being prepared. Check back shortly.
+                </p>
+              ) : (
+                <ul className="mt-3 space-y-1">
+                  {resources.slice(0, 3).map((resource) => (
+                    <li key={resource.id}>
+                      <Link
+                        to="/resources/$resourceId"
+                        params={{ resourceId: String(resource.id) }}
+                        className="group -mx-2 flex items-center gap-3 rounded-xl px-2 py-2 transition-colors hover:bg-(--tint-1) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring)"
+                      >
+                        <span className="h-12 w-14 shrink-0 overflow-hidden rounded-lg bg-(--soft-beige)">
+                          <img
+                            src={getResourceImage(resource)}
+                            alt=""
+                            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                            loading="lazy"
+                            decoding="async"
+                          />
+                        </span>
+                        <span className="min-w-0 flex-1">
+                          <span className="block truncate text-sm font-semibold text-(--charcoal)">
+                            {resource.name}
+                          </span>
+                          <span className="mt-0.5 block truncate text-xs text-(--muted)">
+                            {resource.category} · {resource.location}
+                          </span>
+                        </span>
+                        <ArrowUpRight
+                          className="h-4 w-4 shrink-0 text-(--taupe) transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                          aria-hidden="true"
+                        />
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </section>
+          </div>
+        </Reveal>
       </div>
     </div>
   )

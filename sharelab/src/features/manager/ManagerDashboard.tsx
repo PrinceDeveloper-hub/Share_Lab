@@ -190,7 +190,7 @@ export const ManagerDashboard = () => {
           <SectionCard>
             <div className="flex items-center justify-between gap-2">
               <h2 className="text-sm font-semibold text-(--charcoal)">Your resources</h2>
-              <span className="rounded-full bg-[rgba(81,53,34,0.07)] px-2 py-0.5 text-[0.65rem] font-semibold text-(--espresso)">
+              <span className="rounded-full bg-(--tint-2) px-2 py-0.5 text-[0.65rem] font-semibold text-(--espresso)">
                 {resources.length}
               </span>
             </div>

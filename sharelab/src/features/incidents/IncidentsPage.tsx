@@ -45,9 +45,9 @@ const resolveSchema = z.object({
 type ResolveValues = z.infer<typeof resolveSchema>
 
 const incidentTone = {
-  open: 'bg-[rgba(154,107,34,0.12)] text-(--warning)',
-  confirmed: 'bg-[rgba(169,72,60,0.1)] text-(--error)',
-  resolved: 'bg-[rgba(53,107,76,0.12)] text-(--success)',
+  open: 'bg-(--warning-tint) text-(--warning)',
+  confirmed: 'bg-(--error-tint) text-(--error)',
+  resolved: 'bg-(--success-tint) text-(--success)',
 } as const
 
 const formatDate = (value: string) =>
@@ -182,11 +182,11 @@ export const IncidentsPage = () => {
                             >
                               {incident.status}
                             </span>
-                            <span className="rounded-full bg-[rgba(81,53,34,0.07)] px-2.5 py-1 text-[0.66rem] font-semibold capitalize text-(--espresso)">
+                            <span className="rounded-full bg-(--tint-2) px-2.5 py-1 text-[0.66rem] font-semibold capitalize text-(--espresso)">
                               {String(incident.type).replace('_', ' ')}
                             </span>
                             {incident.suggested_by_system ? (
-                              <span className="rounded-full bg-[rgba(154,107,34,0.08)] px-2.5 py-1 text-[0.66rem] font-semibold text-(--warning)">
+                              <span className="rounded-full bg-(--warning-tint-soft) px-2.5 py-1 text-[0.66rem] font-semibold text-(--warning)">
                                 System suggested
                               </span>
                             ) : null}
@@ -210,12 +210,12 @@ export const IncidentsPage = () => {
                         </Button>
                       </div>
 
-                      <p className="rounded-2xl bg-[rgba(81,53,34,0.045)] px-4 py-3 text-sm leading-relaxed text-(--charcoal)">
+                      <p className="rounded-2xl bg-(--tint-1) px-4 py-3 text-sm leading-relaxed text-(--charcoal)">
                         {incident.description}
                       </p>
 
                       {incident.resolution_note ? (
-                        <div className="rounded-2xl border border-[rgba(53,107,76,0.18)] bg-[rgba(53,107,76,0.06)] px-4 py-3">
+                        <div className="rounded-2xl border border-(--success-tint) bg-(--success-tint-soft) px-4 py-3">
                           <p className="text-[0.66rem] font-semibold uppercase tracking-[0.12em] text-(--success)">
                             Resolution
                           </p>

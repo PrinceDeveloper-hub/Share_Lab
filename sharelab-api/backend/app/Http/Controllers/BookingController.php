@@ -29,14 +29,15 @@ class BookingController extends Controller
         private readonly BookingService $bookings,
         private readonly ConditionReportService $conditions,
         private readonly IncidentService $incidents,
-    ) {
-    }
+    ) {}
 
     public function index(Request $request): JsonResponse
     {
         $paginator = $this->bookings->paginateForUser($request->user(), $request->all());
 
-        return $this->paginated($paginator, BookingResource::class, 'Bookings retrieved successfully.');
+        return $this->paginated($paginator, BookingResource::class, 'Bookings retrieved successfully.', [
+            'counts' => $this->bookings->statusCounts($request->user()),
+        ]);
     }
 
     public function managerIndex(Request $request): JsonResponse

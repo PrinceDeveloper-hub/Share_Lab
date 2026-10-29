@@ -48,7 +48,7 @@ export const ResourceCard = ({ resource, className }: ResourceCardProps) => {
         {imageFailed ? (
           <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(150deg,var(--soft-beige),var(--surface))]">
             <FlaskConical
-              className="h-8 w-8 text-[rgba(81,53,34,0.28)]"
+              className="h-8 w-8 text-(--taupe)"
               aria-hidden="true"
             />
           </div>
@@ -67,7 +67,7 @@ export const ResourceCard = ({ resource, className }: ResourceCardProps) => {
         )}
 
         <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-2 p-3">
-          <span className="rounded-[0.35rem] bg-[rgba(255,252,247,0.94)] px-2 py-1 text-[0.625rem] font-semibold uppercase tracking-[0.1em] text-(--espresso)">
+          <span className="rounded-[0.35rem] bg-(--surface) px-2 py-1 text-[0.625rem] font-semibold uppercase tracking-[0.1em] text-(--charcoal)">
             {resource.category}
           </span>
           <span

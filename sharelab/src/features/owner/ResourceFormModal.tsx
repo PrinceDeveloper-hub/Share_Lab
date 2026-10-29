@@ -297,7 +297,7 @@ export const ResourceFormModal = ({
                 className={cn(
                   'inline-flex min-h-10 cursor-pointer items-center rounded-full border px-3 text-xs font-semibold transition-colors',
                   form.watch('weekdays').includes(day.value)
-                    ? 'border-(--espresso) bg-(--espresso) text-white'
+                    ? 'border-(--espresso) bg-(--espresso) text-(--accent-contrast)'
                     : 'border-(--border-subtle) bg-(--surface) text-(--muted)',
                 )}
               >
@@ -375,7 +375,7 @@ export const ResourceFormModal = ({
             id="resource-image"
             type="file"
             accept="image/jpeg,image/png,image/webp"
-            className="block w-full cursor-pointer rounded-xl border border-(--border-subtle) bg-(--surface) px-3 py-2.5 text-sm text-(--muted) file:mr-3 file:rounded-full file:border-0 file:bg-(--espresso) file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white"
+            className="block w-full cursor-pointer rounded-xl border border-(--border-subtle) bg-(--surface) px-3 py-2.5 text-sm text-(--muted) file:mr-3 file:rounded-full file:border-0 file:bg-(--espresso) file:px-4 file:py-2 file:text-sm file:font-semibold file:text-(--accent-contrast)"
             {...form.register('image')}
           />
         </Field>

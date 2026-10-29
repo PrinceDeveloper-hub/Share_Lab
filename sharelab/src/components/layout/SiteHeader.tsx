@@ -6,7 +6,6 @@ import {
   Bell,
   CalendarDays,
   ChevronDown,
-  FlaskConical,
   Gauge,
   LayoutDashboard,
   Loader2,
@@ -22,6 +21,8 @@ import { cn } from '../../lib/utils'
 import { useAuth } from '../../hooks/useAuth'
 import { useUnreadNotificationCount } from '../../hooks/useNotifications'
 import { Button } from '../ui/button'
+import { BrandMark } from './BrandMark'
+import { ThemeToggle } from './ThemeToggle'
 
 const primaryNav = [
   { to: '/', label: 'Home', exact: true },
@@ -42,6 +43,7 @@ const accountLinks = [
 const workspaceLinks = {
   owner: { to: '/owner', label: 'Owner workspace', icon: Gauge },
   manager: { to: '/manager', label: 'Manager workspace', icon: Settings2 },
+  admin: { to: '/admin', label: 'Admin console', icon: ShieldCheck },
 } as const
 
 const NavLink = ({
@@ -55,7 +57,9 @@ const NavLink = ({
   exact: boolean
   onNavigate?: () => void
 }) => {
-  const pathname = useRouterState({ select: (state) => state.location.pathname })
+  const pathname = useRouterState({
+    select: (state) => state.location.pathname,
+  })
   const active = exact
     ? pathname === to
     : pathname === to || pathname.startsWith(`${to}/`)
@@ -67,9 +71,7 @@ const NavLink = ({
       aria-current={active ? 'page' : undefined}
       className={cn(
         'relative inline-flex h-(--header-height) items-center px-1 text-[0.8125rem] font-medium tracking-[-0.005em] transition-colors',
-        active
-          ? 'text-(--charcoal)'
-          : 'text-(--muted) hover:text-(--charcoal)',
+        active ? 'text-(--charcoal)' : 'text-(--muted) hover:text-(--charcoal)',
       )}
     >
       {label}
@@ -89,7 +91,9 @@ export const SiteHeader = () => {
   const [accountOpen, setAccountOpen] = useState(false)
   const [loggingOut, setLoggingOut] = useState(false)
   const accountRef = useRef<HTMLDivElement>(null)
-  const pathname = useRouterState({ select: (state) => state.location.pathname })
+  const pathname = useRouterState({
+    select: (state) => state.location.pathname,
+  })
   const router = useRouter()
   const shouldReduceMotion = Boolean(useReducedMotion())
   const { user, status, logout } = useAuth()
@@ -166,16 +170,17 @@ export const SiteHeader = () => {
   }, [menuOpen])
 
   return (
-    <header className="sticky top-0 z-50 border-b border-(--border-subtle) bg-[rgba(248,245,239,0.88)] backdrop-blur-xl">
+    <header className="sticky top-0 z-50 border-b border-(--border-subtle) bg-(--header-bg) shadow-[0_1px_0_var(--glass-border)] backdrop-blur-xl backdrop-saturate-150">
       <div className="page-shell flex h-(--header-height) items-center justify-between gap-6">
         <Link
           to="/"
           aria-label="ShareLab — campus resource commons, home"
           className="group flex shrink-0 items-center gap-2.5 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring) focus-visible:ring-offset-4"
         >
-          <span className="flex h-9 w-9 items-center justify-center rounded-[0.6rem] bg-(--espresso) shadow-[inset_0_1px_0_rgba(255,255,255,0.16)]">
-            <FlaskConical className="h-[1.05rem] w-[1.05rem] text-(--cream)" aria-hidden="true" />
-          </span>
+          <BrandMark
+            className="h-9 w-9 rounded-[0.6rem] bg-(--surface) p-1 ring-1 ring-(--border-subtle)"
+            iconClassName="text-(--espresso)"
+          />
           <span className="flex flex-col leading-none">
             <span className="font-display text-[1.0625rem] font-bold tracking-[-0.03em] text-(--charcoal)">
               ShareLab
@@ -193,6 +198,7 @@ export const SiteHeader = () => {
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
+          <ThemeToggle />
           {status === 'loading' ? (
             <span
               aria-hidden="true"
@@ -223,12 +229,17 @@ export const SiteHeader = () => {
                   onClick={() => setAccountOpen((open) => !open)}
                   className="inline-flex h-9 items-center gap-2 rounded-md border border-(--border-subtle) bg-(--surface) pl-1 pr-2 text-[0.8125rem] font-semibold text-(--charcoal) transition-colors hover:border-(--border-strong) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring)"
                 >
-                  <span className="flex h-7 w-7 items-center justify-center rounded-[0.35rem] bg-(--espresso) text-[0.625rem] font-semibold tracking-wide text-(--cream)">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-[0.35rem] bg-(--espresso) text-[0.625rem] font-semibold tracking-wide text-(--accent-contrast)">
                     {initials}
                   </span>
-                  <span className="max-w-24 truncate">{user.name.split(' ')[0]}</span>
+                  <span className="max-w-24 truncate">
+                    {user.name.split(' ')[0]}
+                  </span>
                   <ChevronDown
-                    className={cn('h-3.5 w-3.5 text-(--muted) transition-transform', accountOpen && 'rotate-180')}
+                    className={cn(
+                      'h-3.5 w-3.5 text-(--muted) transition-transform',
+                      accountOpen && 'rotate-180',
+                    )}
                     aria-hidden="true"
                   />
                 </button>
@@ -238,17 +249,25 @@ export const SiteHeader = () => {
                     <motion.div
                       role="menu"
                       aria-label="Account navigation"
-                      initial={shouldReduceMotion ? false : { opacity: 0, y: -4 }}
+                      initial={
+                        shouldReduceMotion ? false : { opacity: 0, y: -4 }
+                      }
                       animate={{ opacity: 1, y: 0 }}
-                      exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -4 }}
+                      exit={
+                        shouldReduceMotion
+                          ? { opacity: 0 }
+                          : { opacity: 0, y: -4 }
+                      }
                       transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
-                      className="absolute right-0 top-[calc(100%+0.5rem)] w-64 overflow-hidden rounded-(--radius-md) border border-(--border-subtle) bg-(--surface) p-1.5 shadow-(--shadow-lg)"
+                      className="absolute right-0 top-[calc(100%+0.5rem)] w-64 overflow-hidden rounded-(--radius-md) border border-(--glass-border) bg-(--glass-light) p-1.5 shadow-(--shadow-lg) backdrop-blur-2xl backdrop-saturate-150"
                     >
                       <div className="border-b border-(--border-subtle) px-2.5 pb-2.5 pt-1.5">
                         <p className="truncate text-[0.8125rem] font-semibold text-(--charcoal)">
                           {user.name}
                         </p>
-                        <p className="truncate text-xs text-(--muted)">{user.email}</p>
+                        <p className="truncate text-xs text-(--muted)">
+                          {user.email}
+                        </p>
                         <span className="mt-1.5 inline-flex items-center rounded-[0.3rem] bg-(--soft-beige) px-1.5 py-0.5 text-[0.5625rem] font-semibold uppercase tracking-[0.14em] text-(--muted-strong)">
                           {user.role}
                         </span>
@@ -262,7 +281,10 @@ export const SiteHeader = () => {
                             to={link.to}
                             className="flex min-h-9 items-center gap-2.5 rounded-[0.4rem] px-2.5 text-[0.8125rem] font-medium text-(--charcoal) transition-colors hover:bg-(--surface-sunken)"
                           >
-                            <link.icon className="h-4 w-4 text-(--bronze)" aria-hidden="true" />
+                            <link.icon
+                              className="h-4 w-4 text-(--bronze)"
+                              aria-hidden="true"
+                            />
                             {link.label}
                           </Link>
                         ))}
@@ -272,7 +294,10 @@ export const SiteHeader = () => {
                             to={workspace.to}
                             className="flex min-h-9 items-center gap-2.5 rounded-[0.4rem] px-2.5 text-[0.8125rem] font-medium text-(--charcoal) transition-colors hover:bg-(--surface-sunken)"
                           >
-                            <workspace.icon className="h-4 w-4 text-(--bronze)" aria-hidden="true" />
+                            <workspace.icon
+                              className="h-4 w-4 text-(--bronze)"
+                              aria-hidden="true"
+                            />
                             {workspace.label}
                           </Link>
                         ) : null}
@@ -286,7 +311,10 @@ export const SiteHeader = () => {
                             to={link.to}
                             className="flex min-h-9 items-center gap-2.5 rounded-[0.4rem] px-2.5 text-[0.8125rem] font-medium text-(--charcoal) transition-colors hover:bg-(--surface-sunken)"
                           >
-                            <link.icon className="h-4 w-4 text-(--bronze)" aria-hidden="true" />
+                            <link.icon
+                              className="h-4 w-4 text-(--bronze)"
+                              aria-hidden="true"
+                            />
                             {link.label}
                             {link.to === '/notifications' && unread > 0 ? (
                               <span className="ml-auto rounded-[0.3rem] bg-(--badge-pending) px-1.5 py-0.5 text-[0.625rem] font-semibold text-(--warning)">
@@ -300,10 +328,13 @@ export const SiteHeader = () => {
                           role="menuitem"
                           onClick={() => void handleLogout()}
                           disabled={loggingOut}
-                          className="flex min-h-9 w-full items-center gap-2.5 rounded-[0.4rem] px-2.5 text-[0.8125rem] font-medium text-(--error) transition-colors hover:bg-[rgba(169,72,60,0.06)] disabled:opacity-60"
+                          className="flex min-h-9 w-full items-center gap-2.5 rounded-[0.4rem] px-2.5 text-[0.8125rem] font-medium text-(--error) transition-colors hover:bg-(--error-tint-soft) disabled:opacity-60"
                         >
                           {loggingOut ? (
-                            <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                            <Loader2
+                              className="h-4 w-4 animate-spin"
+                              aria-hidden="true"
+                            />
                           ) : (
                             <LogOut className="h-4 w-4" aria-hidden="true" />
                           )}
@@ -338,10 +369,16 @@ export const SiteHeader = () => {
           className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-(--border-subtle) text-(--espresso) transition-colors hover:bg-(--surface-sunken) md:hidden"
           aria-expanded={menuOpen}
           aria-controls="mobile-navigation"
-          aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+          aria-label={
+            menuOpen ? 'Close navigation menu' : 'Open navigation menu'
+          }
           onClick={() => setMenuOpen((open) => !open)}
         >
-          {menuOpen ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
+          {menuOpen ? (
+            <X className="h-5 w-5" aria-hidden="true" />
+          ) : (
+            <Menu className="h-5 w-5" aria-hidden="true" />
+          )}
         </button>
       </div>
 
@@ -351,9 +388,11 @@ export const SiteHeader = () => {
             id="mobile-navigation"
             initial={shouldReduceMotion ? false : { opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
-            exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, height: 0 }}
+            exit={
+              shouldReduceMotion ? { opacity: 0 } : { opacity: 0, height: 0 }
+            }
             transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-            className="overflow-hidden border-t border-(--border-subtle) bg-(--ivory) md:hidden"
+            className="overflow-hidden border-t border-(--border-subtle) bg-(--glass-light) backdrop-blur-2xl md:hidden"
           >
             <nav
               aria-label="Mobile"
@@ -395,10 +434,15 @@ export const SiteHeader = () => {
                         onClick={() => setMenuOpen(false)}
                         className="flex min-h-11 items-center gap-3 rounded-[0.5rem] border border-(--border-subtle) bg-(--surface) px-3 text-sm font-medium text-(--charcoal)"
                       >
-                        <link.icon className="h-4 w-4 text-(--bronze)" aria-hidden="true" />
+                        <link.icon
+                          className="h-4 w-4 text-(--bronze)"
+                          aria-hidden="true"
+                        />
                         {link.label}
                         {link.to === '/notifications' && unread > 0 ? (
-                          <span className="ml-auto text-xs font-semibold text-(--warning)">{unread}</span>
+                          <span className="ml-auto text-xs font-semibold text-(--warning)">
+                            {unread}
+                          </span>
                         ) : null}
                       </Link>
                     ))}
@@ -408,13 +452,25 @@ export const SiteHeader = () => {
                         onClick={() => setMenuOpen(false)}
                         className="flex min-h-11 items-center gap-3 rounded-[0.5rem] border border-(--border-subtle) bg-(--surface) px-3 text-sm font-medium text-(--charcoal)"
                       >
-                        <workspace.icon className="h-4 w-4 text-(--bronze)" aria-hidden="true" />
+                        <workspace.icon
+                          className="h-4 w-4 text-(--bronze)"
+                          aria-hidden="true"
+                        />
                         {workspace.label}
                       </Link>
                     ) : null}
-                    <Button variant="outline" size="lg" onClick={() => void handleLogout()} disabled={loggingOut}>
+                    <ThemeToggle withLabel />
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      onClick={() => void handleLogout()}
+                      disabled={loggingOut}
+                    >
                       {loggingOut ? (
-                        <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                        <Loader2
+                          className="h-4 w-4 animate-spin"
+                          aria-hidden="true"
+                        />
                       ) : (
                         <LogOut className="h-4 w-4" aria-hidden="true" />
                       )}
@@ -423,6 +479,7 @@ export const SiteHeader = () => {
                   </>
                 ) : (
                   <>
+                    <ThemeToggle withLabel />
                     <Button asChild size="lg">
                       <Link to="/register" onClick={() => setMenuOpen(false)}>
                         Get started

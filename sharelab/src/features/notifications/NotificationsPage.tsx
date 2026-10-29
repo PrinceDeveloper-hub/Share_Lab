@@ -1,6 +1,8 @@
+import { useState } from 'react'
 import { Bell, CheckCheck, ExternalLink, Inbox } from 'lucide-react'
 import { Link } from '@tanstack/react-router'
 import { Button } from '../../components/ui/button'
+import { Pagination } from '../../components/ui/pagination'
 import {
   EmptyState,
   ErrorNotice,
@@ -12,6 +14,7 @@ import {
   useMarkAllNotificationsRead,
   useMarkNotificationRead,
   useNotifications,
+  usePrefetchNotifications,
 } from '../../hooks/useNotifications'
 import { getApiErrorMessage } from '../../lib/api-client'
 import { cn } from '../../lib/utils'
@@ -28,11 +31,16 @@ const notificationLabel = (type: string) =>
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
     .join(' ')
 
+const PER_PAGE = 10
+
 export const NotificationsPage = () => {
-  const notificationsQuery = useNotifications()
+  const [page, setPage] = useState(1)
+  const notificationsQuery = useNotifications(page, PER_PAGE)
+  const prefetch = usePrefetchNotifications(PER_PAGE)
   const markRead = useMarkNotificationRead()
   const markAll = useMarkAllNotificationsRead()
   const notifications = notificationsQuery.data?.data ?? []
+  const meta = notificationsQuery.data?.meta
   const unread = notifications.filter((notification) => !notification.read)
   const error = markRead.error ?? markAll.error
 
@@ -58,7 +66,10 @@ export const NotificationsPage = () => {
         <div className="mt-5">
           <ErrorNotice
             title="That update could not be saved"
-            message={getApiErrorMessage(error, 'Refresh the page and try again.')}
+            message={getApiErrorMessage(
+              error,
+              'Refresh the page and try again.',
+            )}
           />
         </div>
       ) : null}
@@ -70,7 +81,8 @@ export const NotificationsPage = () => {
             <h2 className="text-sm font-semibold text-(--charcoal)">Inbox</h2>
           </div>
           <p className="text-xs font-medium text-(--muted)" aria-live="polite">
-            {unread.length} unread · {notifications.length} total
+            {unread.length} unread on this page ·{' '}
+            {meta?.total ?? notifications.length} total
           </p>
         </div>
 
@@ -101,7 +113,7 @@ export const NotificationsPage = () => {
                 key={notification.id}
                 className={cn(
                   'flex flex-col gap-3 px-5 py-4 sm:flex-row sm:items-start sm:justify-between',
-                  !notification.read && 'bg-[rgba(154,107,34,0.035)]',
+                  !notification.read && 'bg-(--warning-tint-soft)',
                 )}
               >
                 <div className="min-w-0">
@@ -115,7 +127,7 @@ export const NotificationsPage = () => {
                       {notificationLabel(notification.type)}
                     </p>
                     {!notification.read ? (
-                      <span className="rounded-full bg-[rgba(154,107,34,0.12)] px-2 py-0.5 text-[0.62rem] font-semibold text-(--warning)">
+                      <span className="rounded-full bg-(--warning-tint) px-2 py-0.5 text-[0.62rem] font-semibold text-(--warning)">
                         New
                       </span>
                     ) : null}
@@ -135,11 +147,15 @@ export const NotificationsPage = () => {
                         to="/my-bookings/$bookingId"
                         params={{ bookingId: String(notification.booking_id) }}
                         onClick={() => {
-                          if (!notification.read) markRead.mutate(notification.id)
+                          if (!notification.read)
+                            markRead.mutate(notification.id)
                         }}
                       >
                         Open booking
-                        <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                        <ExternalLink
+                          className="h-3.5 w-3.5"
+                          aria-hidden="true"
+                        />
                       </Link>
                     </Button>
                   ) : null}
@@ -159,6 +175,19 @@ export const NotificationsPage = () => {
           </ul>
         )}
       </SectionCard>
+
+      {notificationsQuery.data ? (
+        <Pagination
+          label="Notification pagination"
+          page={page}
+          lastPage={meta?.last_page ?? 1}
+          total={meta?.total}
+          perPage={meta?.per_page ?? PER_PAGE}
+          isFetching={notificationsQuery.isFetching}
+          onPageChange={setPage}
+          onPrefetch={(nextPage) => void prefetch(nextPage)}
+        />
+      ) : null}
     </div>
   )
 }

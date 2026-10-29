@@ -423,7 +423,7 @@ export const HeroCarousel = ({ slides, className }: HeroCarouselProps) => {
                     'block h-[3px] rounded-full transition-[width,background-color] duration-300',
                     isActive
                       ? 'w-8 bg-(--espresso)'
-                      : 'w-4 bg-[rgba(81,53,34,0.22)] group-hover:bg-[rgba(81,53,34,0.4)]',
+                      : 'w-4 bg-(--tint-3) group-hover:bg-[rgba(81,53,34,0.4)]',
                   )}
                 />
               </button>

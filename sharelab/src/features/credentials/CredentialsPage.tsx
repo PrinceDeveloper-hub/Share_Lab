@@ -62,9 +62,9 @@ const reviewSchema = z.object({
 type ReviewValues = z.infer<typeof reviewSchema>
 
 const statusTone = {
-  pending: 'bg-[rgba(154,107,34,0.12)] text-(--warning)',
-  verified: 'bg-[rgba(53,107,76,0.12)] text-(--success)',
-  rejected: 'bg-[rgba(169,72,60,0.1)] text-(--error)',
+  pending: 'bg-(--warning-tint) text-(--warning)',
+  verified: 'bg-(--success-tint) text-(--success)',
+  rejected: 'bg-(--error-tint) text-(--error)',
 } as const
 
 const CredentialStatusPill = ({ status }: { status: Credential['status'] }) => (
@@ -343,7 +343,7 @@ export const CredentialsPage = ({ initialTab = 'mine' }: CredentialsPageProps) =
                         <CredentialStatusPill status={credential.status} />
                       </div>
                       {credential.review_note ? (
-                        <p className="mt-3 rounded-xl bg-[rgba(81,53,34,0.045)] px-3 py-2 text-xs leading-relaxed text-(--muted)">
+                        <p className="mt-3 rounded-xl bg-(--tint-1) px-3 py-2 text-xs leading-relaxed text-(--muted)">
                           <span className="font-semibold text-(--charcoal)">Review note:</span>{' '}
                           {credential.review_note}
                         </p>
@@ -360,20 +360,20 @@ export const CredentialsPage = ({ initialTab = 'mine' }: CredentialsPageProps) =
               <h2 className="text-sm font-semibold text-(--charcoal)">How review works</h2>
               <ol className="mt-3 space-y-3 text-sm leading-relaxed text-(--muted)">
                 <li className="flex gap-2.5">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[rgba(81,53,34,0.07)] text-[0.68rem] font-bold text-(--espresso)">1</span>
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-(--tint-2) text-[0.68rem] font-bold text-(--espresso)">1</span>
                   Attach a certificate, card, or signed evidence file.
                 </li>
                 <li className="flex gap-2.5">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[rgba(81,53,34,0.07)] text-[0.68rem] font-bold text-(--espresso)">2</span>
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-(--tint-2) text-[0.68rem] font-bold text-(--espresso)">2</span>
                   A manager for an assigned resource, or its owner, reviews the file.
                 </li>
                 <li className="flex gap-2.5">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[rgba(81,53,34,0.07)] text-[0.68rem] font-bold text-(--espresso)">3</span>
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-(--tint-2) text-[0.68rem] font-bold text-(--espresso)">3</span>
                   Verification unlocks eligibility. Rejections always include a reason.
                 </li>
               </ol>
             </SectionCard>
-            <div className="rounded-(--radius-md) border border-[rgba(154,107,34,0.18)] bg-[rgba(154,107,34,0.06)] p-4 text-xs leading-relaxed text-(--muted)">
+            <div className="rounded-(--radius-md) border border-(--warning-tint) bg-(--warning-tint-soft) p-4 text-xs leading-relaxed text-(--muted)">
               <p className="font-semibold text-(--warning)">Privacy</p>
               <p className="mt-1">
                 Uploaded files are stored privately. Download links are short-lived and signed, so
@@ -499,7 +499,7 @@ export const CredentialsPage = ({ initialTab = 'mine' }: CredentialsPageProps) =
               id="credential-file"
               type="file"
               accept=".pdf,image/jpeg,image/png,image/webp"
-              className="block w-full cursor-pointer rounded-xl border border-(--border-subtle) bg-(--surface) px-3 py-2.5 text-sm text-(--muted) file:mr-3 file:rounded-full file:border-0 file:bg-(--espresso) file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white"
+              className="block w-full cursor-pointer rounded-xl border border-(--border-subtle) bg-(--surface) px-3 py-2.5 text-sm text-(--muted) file:mr-3 file:rounded-full file:border-0 file:bg-(--espresso) file:px-4 file:py-2 file:text-sm file:font-semibold file:text-(--accent-contrast)"
               {...submitForm.register('file')}
             />
           </Field>

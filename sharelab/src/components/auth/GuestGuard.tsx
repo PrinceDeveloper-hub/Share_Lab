@@ -14,7 +14,7 @@ const SessionCheck = () => (
     <div
       role="status"
       aria-live="polite"
-      className="flex items-center gap-3 rounded-full border border-[rgba(81,53,34,0.14)] bg-[rgba(255,252,247,0.78)] px-5 py-3 text-sm font-medium text-(--muted) shadow-[0_18px_50px_-32px_rgba(81,53,34,0.5)] backdrop-blur-xl"
+      className="flex items-center gap-3 rounded-full border border-(--tint-3) bg-(--surface-translucent) px-5 py-3 text-sm font-medium text-(--muted) shadow-[0_18px_50px_-32px_rgba(81,53,34,0.5)] backdrop-blur-xl"
     >
       <Loader2
         className="h-4 w-4 animate-spin text-(--espresso)"

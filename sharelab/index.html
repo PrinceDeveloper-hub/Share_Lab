@@ -10,6 +10,22 @@
     <meta name="theme-color" content="#4B2F1F" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>ShareLab — Campus Commons</title>
+    <script>
+      // Resolve the saved theme before first paint so dark mode never flashes.
+      ;(function () {
+        try {
+          var stored = localStorage.getItem('sharelab-theme')
+          var dark =
+            stored === 'dark' ||
+            ((!stored || stored === 'system') &&
+              window.matchMedia('(prefers-color-scheme: dark)').matches)
+          document.documentElement.dataset.theme = dark ? 'dark' : 'light'
+          document.documentElement.style.colorScheme = dark ? 'dark' : 'light'
+        } catch (error) {
+          document.documentElement.dataset.theme = 'light'
+        }
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -1,17 +1,198 @@
-# Project knowledge
+# AGENTS.md — ShareLab Hackathon Repository
 
-This file gives Freebuff context about your project: goals, commands, conventions, and gotchas.
+This file provides compact, high-signal guidance for OpenCode sessions. Every line answers: "Would an agent likely miss this without help?"
 
-## Quickstart
-- Setup:
-- Dev:
-- Test:
+## Commands
 
-## Architecture
-- Key directories:
-- Data flow:
+### Frontend (`cd sharelab`)
 
-## Conventions
-- Formatting/linting:
-- Patterns to follow:
-- Things to avoid:
+| Action | Command |
+|---|---|
+| Start dev server | `pnpm dev` — Vite on port 3000; proxies `/api` and `/storage` to `http://localhost:8000` |
+| Build for production | `pnpm build` |
+| Preview build | `pnpm preview` |
+| Lint | `pnpm lint` (eslint) |
+| Check formatting | `pnpm check` (prettier --check) |
+| Format code | `pnpm format` (prettier --write . && eslint --fix) |
+| Generate route tree | `pnpm generate-routes` (`tsr generate`); **required after adding/renaming route files** |
+| Run smoke test | `pnpm smoke` |
+
+**No frontend test runner is configured.** Playwright is a devDependency but there is no test script.
+
+### Backend (`cd sharelab-api/backend`)
+
+| Action | Command |
+|---|---|
+| Install dependencies | `composer install` |
+| Create env file | `cp .env.example .env` (or `copy .env.example .env` on Windows CMD) |
+| Generate app key | `php artisan key:generate` |
+| Run migrations & seed | `php artisan migrate --seed` (MariaDB database `sharelab`) |
+| Start dev server | `php artisan serve` — API at `http://127.0.0.1:8000/api` |
+| Run tests | `php artisan test` — uses DB `sharelab_test` (real MariaDB, not sqlite) |
+| Check PHP formatting | `vendor/bin/pint --parallel` (or `--test` to check only) |
+| Full dev environment | `composer dev` runs serve + queue:listen + pail + vite together |
+
+### Root-level (monorepo)
+
+| Action | Command |
+|---|---|
+| CI check (lint → typecheck → test) | `pnpm --filter sharelab-api ci:check` (from root) or `npm run ci:check` in sharelab-api |
+| Full dev stack | See `DEPLOYMENT.md` — `docker compose up -d --build` starts API + web + db |
+
+## Architecture & Package Boundaries
+
+- **Monorepo structure:** `sharelab/` (React 19 + Vite 8 + TanStack Router/Query, Tailwind v4) + `sharelab-api/` (Laravel 11 JSON API)
+- **Frontend → Backend:** Vite dev server proxies `/api` and `/storage` to `http://localhost:8000`; production uses absolute `VITE_API_BASE_URL`
+- **Auth:** JWT in HttpOnly cookies (`sharelab_access`, `sharelab_refresh`); frontend uses `withCredentials` and silently retries once via `POST /api/refresh` on 401, then emits `sharelab:auth-expired`
+- **API envelope:** `{ data, message, errors, meta }`; paginated lists add `page`, `per_page`, `total`, `last_page` in `meta`
+- **Routes:** File-based routes via TanStack Router. Run `pnpm generate-routes` after adding/renaming a route file in `sharelab/src/routes/`. The route tree lives in `sharelab/src/routeTree.gen.ts`.
+- **Do not edit** `sharelab-api/` root for product work — it is a Laravel starter-kit scaffold (not the ShareLab API). Product code lives in `sharelab-api/backend/`
+- **Dashboard entry point:** `sharelab/src/features/dashboard/Dashboard.tsx` — the authenticated dashboard
+
+## Design Tokens (from `sharelab/src/styles/tokens.css`)
+
+The repo uses a warm editorial campus palette. Key CSS custom properties:
+
+| Variable | Value | Purpose |
+|---|---|---|
+| `--ivory` | `#f8f5ef` | Page background |
+| `--cream` | `#fffcf7` | Cards, elevated surfaces |
+| `--surface` | `#fffcf7` | Base surface |
+| `--soft-beige` | `#efe6d9` | Secondary background |
+| `--taupe` | `#a78260` | Muted bronze |
+| `--bronze` | `#a78260` | Bronze detail |
+| `--espresso` | `#513522` | Primary accent |
+| `--espresso-hover` | `#452c1c` | Hover state |
+| `--deep-brown` | `#221812` | Footer, dark bands |
+| `--charcoal` | `#292521` | Primary text |
+| `--muted` | `#71685f` | Secondary text |
+| `--muted-strong` | `#544c44` | Muted-strong |
+| `--success` | `#356b4c` | Sage green |
+| `--warning` | `#9a6b22` | Warm amber |
+| `--error` | `#a9483c` | Terracotta |
+
+Typography: `--font-sans: Inter`, `--font-display: Manrope`, type scales from `--text-xs` (0.75rem) to `--text-6xl` (3.75rem). Layout: `--gutter: clamp(1.25rem, 4vw, 2.5rem)`, `--radius-md: 0.875rem`, `--radius-lg: 1.25rem`.
+
+**Do not invent new color tokens** — the design system is already defined. Reuse existing `--espresso`, `--cream`, `--taupe`, etc.
+
+## Gotchas & Quirks
+
+| Topic | Detail |
+|---|---|
+| Windows case collision | `use-auth.ts` and `useAuth.ts` both exist. Import `useAuth.ts` (the real one). |
+| Env files | `.env` is gitignored. Ship `DB_PASSWORD=` blank in `.env.example`. Never commit real `.env` values. |
+| DB configuration | Belongs only in `sharelab-api/backend/.env`. MariaDB must have `sharelab` (and `sharelab_test` for tests) running. |
+| Generated route tree | `routeTree.gen.ts` lives in `sharelab/src/`. Regenerated by `pnpm generate-routes`. Do not edit manually. |
+| Frontend test runner | No test script is configured. If adding tests, configure Playwright or equivalent in `sharelab/package.json`. |
+| PHP formatting | Uses `pint` (Laravel Pint). Run `vendor/bin/pint --parallel` on the backend; `--test` checks only. |
+| Type checking | Frontend: `pnpm types:check` (`tsc --noEmit`). Full CI runs both frontend and backend checks. |
+| Test database | PHPUnit uses MariaDB `sharelab_test` (real DB, not sqlite). Ensure it's running before running `php artisan test`. |
+| Deployment | Docker Compose stack at project root: `web` (nginx), `api` (PHP-FPM), `db` (MariaDB). Same-origin setup keeps JWT cookies first-party. |
+| Split deployment | If hosting frontend separately (Vercel/Netlify), build with `VITE_API_BASE_URL=https://api.example.com/api pnpm build` and set `CORS_ALLOWED_ORIGINS` on the API. |
+| Seeder | 5 demo accounts (`user1@sharelab.test`–`admin@sharelab.test`, password `password`), 6 resources. Reseeding purges older `user@user.com` style accounts. |
+| Frontend build artifacts | `sharelab/dist`, `sharelab/node_modules`, `sharelab/.pnpm-store` are generated. Do not commit. |
+| Backend build artifacts | `sharelab-api/public/build`, `sharelab-api/vendor`, `sharelab-api/.phpunit.result.cache` are generated. Do not commit. |
+| Authentication | JWT in HttpOnly cookies. Frontend uses `withCredentials`. Do not assume Sanctum tokens are used. |
+| Skip-reduced-motion | Several components respect `useReducedMotion` from `framer-motion`. Always check before adding motion. |
+| API base URL | `VITE_API_BASE_URL` env var, defaults to `/api`. Set it when the frontend is not co-located with the backend. |
+
+## Workflow Order
+
+When making changes that touch both frontend and backend:
+
+1. **Backend first** — add API routes, controllers, and migrations; run `php artisan migrate --seed`
+2. **Frontend second** — add/components/fix pages; run `pnpm generate-routes` if routes changed
+3. **Lint + typecheck** — `pnpm lint && pnpm check && pnpm types:check` (frontend) + `vendor/bin/pint --parallel` (backend)
+4. **Run tests** — `php artisan test` (backend); no frontend test runner configured
+
+## Role-Aware Dashboard
+
+Adapt dashboard navigation and available actions to the user's existing role (from `user.role`):
+
+**Student / Researcher**
+- Personal booking overview.
+- Upcoming sessions.
+- Credential status.
+- Recommended resources.
+- Notifications and activity.
+- Incident reporting.
+
+**Resource Owner**
+- My listed resources.
+- Resource availability.
+- Incoming booking requests where authorized.
+- Resource usage and recent bookings.
+- Resource maintenance or incident information where supported.
+
+**Manager**
+- Booking approval queue where authorized.
+- Credential review queue.
+- Resource oversight.
+- Incident resolution.
+- Reports and audit history.
+
+**Administrator**
+- Platform overview.
+- User and role management.
+- Resource management.
+- Booking oversight.
+- Incident management.
+- Audit logs and settings.
+
+Use the existing authenticated role information. **Do not trust frontend role checks as a substitute for backend authorization.** Do not show administrative information to regular users.
+
+Avoid creating four completely separate visual systems. Reuse the same design system and shared components.
+
+## What to Avoid
+
+- Do not guess `.env` values or API endpoints — always check the actual `.env.example` and running server
+- Do not edit `sharelab-api/` root `composer.json`, `package.json`, or `vite.config.ts` for product work — those are the Laravel starter-kit scaffold
+- Do not commit `.env`, `node_modules`, `vendor`, or generated build output
+- Do not skip `pnpm generate-routes` after route file changes — the frontend will fail to resolve paths
+- Do not assume Sanctum tokens are used — this repo uses custom JWT in HttpOnly cookies
+- Do not run `php artisan test` without MariaDB `sharelab_test` available
+- Do not fabricate statistics, bookings, notifications, or user information in the UI
+- Do not use remote placeholder URLs for resource images — the repo uses local bundled images only
+- Do not change backend code, database schemas, or API contracts as part of frontend-only tasks
+
+## Component Architecture
+
+Use existing shadcn/ui conventions for:
+- **Cards** — `bg-(--surface) border border-(--border-subtle) rounded-(--radius-lg) p-6 shadow-soft`
+- **Buttons** — `button` component with variants `default`, `secondary`, `outline`, `ghost`, `inverse`, `danger`. Uses `--espresso`, `--cream`, `--border-subtle` tokens.
+- **Dropdown menus** — Radix-based, glass-styled, respects `prefers-reduced-motion`
+- **Tabs** — Use where tabular navigation makes sense
+- **Dialogs and confirmation modals** — `Modal` component with `onClose`, `disabled` during mutation
+- **Tooltips** — Radix-based, coordinated with card borders
+- **Inputs and forms** — `useForm` from React Hook Form + Zod validation
+- **Tables** — Horizontal scrolling on mobile, card layout as fallback
+- **Skeletons** — `LoadingRows`, `ResourceCardSkeleton`, etc.
+- **Empty states** — Illustrated with Lucide icons, descriptive text, and CTAs
+- **Popovers** — For overflow menu items
+- **Toasts** — The project uses `sonner` for notifications
+
+Use **Lucide icons** consistently (import from `lucide-react`). Do not mix icon sets.
+
+## Responsive Design
+
+- **Desktop:** Spacious, balanced layout; two-column dashboard sections; consistent content widths.
+- **Tablet:** Adapt grid columns and spacing; preserve readable content widths; prevent overcrowding.
+- **Mobile:** Stack content vertically; use compact statistics cards; ensure menus and dialogs fit viewport; keep actions touch-friendly; prevent horizontal overflow.
+- **Tables on mobile:** Use horizontal scrolling or transform into card layouts.
+
+Maintain semantic HTML, keyboard navigation, visible focus indicators, accessible status descriptions, and sufficient color contrast.
+
+## Performance & Data Integrity
+
+- **Inspect existing hooks, queries, API clients, types, and route definitions** before editing. Reuse existing data sources.
+- **Avoid unnecessary refetching and duplicate requests.** Query keys are shared across components (`['bookings']`, `['resources', filters]`, `['notifications', 'list']`).
+- **Keep loading states stable and prevent layout shifts.** Use skeleton loaders during data fetching.
+- **Do not introduce fake statistics, mock bookings, fabricated notifications, or invented user information** into production UI.
+- **Use mock data only in an explicitly isolated development or preview environment.**
+- **Never expose private information** through dashboard widgets.
+- **Preserve the application's existing error-handling patterns.**
+- **Do not change backend code, database schemas, or API contracts.**
+
+## Final Objective
+
+Build a complete, polished ShareLab dashboard that combines the existing warm beige and espresso-brown identity with professional typography, thoughtful information architecture, useful campus resource management features, responsive shadcn/ui components, and refined Framer Motion interactions. Make it feel like a real, production-quality campus platform—not a generic template or a collection of decorative cards.

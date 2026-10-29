@@ -49,11 +49,11 @@ export const AuthField = ({
           aria-invalid={error ? 'true' : undefined}
           aria-describedby={describedBy || undefined}
           className={cn(
-            'h-11 w-full rounded-[0.5rem] border bg-(--surface) px-3.5 text-sm text-(--charcoal) outline-none transition-colors placeholder:text-[rgba(113,104,95,0.66)] hover:border-(--border-strong) focus:border-(--espresso) focus:ring-2 focus:ring-[rgba(81,53,34,0.14)]',
+            'h-11 w-full rounded-[0.5rem] border bg-(--surface) px-3.5 text-sm text-(--charcoal) outline-none transition-colors placeholder:text-(--muted) hover:border-(--border-strong) focus:border-(--espresso) focus:ring-2 focus:ring-(--tint-3)',
             Icon ? 'pl-11' : '',
             trailing ? 'pr-12' : '',
             error
-              ? 'border-[rgba(169,72,60,0.55)] bg-[rgba(169,72,60,0.035)]'
+              ? 'border-[rgba(169,72,60,0.55)] bg-(--error-tint-soft)'
               : 'border-(--border-subtle)',
             className,
           )}

@@ -143,7 +143,7 @@ export const HowItWorksPage = () => {
 
   return (
     <SiteLayout>
-      <section className="relative overflow-hidden border-b border-(--border-subtle) bg-[rgba(255,252,247,0.46)]">
+      <section className="relative overflow-hidden border-b border-(--border-subtle) bg-(--surface-band)">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute -left-40 -top-32 h-96 w-96 rounded-full bg-[radial-gradient(circle,rgba(198,165,138,0.22),transparent_70%)] blur-3xl"
@@ -189,7 +189,7 @@ export const HowItWorksPage = () => {
               </div>
             </div>
 
-            <div className="relative overflow-hidden rounded-(--radius-panel) border border-(--border-subtle) bg-(--cream) p-6 shadow-(--shadow-md) sm:p-8">
+            <div className="relative overflow-hidden rounded-(--radius-panel) border border-(--border-subtle) bg-(--surface) p-6 shadow-(--shadow-md) sm:p-8">
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <p className="text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-(--muted)">
@@ -199,7 +199,7 @@ export const HowItWorksPage = () => {
                     Six checkpoints
                   </p>
                 </div>
-                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-(--espresso) text-(--cream)">
+                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-(--espresso) text-(--accent-contrast)">
                   <CheckCircle2 className="h-5 w-5" aria-hidden="true" />
                 </span>
               </div>
@@ -238,20 +238,20 @@ export const HowItWorksPage = () => {
               className="grid grid-cols-[2.75rem_minmax(0,1fr)] gap-4 sm:grid-cols-[4rem_minmax(0,1fr)] sm:gap-6"
             >
               <div className="relative flex justify-center">
-                <span className="relative z-10 flex h-11 w-11 items-center justify-center rounded-full border border-[rgba(81,53,34,0.16)] bg-(--cream) font-display text-sm font-bold text-(--espresso) shadow-(--shadow-xs) sm:h-14 sm:w-14 sm:text-base">
+                <span className="relative z-10 flex h-11 w-11 items-center justify-center rounded-full border border-(--tint-3) bg-(--surface) font-display text-sm font-bold text-(--espresso) shadow-(--shadow-xs) sm:h-14 sm:w-14 sm:text-base">
                   {step.number}
                 </span>
                 {index < steps.length - 1 ? (
                   <span
                     aria-hidden="true"
-                    className="absolute -bottom-4 top-11 w-px bg-[rgba(81,53,34,0.18)] sm:-bottom-6 sm:top-14"
+                    className="absolute -bottom-4 top-11 w-px bg-(--tint-3) sm:-bottom-6 sm:top-14"
                   />
                 ) : null}
               </div>
 
               <div className="rounded-(--radius-lg) border border-(--border-subtle) bg-(--surface) p-5 shadow-(--shadow-xs) sm:p-6">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[rgba(81,53,34,0.075)]">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-(--tint-2)">
                     <step.icon className="h-4 w-4 text-(--espresso)" aria-hidden="true" />
                   </span>
                   <span className="text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-(--muted)">
@@ -264,7 +264,7 @@ export const HowItWorksPage = () => {
                 <p className="mt-2 text-sm leading-relaxed text-(--muted) sm:text-base">
                   {step.description}
                 </p>
-                <p className="mt-3 rounded-xl bg-[rgba(233,217,198,0.32)] px-3.5 py-2.5 text-xs leading-relaxed text-(--muted) sm:text-sm">
+                <p className="mt-3 rounded-xl bg-(--beige-tint-2) px-3.5 py-2.5 text-xs leading-relaxed text-(--muted) sm:text-sm">
                   {step.detail}
                 </p>
               </div>
@@ -275,7 +275,7 @@ export const HowItWorksPage = () => {
 
       <section
         aria-labelledby="important-notes"
-        className="border-y border-(--border-subtle) bg-[rgba(255,249,241,0.62)] py-16 sm:py-20"
+        className="border-y border-(--border-subtle) bg-(--surface-band) py-16 sm:py-20"
       >
         <div className="page-shell">
           <SectionHeading
@@ -289,9 +289,9 @@ export const HowItWorksPage = () => {
             {notes.map((note) => (
               <div
                 key={note.title}
-                className="flex h-full flex-col gap-4 rounded-(--radius-lg) border border-(--border-subtle) bg-(--cream) p-6"
+                className="flex h-full flex-col gap-4 rounded-(--radius-lg) border border-(--border-subtle) bg-(--surface) p-6"
               >
-                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[rgba(81,53,34,0.075)]">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-(--tint-2)">
                   <note.icon className="h-5 w-5 text-(--espresso)" aria-hidden="true" />
                 </span>
                 <div>
@@ -304,7 +304,7 @@ export const HowItWorksPage = () => {
             ))}
           </div>
 
-          <div className="mt-5 rounded-(--radius-lg) border border-[rgba(154,107,34,0.22)] bg-[rgba(154,107,34,0.06)] p-5 text-sm leading-relaxed text-(--muted)">
+          <div className="mt-5 rounded-(--radius-lg) border border-(--warning-tint) bg-(--warning-tint-soft) p-5 text-sm leading-relaxed text-(--muted)">
             <strong className="font-semibold text-(--charcoal)">A note on availability:</strong>{' '}
             a listing’s “Active” status means it is published — it does not guarantee an open slot.
             The server evaluates conflicts, eligibility, duration, and weekly caps when a request is
@@ -335,7 +335,7 @@ export const HowItWorksPage = () => {
             {faqs.map((faq) => (
               <details
                 key={faq.question}
-                className="group rounded-2xl border border-(--border-subtle) bg-(--surface) open:bg-(--cream)"
+                className="group rounded-2xl border border-(--border-subtle) bg-(--surface) open:bg-(--surface)"
               >
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 [&::-webkit-details-marker]:hidden">
                   <span className="text-sm font-semibold text-(--charcoal) sm:text-base">
@@ -356,7 +356,7 @@ export const HowItWorksPage = () => {
       </section>
 
       <section className="page-shell pb-20">
-        <div className="flex flex-col items-start justify-between gap-6 rounded-(--radius-panel) border border-(--border-subtle) bg-[rgba(233,217,198,0.34)] px-6 py-8 sm:flex-row sm:items-center sm:px-8">
+        <div className="flex flex-col items-start justify-between gap-6 rounded-(--radius-panel) border border-(--border-subtle) bg-(--beige-tint-2) px-6 py-8 sm:flex-row sm:items-center sm:px-8">
           <div>
             <h2 className="text-2xl font-semibold tracking-tight text-(--charcoal) sm:text-3xl">
               Ready to start with a real listing?

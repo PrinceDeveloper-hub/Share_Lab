@@ -25,11 +25,11 @@ import type { Booking, CreateBookingParams } from '../../lib/booking-service'
 import { getResourceImage } from '../../lib/resources'
 
 const statusStyles: Record<Booking['status'], string> = {
-  pending: 'bg-[rgba(154,107,34,0.14)] text-(--warning)',
-  waitlisted: 'bg-[rgba(154,107,34,0.14)] text-(--warning)',
-  approved: 'bg-[rgba(53,107,76,0.14)] text-(--success)',
-  rejected: 'bg-[rgba(169,72,60,0.12)] text-(--error)',
-  checked_in: 'bg-[rgba(81,53,34,0.12)] text-(--espresso)',
+  pending: 'bg-(--warning-tint) text-(--warning)',
+  waitlisted: 'bg-(--warning-tint) text-(--warning)',
+  approved: 'bg-(--success-tint) text-(--success)',
+  rejected: 'bg-(--error-tint) text-(--error)',
+  checked_in: 'bg-(--tint-3) text-(--espresso)',
   returned: 'bg-[rgba(130,119,109,0.12)] text-(--muted)',
   cancelled: 'bg-[rgba(130,119,109,0.1)] text-(--muted)',
 }
@@ -236,7 +236,7 @@ export const ResourceDetail = ({ resourceId }: ResourceDetailProps) => {
     return (
       <SiteLayout>
         <div className="page-shell py-16">
-          <div className="mx-auto max-w-lg rounded-3xl border border-[rgba(169,72,60,0.25)] bg-[rgba(169,72,60,0.05)] p-8 text-center">
+          <div className="mx-auto max-w-lg rounded-3xl border border-(--error-tint) bg-(--error-tint-soft) p-8 text-center">
             <AlertTriangle className="mx-auto h-8 w-8 text-(--error)" aria-hidden="true" />
             <h1 className="mt-4 text-2xl font-semibold text-(--charcoal)">
               That resource link is not valid
@@ -285,7 +285,7 @@ export const ResourceDetail = ({ resourceId }: ResourceDetailProps) => {
             role="alert"
             className="mx-auto max-w-xl rounded-(--radius-lg) border border-(--border-subtle) bg-(--surface) p-8"
           >
-            <span className="flex h-10 w-10 items-center justify-center rounded-[0.5rem] bg-[rgba(169,72,60,0.1)]">
+            <span className="flex h-10 w-10 items-center justify-center rounded-[0.5rem] bg-(--error-tint)">
               <AlertTriangle className="h-5 w-5 text-(--error)" aria-hidden="true" />
             </span>
             <h1 className="mt-4 font-display text-[1.5rem] font-semibold tracking-[-0.02em] text-(--charcoal)">
@@ -350,7 +350,7 @@ export const ResourceDetail = ({ resourceId }: ResourceDetailProps) => {
 
         <Link
           to="/resources"
-          className="mb-6 inline-flex items-center gap-1.5 text-sm font-semibold text-(--espresso) transition-colors hover:text-(--deep-brown)"
+          className="mb-6 inline-flex items-center gap-1.5 text-sm font-semibold text-(--espresso) transition-colors hover:text-(--espresso-hover)"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           All resources
@@ -361,7 +361,7 @@ export const ResourceDetail = ({ resourceId }: ResourceDetailProps) => {
             <div className="relative overflow-hidden rounded-(--radius-lg) border border-(--border-subtle) bg-(--surface-sunken) shadow-(--shadow-sm)">
               {imageFailed ? (
                 <div className="flex aspect-[16/10] items-center justify-center bg-[linear-gradient(145deg,var(--soft-beige),var(--cream))]">
-                  <FlaskConical className="h-12 w-12 text-[rgba(81,53,34,0.3)]" aria-hidden="true" />
+                  <FlaskConical className="h-12 w-12 text-(--tint-3)" aria-hidden="true" />
                 </div>
               ) : (
                 <img
@@ -377,7 +377,7 @@ export const ResourceDetail = ({ resourceId }: ResourceDetailProps) => {
                 />
               )}
               <div className="absolute left-4 top-4 flex flex-wrap gap-2">
-                <span className="rounded-[0.35rem] bg-[rgba(255,252,247,0.94)] px-2.5 py-1 text-[0.625rem] font-semibold uppercase tracking-[0.1em] text-(--espresso)">
+                <span className="rounded-[0.35rem] bg-(--surface) px-2.5 py-1 text-[0.625rem] font-semibold uppercase tracking-[0.1em] text-(--charcoal)">
                   {resource.category}
                 </span>
                 <span
@@ -447,10 +447,10 @@ export const ResourceDetail = ({ resourceId }: ResourceDetailProps) => {
 
             <section
               aria-labelledby="resource-requirements"
-              className="mt-6 rounded-(--radius-lg) border border-(--border-subtle) bg-[rgba(154,107,34,0.05)] p-5 sm:p-6"
+              className="mt-6 rounded-(--radius-lg) border border-(--border-subtle) bg-(--warning-tint-soft) p-5 sm:p-6"
             >
               <div className="flex items-start gap-3">
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[rgba(154,107,34,0.14)]">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-(--warning-tint)">
                   <ShieldCheck className="h-4 w-4 text-(--warning)" aria-hidden="true" />
                 </span>
                 <div>
@@ -480,7 +480,7 @@ export const ResourceDetail = ({ resourceId }: ResourceDetailProps) => {
                         return (
                           <li
                             key={requirement.id}
-                            className="flex items-center justify-between gap-3 rounded-xl border border-[rgba(154,107,34,0.14)] bg-[rgba(255,252,247,0.4)] px-3 py-2"
+                            className="flex items-center justify-between gap-3 rounded-xl border border-(--warning-tint) bg-(--surface-muted) px-3 py-2"
                           >
                             <span className="text-xs font-medium text-(--charcoal)">
                               {requirement.name}
@@ -488,8 +488,8 @@ export const ResourceDetail = ({ resourceId }: ResourceDetailProps) => {
                             <span
                               className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[0.62rem] font-semibold ${
                                 met
-                                  ? 'bg-[rgba(53,107,76,0.12)] text-(--success)'
-                                  : 'bg-[rgba(154,107,34,0.12)] text-(--warning)'
+                                  ? 'bg-(--success-tint) text-(--success)'
+                                  : 'bg-(--warning-tint) text-(--warning)'
                               }`}
                             >
                               {met ? (
@@ -512,7 +512,7 @@ export const ResourceDetail = ({ resourceId }: ResourceDetailProps) => {
                   {!eligibility?.qualifies && eligibility?.missing.length ? (
                     <Link
                       to="/credentials"
-                      className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-(--espresso) underline decoration-[rgba(81,53,34,0.25)] underline-offset-4"
+                      className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-(--espresso) underline decoration-(--tint-3) underline-offset-4"
                     >
                       Submit the missing credentials
                       <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -527,7 +527,7 @@ export const ResourceDetail = ({ resourceId }: ResourceDetailProps) => {
                 aria-labelledby="resource-owner"
                 className="mt-6 flex items-center gap-3 rounded-2xl border border-(--border-subtle) bg-(--surface) px-4 py-3"
               >
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[rgba(81,53,34,0.07)]">
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-(--tint-2)">
                   <UserRound className="h-4 w-4 text-(--espresso)" aria-hidden="true" />
                 </span>
                 <div>
@@ -577,7 +577,7 @@ export const ResourceDetail = ({ resourceId }: ResourceDetailProps) => {
                   </div>
                 ) : bookingMutation.isSuccess && bookingResult ? (
                   <div>
-                    <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[rgba(53,107,76,0.12)]">
+                    <span className="flex h-11 w-11 items-center justify-center rounded-full bg-(--success-tint)">
                       <CheckCircle2 className="h-5 w-5 text-(--success)" aria-hidden="true" />
                     </span>
                     <h3 className="mt-3 text-lg font-semibold text-(--charcoal)">
@@ -631,8 +631,8 @@ export const ResourceDetail = ({ resourceId }: ResourceDetailProps) => {
                       <div
                         className={`mb-4 rounded-xl px-3.5 py-3 text-xs leading-relaxed ${
                           eligibility.qualifies
-                            ? 'bg-[rgba(53,107,76,0.1)] text-(--success)'
-                            : 'bg-[rgba(154,107,34,0.1)] text-(--warning)'
+                            ? 'bg-(--success-tint) text-(--success)'
+                            : 'bg-(--warning-tint) text-(--warning)'
                         }`}
                       >
                         <p className="font-semibold">
@@ -643,7 +643,7 @@ export const ResourceDetail = ({ resourceId }: ResourceDetailProps) => {
                         <p className="mt-1 opacity-90">{eligibility.message}</p>
                       </div>
                     ) : (
-                      <div className="mb-4 flex items-start gap-2 rounded-xl bg-[rgba(81,53,34,0.05)] px-3.5 py-3 text-xs leading-relaxed text-(--muted)">
+                      <div className="mb-4 flex items-start gap-2 rounded-xl bg-(--tint-1) px-3.5 py-3 text-xs leading-relaxed text-(--muted)">
                         <ShieldCheck
                           className="mt-0.5 h-3.5 w-3.5 shrink-0 text-(--espresso)"
                           aria-hidden="true"
@@ -653,7 +653,7 @@ export const ResourceDetail = ({ resourceId }: ResourceDetailProps) => {
                       </div>
                     )}
 
-                    <div className="mb-4 rounded-xl border border-(--border-subtle) bg-[rgba(255,252,247,0.58)] p-3.5">
+                    <div className="mb-4 rounded-xl border border-(--border-subtle) bg-(--surface-muted) p-3.5">
                       <div className="flex items-center justify-between gap-2">
                         <label
                           htmlFor="availability-date"
@@ -666,7 +666,7 @@ export const ResourceDetail = ({ resourceId }: ResourceDetailProps) => {
                           type="date"
                           value={availabilityDate}
                           onChange={(event) => setAvailabilityDate(event.target.value)}
-                          className="h-9 rounded-lg border border-(--border-subtle) bg-(--surface) px-2 text-xs text-(--charcoal) focus:outline-none focus:ring-2 focus:ring-[rgba(81,53,34,0.16)]"
+                          className="h-9 rounded-lg border border-(--border-subtle) bg-(--surface) px-2 text-xs text-(--charcoal) focus:outline-none focus:ring-2 focus:ring-(--tint-3)"
                         />
                       </div>
 
@@ -698,8 +698,8 @@ export const ResourceDetail = ({ resourceId }: ResourceDetailProps) => {
                               }}
                               className={`inline-flex min-h-8 items-center rounded-full border px-2.5 text-[0.68rem] font-semibold transition-colors ${
                                 slot.available
-                                  ? 'border-[rgba(53,107,76,0.22)] bg-[rgba(53,107,76,0.08)] text-(--success) hover:bg-[rgba(53,107,76,0.14)]'
-                                  : 'cursor-not-allowed border-(--border-subtle) bg-[rgba(81,53,34,0.04)] text-(--muted) line-through'
+                                  ? 'border-(--success-tint) bg-(--success-tint-soft) text-(--success) hover:bg-(--success-tint)'
+                                  : 'cursor-not-allowed border-(--border-subtle) bg-(--tint-1) text-(--muted) line-through'
                               }`}
                             >
                               {new Date(slot.start_at).toLocaleTimeString([], {
@@ -729,7 +729,7 @@ export const ResourceDetail = ({ resourceId }: ResourceDetailProps) => {
                           value={startAt}
                           onChange={(event) => setStartAt(event.target.value)}
                           required
-                          className="mt-1.5 h-10 w-full rounded-xl border border-(--border-subtle) bg-(--surface) px-3 text-sm text-(--charcoal) focus:outline-none focus:ring-2 focus:ring-[rgba(81,53,34,0.16)]"
+                          className="mt-1.5 h-10 w-full rounded-xl border border-(--border-subtle) bg-(--surface) px-3 text-sm text-(--charcoal) focus:outline-none focus:ring-2 focus:ring-(--tint-3)"
                         />
                       </div>
 
@@ -746,7 +746,7 @@ export const ResourceDetail = ({ resourceId }: ResourceDetailProps) => {
                           value={endAt}
                           onChange={(event) => setEndAt(event.target.value)}
                           required
-                          className="mt-1.5 h-10 w-full rounded-xl border border-(--border-subtle) bg-(--surface) px-3 text-sm text-(--charcoal) focus:outline-none focus:ring-2 focus:ring-[rgba(81,53,34,0.16)]"
+                          className="mt-1.5 h-10 w-full rounded-xl border border-(--border-subtle) bg-(--surface) px-3 text-sm text-(--charcoal) focus:outline-none focus:ring-2 focus:ring-(--tint-3)"
                         />
                         <p className="mt-1.5 flex items-center gap-1.5 text-[0.7rem] text-(--muted)">
                           <Clock3 className="h-3.5 w-3.5" aria-hidden="true" />
@@ -768,19 +768,19 @@ export const ResourceDetail = ({ resourceId }: ResourceDetailProps) => {
                           value={purpose}
                           onChange={(event) => setPurpose(event.target.value)}
                           placeholder="What will you use the resource for?"
-                          className="mt-1.5 w-full resize-none rounded-xl border border-(--border-subtle) bg-(--surface) px-3 py-2 text-sm text-(--charcoal) placeholder:text-[rgba(130,119,109,0.75)] focus:outline-none focus:ring-2 focus:ring-[rgba(81,53,34,0.16)]"
+                          className="mt-1.5 w-full resize-none rounded-xl border border-(--border-subtle) bg-(--surface) px-3 py-2 text-sm text-(--charcoal) placeholder:text-[rgba(130,119,109,0.75)] focus:outline-none focus:ring-2 focus:ring-(--tint-3)"
                         />
                       </div>
 
                       {formError ? (
-                        <p role="alert" className="flex items-start gap-2 rounded-xl bg-[rgba(169,72,60,0.08)] px-3 py-2 text-xs leading-relaxed text-(--error)">
+                        <p role="alert" className="flex items-start gap-2 rounded-xl bg-(--error-tint-soft) px-3 py-2 text-xs leading-relaxed text-(--error)">
                           <XCircle className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                           {formError}
                         </p>
                       ) : null}
 
                       {bookingMutation.isError ? (
-                        <p role="alert" className="flex items-start gap-2 rounded-xl bg-[rgba(169,72,60,0.08)] px-3 py-2 text-xs leading-relaxed text-(--error)">
+                        <p role="alert" className="flex items-start gap-2 rounded-xl bg-(--error-tint-soft) px-3 py-2 text-xs leading-relaxed text-(--error)">
                           <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                           {getErrorMessage(bookingMutation.error)}
                         </p>
@@ -815,10 +815,10 @@ export const ResourceDetail = ({ resourceId }: ResourceDetailProps) => {
               </div>
             </div>
 
-            <div className="mt-4 rounded-2xl border border-(--border-subtle) bg-[rgba(233,217,198,0.26)] px-4 py-3 text-xs leading-relaxed text-(--muted)">
+            <div className="mt-4 rounded-2xl border border-(--border-subtle) bg-(--beige-tint-2) px-4 py-3 text-xs leading-relaxed text-(--muted)">
               <Link
                 to="/how-it-works"
-                className="font-semibold text-(--espresso) transition-colors hover:text-(--deep-brown)"
+                className="font-semibold text-(--espresso) transition-colors hover:text-(--espresso-hover)"
               >
                 Read the full booking process
               </Link>{' '}

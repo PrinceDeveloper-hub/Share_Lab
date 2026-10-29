@@ -102,7 +102,7 @@ export const OwnerManagerModal = ({
         <div>
           <div className="flex items-center justify-between gap-2">
             <h3 className="text-sm font-semibold text-(--charcoal)">Assigned managers</h3>
-            <span className="rounded-full bg-[rgba(81,53,34,0.07)] px-2 py-0.5 text-[0.65rem] font-semibold text-(--espresso)">
+            <span className="rounded-full bg-(--tint-2) px-2 py-0.5 text-[0.65rem] font-semibold text-(--espresso)">
               {managers.length}
             </span>
           </div>
@@ -140,7 +140,7 @@ export const OwnerManagerModal = ({
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="text-(--error) hover:bg-[rgba(169,72,60,0.07)] hover:text-(--error)"
+                    className="text-(--error) hover:bg-(--error-tint-soft) hover:text-(--error)"
                     disabled={removeMutation.isPending}
                     onClick={() => {
                       if (!resource) return

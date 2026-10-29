@@ -28,8 +28,8 @@ const AuthLoading = () => (
 
 const AccessDenied = () => (
   <div className="page-shell py-16 sm:py-20">
-    <div className="mx-auto max-w-lg rounded-3xl border border-[rgba(169,72,60,0.2)] bg-(--surface) p-8 text-center shadow-soft">
-      <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[rgba(169,72,60,0.08)]">
+    <div className="mx-auto max-w-lg rounded-3xl border border-(--error-tint) bg-(--surface) p-8 text-center shadow-soft">
+      <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-(--error-tint-soft)">
         <ShieldAlert
           className="h-5 w-5 text-(--error)"
           aria-hidden="true"

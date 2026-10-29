@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
-import { ArrowUpRight, FlaskConical } from 'lucide-react'
+import { ArrowUpRight } from 'lucide-react'
+import { BrandMark } from './BrandMark'
 
 const exploreLinks = [
   { to: '/resources', label: 'Resource catalogue' },
@@ -51,9 +52,10 @@ export const SiteFooter = () => {
               aria-label="ShareLab — campus resource commons, home"
               className="group inline-flex items-center gap-2.5 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(255,252,247,0.7)] focus-visible:ring-offset-4 focus-visible:ring-offset-(--deep-brown)"
             >
-              <span className="flex h-9 w-9 items-center justify-center rounded-[0.6rem] bg-[rgba(255,252,247,0.1)] ring-1 ring-[rgba(255,252,247,0.16)]">
-                <FlaskConical className="h-[1.05rem] w-[1.05rem] text-(--cream)" aria-hidden="true" />
-              </span>
+              <BrandMark
+                className="h-9 w-9 rounded-[0.6rem] bg-[rgba(255,252,247,0.1)] p-1 ring-1 ring-[rgba(255,252,247,0.16)]"
+                iconClassName="text-(--cream)"
+              />
               <span className="flex flex-col leading-none">
                 <span className="font-display text-[1.0625rem] font-bold tracking-[-0.03em] text-(--cream)">
                   ShareLab
@@ -64,8 +66,8 @@ export const SiteFooter = () => {
               </span>
             </Link>
             <p className="mt-5 text-sm leading-relaxed text-[rgba(255,252,247,0.62)]">
-              A transparent way for campus communities to discover shared equipment, verify
-              eligibility, and keep every booking accountable.
+              A transparent way for campus communities to discover shared
+              equipment, verify eligibility, and keep every booking accountable.
             </p>
             <Link
               to="/resources"

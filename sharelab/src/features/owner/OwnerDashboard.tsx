@@ -196,8 +196,8 @@ export const OwnerDashboard = () => {
                   className={cn(
                     'inline-flex min-h-9 items-center gap-2 rounded-full px-3 text-xs font-semibold transition-colors',
                     requestTab === item.value
-                      ? 'bg-(--espresso) text-white'
-                      : 'text-(--muted) hover:bg-[rgba(81,53,34,0.06)] hover:text-(--espresso)',
+                      ? 'bg-(--espresso) text-(--accent-contrast)'
+                      : 'text-(--muted) hover:bg-(--tint-2) hover:text-(--espresso)',
                   )}
                 >
                   {item.label}
@@ -282,7 +282,7 @@ export const OwnerDashboard = () => {
               {resources.map((resource) => (
                 <li key={resource.id}>
                   <SectionCard className="flex h-full flex-col p-0 sm:p-0">
-                    <div className="relative h-36 overflow-hidden rounded-t-[1.35rem] bg-[rgba(81,53,34,0.08)]">
+                    <div className="relative h-36 overflow-hidden rounded-t-[1.35rem] bg-(--tint-2)">
                       <img
                         src={getResourceImage(resource)}
                         alt=""
@@ -314,16 +314,16 @@ export const OwnerDashboard = () => {
                       </div>
 
                       <div className="mt-3 flex flex-wrap gap-2 text-[0.68rem] font-medium text-(--muted)">
-                        <span className="rounded-full bg-[rgba(81,53,34,0.06)] px-2.5 py-1">
+                        <span className="rounded-full bg-(--tint-2) px-2.5 py-1">
                           Max {resource.max_hours_per_booking}h / booking
                         </span>
-                        <span className="rounded-full bg-[rgba(81,53,34,0.06)] px-2.5 py-1">
+                        <span className="rounded-full bg-(--tint-2) px-2.5 py-1">
                           {resource.weekly_cap_hours}h weekly cap
                         </span>
-                        <span className="rounded-full bg-[rgba(81,53,34,0.06)] px-2.5 py-1">
+                        <span className="rounded-full bg-(--tint-2) px-2.5 py-1">
                           {resource.requirements?.length ?? 0} requirements
                         </span>
-                        <span className="rounded-full bg-[rgba(81,53,34,0.06)] px-2.5 py-1">
+                        <span className="rounded-full bg-(--tint-2) px-2.5 py-1">
                           {resource.managers?.length ?? 0} managers
                         </span>
                       </div>
@@ -352,7 +352,7 @@ export const OwnerDashboard = () => {
                         <Button
                           size="sm"
                           variant="ghost"
-                          className="text-(--error) hover:bg-[rgba(169,72,60,0.07)] hover:text-(--error)"
+                          className="text-(--error) hover:bg-(--error-tint-soft) hover:text-(--error)"
                           disabled={deleteMutation.isPending}
                           onClick={() => {
                             if (

@@ -108,14 +108,28 @@ class ResourceAccessMatrixTest extends TestCase
 
     public function test_seeded_demo_accounts_cover_every_role(): void
     {
-        $this->assertSame(5, User::query()->count());
+        // The demo dataset is intentionally large, but these five documented
+        // accounts must always exist and between them cover every role.
+        $documented = [
+            'user1@sharelab.test' => Role::User,
+            'user2@sharelab.test' => Role::User,
+            'manager@sharelab.test' => Role::Manager,
+            'owner@sharelab.test' => Role::Owner,
+            'admin@sharelab.test' => Role::Admin,
+        ];
+
+        foreach ($documented as $email => $role) {
+            $user = User::query()->where('email', $email)->first();
+
+            $this->assertNotNull($user, "Missing documented demo account {$email}.");
+            $this->assertSame($role, $user->role, "{$email} has the wrong role.");
+        }
 
         foreach (Role::cases() as $role) {
-            $expected = $role === Role::User ? 2 : 1;
-            $this->assertSame(
-                $expected,
+            $this->assertGreaterThanOrEqual(
+                1,
                 User::query()->where('role', $role)->count(),
-                "Unexpected number of {$role->value} demo accounts.",
+                "No demo account covers the {$role->value} role.",
             );
         }
     }

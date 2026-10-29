@@ -29,7 +29,9 @@ const invalidateBookingViews = (
   void queryClient.invalidateQueries({ queryKey: ['notifications'] })
   if (bookingId) {
     void queryClient.invalidateQueries({ queryKey: ['booking', bookingId] })
-    void queryClient.invalidateQueries({ queryKey: ['booking', bookingId, 'timeline'] })
+    void queryClient.invalidateQueries({
+      queryKey: ['booking', bookingId, 'timeline'],
+    })
   }
 }
 
@@ -45,9 +47,15 @@ export const useBookings = () => {
   })
 
   const cancelMutation = useMutation({
-    mutationFn: ({ bookingId, reason }: { bookingId: number; reason?: string }) =>
-      cancelBooking(bookingId, reason),
-    onSuccess: (_, variables) => invalidateBookingViews(queryClient, variables.bookingId),
+    mutationFn: ({
+      bookingId,
+      reason,
+    }: {
+      bookingId: number
+      reason?: string
+    }) => cancelBooking(bookingId, reason),
+    onSuccess: (_, variables) =>
+      invalidateBookingViews(queryClient, variables.bookingId),
   })
 
   const checkInMutation = useMutation({
@@ -58,7 +66,8 @@ export const useBookings = () => {
       bookingId: number
       payload: ConditionReportPayload
     }) => checkInBooking(bookingId, payload),
-    onSuccess: (_, variables) => invalidateBookingViews(queryClient, variables.bookingId),
+    onSuccess: (_, variables) =>
+      invalidateBookingViews(queryClient, variables.bookingId),
   })
 
   const returnMutation = useMutation({
@@ -69,7 +78,8 @@ export const useBookings = () => {
       bookingId: number
       payload: ConditionReportPayload
     }) => returnBooking(bookingId, payload),
-    onSuccess: (_, variables) => invalidateBookingViews(queryClient, variables.bookingId),
+    onSuccess: (_, variables) =>
+      invalidateBookingViews(queryClient, variables.bookingId),
   })
 
   const reportIncidentMutation = useMutation({
@@ -96,7 +106,8 @@ export const useBookings = () => {
       bookingId: number
       payload: BookingDecisionPayload
     }) => decideBooking(bookingId, payload),
-    onSuccess: (_, variables) => invalidateBookingViews(queryClient, variables.bookingId),
+    onSuccess: (_, variables) =>
+      invalidateBookingViews(queryClient, variables.bookingId),
   })
 
   const confirmOfferMutation = useMutation({
@@ -107,7 +118,8 @@ export const useBookings = () => {
   const extendMutation = useMutation({
     mutationFn: ({ bookingId, endAt }: { bookingId: number; endAt: string }) =>
       extendBooking(bookingId, endAt),
-    onSuccess: (_, variables) => invalidateBookingViews(queryClient, variables.bookingId),
+    onSuccess: (_, variables) =>
+      invalidateBookingViews(queryClient, variables.bookingId),
   })
 
   return {
@@ -149,6 +161,40 @@ export const useBookingList = (
     queryKey: ['bookings', endpoint ?? '/bookings', filters],
     queryFn: () => fetchBookings(filters, endpoint),
     enabled,
+    // Paginated lists keep the previous page on screen while the next loads.
     placeholderData: (previous) => previous,
+    staleTime: 30_000,
+    gcTime: 30 * 60_000,
+  })
+}
+
+/** Warm the cache for the next page before the user commits to it. */
+export const usePrefetchBookings = () => {
+  const queryClient = useQueryClient()
+
+  return (
+    filters: Parameters<typeof fetchBookings>[0],
+    endpoint = '/bookings',
+  ) =>
+    queryClient.prefetchQuery({
+      queryKey: ['bookings', endpoint, filters],
+      queryFn: () => fetchBookings(filters, endpoint),
+      staleTime: 30_000,
+    })
+}
+
+export const useCancelBooking = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({
+      bookingId,
+      reason,
+    }: {
+      bookingId: number
+      reason?: string
+    }) => cancelBooking(bookingId, reason),
+    onSuccess: (_, variables) =>
+      invalidateBookingViews(queryClient, variables.bookingId),
   })
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   fetchResource,
   fetchResourceAvailability,
@@ -8,7 +8,7 @@ import {
 } from '../lib/resources'
 import type { ResourceListFilters } from '../lib/resources'
 
-export const useDebouncedValue = <TValue,>(value: TValue, delay = 300) => {
+export const useDebouncedValue = <TValue>(value: TValue, delay = 300) => {
   const [debounced, setDebounced] = useState(value)
 
   useEffect(() => {
@@ -23,9 +23,26 @@ export const useResources = (filters: ResourceListFilters) => {
   return useQuery({
     queryKey: ['resources', filters],
     queryFn: () => fetchResources(filters),
+    // Keep the current page visible while the next one loads (no layout jump).
     placeholderData: (previous) => previous,
-    staleTime: 30_000,
+    staleTime: 60_000,
+    gcTime: 30 * 60_000,
   })
+}
+
+/**
+ * Paginated queries are cheap to warm: hovering a page number fetches it into
+ * the shared cache so clicking feels instant.
+ */
+export const usePrefetchResources = () => {
+  const queryClient = useQueryClient()
+
+  return (filters: ResourceListFilters) =>
+    queryClient.prefetchQuery({
+      queryKey: ['resources', filters],
+      queryFn: () => fetchResources(filters),
+      staleTime: 60_000,
+    })
 }
 
 export const useResourceCategories = () => {
@@ -33,9 +50,9 @@ export const useResourceCategories = () => {
     queryKey: ['resources', 'categories'],
     queryFn: () => fetchResources({ perPage: 100 }),
     select: (response) =>
-      Array.from(new Set(response.data.map((resource) => resource.category))).sort((a, b) =>
-        a.localeCompare(b),
-      ),
+      Array.from(
+        new Set(response.data.map((resource) => resource.category)),
+      ).sort((a, b) => a.localeCompare(b)),
     staleTime: 5 * 60_000,
   })
 }

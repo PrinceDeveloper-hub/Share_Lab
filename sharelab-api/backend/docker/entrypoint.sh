@@ -13,6 +13,11 @@ mkdir -p storage/framework/cache/data \
          bootstrap/cache
 chown -R www-data:www-data storage bootstrap/cache
 
+# Uploaded resource images are served from the public disk at /storage/..., and
+# that path only exists through public/storage. Recreate the symlink on boot
+# because it points into the storage volume, which is not part of the image.
+php artisan storage:link --force --no-interaction >/dev/null 2>&1 || true
+
 if [ -n "$APP_KEY" ] && [ "$APP_KEY" = "base64:production_key_will_be_set_here" ]; then
     echo "APP_KEY is still the placeholder value. Set a real key in .env." >&2
     exit 1

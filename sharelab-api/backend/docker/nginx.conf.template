@@ -1,0 +1,51 @@
+# Complete nginx main config for the standalone API image. Rendered onto
+# /etc/nginx/nginx.conf at container start by envsubst, which replaces the PORT
+# placeholder below and leaves nginx variables ($uri, $query_string, ...) alone.
+# Shipping the whole file keeps the image independent of the distro's include
+# layout (Alpine uses http.d, Debian uses conf.d).
+worker_processes auto;
+pid /tmp/nginx.pid;
+error_log /dev/stderr warn;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+
+    access_log /dev/stdout;
+
+    sendfile on;
+    keepalive_timeout 65;
+
+    # Credential uploads are capped at 5 MB by the API; leave headroom for
+    # multipart overhead.
+    client_max_body_size 12m;
+
+    server {
+        listen ${PORT};
+        server_name _;
+
+        root /var/www/html/public;
+        index index.php;
+
+        location / {
+            try_files $uri $uri/ /index.php?$query_string;
+        }
+
+        location ~ \.php$ {
+            include fastcgi_params;
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+            fastcgi_param SCRIPT_NAME $fastcgi_script_name;
+            fastcgi_param HTTPS $https if_not_empty;
+            fastcgi_pass 127.0.0.1:9000;
+            fastcgi_read_timeout 60s;
+        }
+
+        location ~ /\.(?!well-known).* {
+            deny all;
+        }
+    }
+}

@@ -172,7 +172,8 @@ from the SPA hits Vercel, which answers with its own 404. Reachability check:
 | Request | API is live when | API is missing when |
 | --- | --- | --- |
 | `GET https://<api-host>/up` | `200` | `404` or an HTML page |
-| `GET https://<api-host>/api/resources` | JSON `401` envelope (no cookie yet) | `404` or an HTML page |
+| `GET https://<api-host>/api/resources` | `200` with the JSON envelope (public list) | `404` or an HTML page |
+| `GET https://<api-host>/api/me` | JSON `401` envelope (no cookie yet) | `404` or an HTML page |
 
 The API image (`sharelab-api/backend/Dockerfile`) runs PHP-FPM on port 9000,
 so it needs a web server in front of it — either the nginx service from
@@ -184,6 +185,24 @@ routes `/api` and `/up` to FPM, so a VPS deployment exposes the API at
 docker compose up -d --build
 curl -fsS https://<host>/up
 ```
+
+If the API goes to a Docker PaaS that routes HTTP to one container, build the
+`standalone` stage instead: it runs nginx and PHP-FPM in the same image,
+listens on `$PORT` (default `8080`) and needs no sidecar proxy.
+
+```bash
+docker build --target standalone -t sharelab-api sharelab-api/backend
+docker run -p 8080:8080 --env-file .env sharelab-api
+curl -fsS http://localhost:8080/up
+```
+
+`standalone` is the last stage of `sharelab-api/backend/Dockerfile`, so a
+platform that simply builds the file (Render, Railway, Fly, App Runner) gets
+it without a target setting; platforms that assign a port only have to pass
+`PORT`, and the container listens there. `docker compose up api-http` builds
+the same image locally and publishes it on `API_HTTP_PORT` (8001 by default).
+PHP-FPM alone stays available as the `runtime` stage, which is what the
+compose `api` service builds.
 
 API environment (container or platform variables — never committed):
 
@@ -212,6 +231,16 @@ requires `JWT_COOKIE_SECURE=true`, otherwise the browser drops the cookie and
 every request after a successful login returns 401. Keep the `lax` default for
 same-origin deployments. Uploaded files live in `storage/app`, so mount a
 persistent volume there or uploads disappear on redeploy.
+
+Uploaded resource images need no rewrite on the SPA host: `config/filesystems.php`
+builds public-disk URLs from `APP_URL`, so an uploaded image is returned as
+`https://<api-host>/storage/resources/…` and the browser fetches it from the API
+directly. Two pieces keep that path alive — the entrypoint recreates
+`public/storage` on every boot (it points into the mounted volume), and nginx
+serves `/storage/` from the `api-storage` volume, which `sharelab/deploy/nginx.conf`
+does for the compose stack and the `standalone` image does through its document
+root. Credential files stay private and stream through
+`GET /api/credentials/{id}/download`.
 
 ## 7. Local development
 

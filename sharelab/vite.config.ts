@@ -11,11 +11,11 @@ const config = defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:8000',
+        target: 'https://sharelab-api.local',
         changeOrigin: true,
       },
       '/storage': {
-        target: 'http://localhost:8000',
+        target: 'https://sharelab-api.local',
         changeOrigin: true,
       },
     },

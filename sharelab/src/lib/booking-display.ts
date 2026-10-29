@@ -42,37 +42,37 @@ export const bookingStatusDetails = {
   pending: {
     label: 'Pending',
     icon: Clock3,
-    tone: 'bg-[rgba(153,94,32,0.12)] text-[var(--warning)]',
+    tone: 'bg-[rgba(154,107,34,0.12)] text-(--warning)',
   },
   waitlisted: {
     label: 'Waitlisted',
     icon: ListOrdered,
-    tone: 'bg-[rgba(153,94,32,0.12)] text-[var(--warning)]',
+    tone: 'bg-[rgba(154,107,34,0.12)] text-(--warning)',
   },
   approved: {
     label: 'Approved',
     icon: CheckCircle2,
-    tone: 'bg-[rgba(56,118,83,0.12)] text-[var(--success)]',
+    tone: 'bg-[rgba(53,107,76,0.12)] text-(--success)',
   },
   checked_in: {
     label: 'Checked in',
     icon: KeyRound,
-    tone: 'bg-[rgba(56,118,83,0.12)] text-[var(--success)]',
+    tone: 'bg-[rgba(53,107,76,0.12)] text-(--success)',
   },
   returned: {
     label: 'Returned',
     icon: RotateCcw,
-    tone: 'bg-[rgba(75,47,31,0.07)] text-[var(--muted)]',
+    tone: 'bg-[rgba(81,53,34,0.07)] text-(--muted)',
   },
   rejected: {
     label: 'Declined',
     icon: XCircle,
-    tone: 'bg-[rgba(180,77,66,0.1)] text-[var(--error)]',
+    tone: 'bg-[rgba(169,72,60,0.1)] text-(--error)',
   },
   cancelled: {
     label: 'Cancelled',
     icon: XCircle,
-    tone: 'bg-[rgba(180,77,66,0.1)] text-[var(--error)]',
+    tone: 'bg-[rgba(169,72,60,0.1)] text-(--error)',
   },
 } satisfies Record<
   Booking['status'],

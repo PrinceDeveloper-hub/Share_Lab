@@ -39,7 +39,7 @@ class AuthTest extends TestCase
 
     private function accessTokenFrom($response): string
     {
-        $cookie = $response->getCookie('sharelab_access', false);
+        $cookie = $response->getCookie('sl_access', false);
 
         $this->assertNotNull($cookie, 'The access cookie was not set.');
 
@@ -48,7 +48,7 @@ class AuthTest extends TestCase
 
     private function refreshTokenFrom($response): string
     {
-        $cookie = $response->getCookie('sharelab_refresh', false);
+        $cookie = $response->getCookie('sl_refresh', false);
 
         $this->assertNotNull($cookie, 'The refresh cookie was not set.');
 
@@ -76,8 +76,8 @@ class AuthTest extends TestCase
         ])
             ->assertStatus(401)
             ->assertJsonPath('data', null)
-            ->assertCookieMissing('sharelab_access')
-            ->assertCookieMissing('sharelab_refresh');
+            ->assertCookieMissing('sl_access')
+            ->assertCookieMissing('sl_refresh');
     }
 
     public function test_login_issues_http_only_cookies_and_authenticates_me(): void
@@ -87,18 +87,18 @@ class AuthTest extends TestCase
         $response = $this->login($user)
             ->assertOk()
             ->assertJsonPath('data.user.email', $user->email)
-            ->assertCookieNotExpired('sharelab_access')
-            ->assertCookieNotExpired('sharelab_refresh');
+            ->assertCookieNotExpired('sl_access')
+            ->assertCookieNotExpired('sl_refresh');
 
-        $access = $response->getCookie('sharelab_access', false);
-        $refresh = $response->getCookie('sharelab_refresh', false);
+        $access = $response->getCookie('sl_access', false);
+        $refresh = $response->getCookie('sl_refresh', false);
 
         $this->assertTrue($access->isHttpOnly());
         $this->assertSame('/', $access->getPath());
         $this->assertTrue($refresh->isHttpOnly());
         $this->assertSame('/api', $refresh->getPath());
 
-        $this->useCookie('sharelab_access', $access->getValue())
+        $this->useCookie('sl_access', $access->getValue())
             ->getJson('/api/me')
             ->assertOk()
             ->assertJsonPath('data.email', $user->email);
@@ -115,15 +115,15 @@ class AuthTest extends TestCase
             ->assertCreated()
             ->assertJsonPath('data.user.email', 'new-member@sharelab.test')
             ->assertJsonPath('data.user.role', 'user')
-            ->assertCookieNotExpired('sharelab_access')
-            ->assertCookieNotExpired('sharelab_refresh');
+            ->assertCookieNotExpired('sl_access')
+            ->assertCookieNotExpired('sl_refresh');
 
         $this->assertDatabaseHas('users', [
             'email' => 'new-member@sharelab.test',
             'role' => 'user',
         ]);
 
-        $this->useCookie('sharelab_access', $this->accessTokenFrom($response))
+        $this->useCookie('sl_access', $this->accessTokenFrom($response))
             ->getJson('/api/me')
             ->assertOk()
             ->assertJsonPath('data.name', 'New Member');
@@ -148,7 +148,7 @@ class AuthTest extends TestCase
         $user = $this->makeUser();
         $access = $this->accessTokenFrom($this->login($user));
 
-        $this->useCookie('sharelab_access', $access)
+        $this->useCookie('sl_access', $access)
             ->postJson('/api/login', [
                 'email' => $user->email,
                 'password' => 'password123',
@@ -165,12 +165,12 @@ class AuthTest extends TestCase
         $originalAccess = $this->accessTokenFrom($login);
         $refresh = $this->refreshTokenFrom($login);
 
-        $response = $this->useCookie('sharelab_refresh', $refresh)
+        $response = $this->useCookie('sl_refresh', $refresh)
             ->postJson('/api/refresh')
             ->assertOk()
             ->assertJsonPath('data.user.email', $user->email)
-            ->assertCookieNotExpired('sharelab_access')
-            ->assertCookieNotExpired('sharelab_refresh');
+            ->assertCookieNotExpired('sl_access')
+            ->assertCookieNotExpired('sl_refresh');
 
         $newAccess = $this->accessTokenFrom($response);
         $newRefresh = $this->refreshTokenFrom($response);
@@ -178,7 +178,7 @@ class AuthTest extends TestCase
         $this->assertNotSame($originalAccess, $newAccess);
         $this->assertNotSame($refresh, $newRefresh);
 
-        $this->useCookie('sharelab_access', $newAccess)
+        $this->useCookie('sl_access', $newAccess)
             ->getJson('/api/me')
             ->assertOk();
     }
@@ -189,11 +189,11 @@ class AuthTest extends TestCase
         $response = $this->login($user);
         $access = $this->accessTokenFrom($response);
 
-        $this->useCookie('sharelab_refresh', $access)
+        $this->useCookie('sl_refresh', $access)
             ->postJson('/api/refresh')
             ->assertStatus(401)
-            ->assertCookieExpired('sharelab_access')
-            ->assertCookieExpired('sharelab_refresh');
+            ->assertCookieExpired('sl_access')
+            ->assertCookieExpired('sl_refresh');
 
         $this->postJson('/api/refresh')
             ->assertStatus(401);
@@ -204,13 +204,13 @@ class AuthTest extends TestCase
         $user = $this->makeUser();
         $access = $this->accessTokenFrom($this->login($user));
 
-        $this->useCookie('sharelab_access', $access)
+        $this->useCookie('sl_access', $access)
             ->postJson('/api/logout')
             ->assertOk()
-            ->assertCookieExpired('sharelab_access')
-            ->assertCookieExpired('sharelab_refresh');
+            ->assertCookieExpired('sl_access')
+            ->assertCookieExpired('sl_refresh');
 
-        $this->useCookie('sharelab_access', '')
+        $this->useCookie('sl_access', '')
             ->getJson('/api/me')
             ->assertStatus(401);
     }
@@ -219,8 +219,8 @@ class AuthTest extends TestCase
     {
         $this->postJson('/api/logout')
             ->assertOk()
-            ->assertCookieExpired('sharelab_access')
-            ->assertCookieExpired('sharelab_refresh');
+            ->assertCookieExpired('sl_access')
+            ->assertCookieExpired('sl_refresh');
     }
 
     public function test_cookie_guard_rejects_tampered_or_refresh_tokens(): void
@@ -229,11 +229,11 @@ class AuthTest extends TestCase
         $response = $this->login($user);
         $refresh = $this->refreshTokenFrom($response);
 
-        $this->useCookie('sharelab_access', $refresh)
+        $this->useCookie('sl_access', $refresh)
             ->getJson('/api/me')
             ->assertStatus(401);
 
-        $this->useCookie('sharelab_access', 'not.a.jwt')
+        $this->useCookie('sl_access', 'not.a.jwt')
             ->getJson('/api/me')
             ->assertStatus(401);
     }

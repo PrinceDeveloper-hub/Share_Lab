@@ -30,16 +30,16 @@ export const Incidents = () => {
 
   // Selected booking info panel (reusable)
   const selectedBookingPanel = selectedBooking ? (
-    <GlassPanel className="p-4 mb-6 rounded-lg bg-[var(--soft-beige)]">
-      <p className="text-[var(--muted)] text-sm mb-2">Reporting for booking:</p>
+    <GlassPanel className="p-4 mb-6 rounded-lg bg-(--soft-beige)">
+      <p className="text-(--muted) text-sm mb-2">Reporting for booking:</p>
       <p className="font-medium text-espresso">{selectedBooking}</p>
     </GlassPanel>
   ) : null
 
   // Selected booking report info
   const selectedBookingReport = selectedBooking ? (
-    <GlassPanel className="mt-6 p-4 rounded-lg bg-[var(--soft-beige)]">
-      <p className="text-[var(--muted)] text-sm mb-2">Booking:</p>
+    <GlassPanel className="mt-6 p-4 rounded-lg bg-(--soft-beige)">
+      <p className="text-(--muted) text-sm mb-2">Booking:</p>
       <p className="font-medium text-espresso">{selectedBooking}</p>
     </GlassPanel>
   ) : null
@@ -53,7 +53,7 @@ export const Incidents = () => {
 
       {/* Incident type */}
       <GlassPanel>
-        <p className="text-[var(--muted)] text-sm mb-3">Incident Type</p>
+        <p className="text-(--muted) text-sm mb-3">Incident Type</p>
 
         <div className="grid grid-cols-3 gap-2">
           <button
@@ -61,9 +61,9 @@ export const Incidents = () => {
             className={cn(
               'rounded-md p-2 text-center',
               type === 'damage'
-                ? 'bg-[var(--error)] text-white'
+                ? 'bg-(--error) text-white'
                 : 'bg-soft-beige text-espresso',
-              'hover:bg-[var(--taupe)] hover:text-white transition-colors',
+              'hover:bg-(--taupe) hover:text-white transition-colors',
             )}
           >
             Damage
@@ -73,9 +73,9 @@ export const Incidents = () => {
             className={cn(
               'rounded-md p-2 text-center',
               type === 'delay'
-                ? 'bg-[var(--warning)] text-white'
+                ? 'bg-(--warning) text-white'
                 : 'bg-soft-beige text-espresso',
-              'hover:bg-[var(--taupe)] hover:text-white transition-colors',
+              'hover:bg-(--taupe) hover:text-white transition-colors',
             )}
           >
             Delay
@@ -85,9 +85,9 @@ export const Incidents = () => {
             className={cn(
               'rounded-md p-2 text-center',
               type === 'other'
-                ? 'bg-[var(--muted)] text-white'
+                ? 'bg-(--muted) text-white'
                 : 'bg-soft-beige text-espresso',
-              'hover:bg-[var(--taupe)] hover:text-white transition-colors',
+              'hover:bg-(--taupe) hover:text-white transition-colors',
             )}
           >
             Other
@@ -97,12 +97,12 @@ export const Incidents = () => {
 
       {/* Description */}
       <div>
-        <label className="block text-[var(--muted)] text-sm mb-2">
+        <label className="block text-(--muted) text-sm mb-2">
           Description
         </label>
         <textarea
           rows={3}
-          className="w-full bg-soft-beige dark:bg-[var(--deep-brown)] border border-sand rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-espresso resize-none text-sm"
+          className="w-full bg-soft-beige dark:bg-(--deep-brown) border border-sand rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-espresso resize-none text-sm"
           placeholder="Describe the incident..."
           onChange={(e) => setDescription(e.target.value)}
           required
@@ -121,7 +121,7 @@ export const Incidents = () => {
               description,
             })
           }
-          className="w-full bg-espresso text-white px-6 py-3 rounded-full font-medium hover:bg-[var(--deep-brown)] transition-colors"
+          className="w-full bg-espresso text-white px-6 py-3 rounded-full font-medium hover:bg-(--deep-brown) transition-colors"
           disabled={!selectedBooking || createMutation.isPending}
         >
           {createMutation.isPending ? 'Submitting...' : 'Report Incident'}
@@ -131,16 +131,16 @@ export const Incidents = () => {
       {/* Modal confirmation */}
       {open ? (
         <GlassPanel className="p-8 text-center fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center">
-          <div className="bg-cream dark:bg-darkBrown rounded-[16px] p-8 max-w-sm">
+          <div className="bg-cream dark:bg-darkBrown rounded-2xl p-8 max-w-sm">
             <h3 className="text-2xl font-bold text-charcoal mb-4">
               Incident Reported
             </h3>
-            <p className="text-[var(--muted)] text-sm mb-6">
+            <p className="text-(--muted) text-sm mb-6">
               Your incident has been reported and a manager will review it.
             </p>
             <button
               onClick={() => setOpen(false)}
-              className="bg-espresso text-white px-6 py-3 rounded-full font-medium hover:bg-[var(--deep-brown)] transition-colors"
+              className="bg-espresso text-white px-6 py-3 rounded-full font-medium hover:bg-(--deep-brown) transition-colors"
             >
               OK
             </button>

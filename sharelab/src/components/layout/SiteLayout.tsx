@@ -8,7 +8,7 @@ export interface SiteLayoutProps {
 
 export const SiteLayout = ({ children }: SiteLayoutProps) => {
   return (
-    <div className="flex min-h-screen flex-col bg-[var(--ivory)]">
+    <div className="flex min-h-screen flex-col bg-(--ivory)">
       <a href="#main-content" className="skip-link">
         Skip to main content
       </a>

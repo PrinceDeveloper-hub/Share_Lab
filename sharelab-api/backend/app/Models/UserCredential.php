@@ -36,4 +36,14 @@ class UserCredential extends Model
     {
         return $this->belongsTo(ResourceRequirement::class, 'requirement_name');
     }
+
+    public function verifiedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'verified_by');
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->status === CredentialStatus::Verified;
+    }
 }

@@ -105,6 +105,7 @@ export const Login = ({ redirect }: LoginProps) => {
     <AuthLayout mode="login">
       <div>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <span className="eyebrow">Welcome back</span>
         <h1 className="mt-2.5 font-display text-[clamp(1.85rem,3.6vw,2.3rem)] font-semibold leading-[1.08] tracking-[-0.032em] text-[var(--charcoal)]">
           Sign in to ShareLab
@@ -113,9 +114,12 @@ export const Login = ({ redirect }: LoginProps) => {
           Continue to your resource requests, approvals, and handover records.
 =======
         <h1 className="font-editorial text-[clamp(2rem,4.6vw,2.65rem)] font-semibold leading-[1.04] tracking-[-0.035em] text-[var(--charcoal)]">
+=======
+        <h1 className="font-display text-[clamp(2rem,4.6vw,2.65rem)] font-semibold leading-[1.04] tracking-[-0.035em] text-(--charcoal)">
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
           Welcome back.
         </h1>
-        <p className="mt-3 max-w-[25rem] text-sm leading-relaxed text-[var(--muted)]">
+        <p className="mt-3 max-w-100 text-sm leading-relaxed text-(--muted)">
           Sign in to pick up where your last request left off — approvals,
           handovers, and lab time in one place.
 >>>>>>> b141025564dd3364106212a52ca5484ec458a43d
@@ -215,6 +219,7 @@ export const Login = ({ redirect }: LoginProps) => {
       </form>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
       <div className="mt-6 flex items-center gap-3">
         <span
           className="h-px flex-1 bg-[var(--border-subtle)]"
@@ -230,45 +235,49 @@ export const Login = ({ redirect }: LoginProps) => {
 =======
       <details className="group mt-5 rounded-xl border border-[rgba(82,59,45,0.12)] bg-[rgba(75,47,31,0.028)]">
         <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 rounded-xl px-3.5 py-2.5 text-[0.72rem] font-semibold text-[var(--espresso)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--ring)] [&::-webkit-details-marker]:hidden">
+=======
+      <details className="group mt-5 rounded-xl border border-[rgba(81,53,34,0.12)] bg-[rgba(81,53,34,0.028)]">
+        <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 rounded-xl px-3.5 py-2.5 text-[0.72rem] font-semibold text-(--espresso) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-(--ring) [&::-webkit-details-marker]:hidden">
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
           <span className="inline-flex items-center gap-2">
             <KeyRound className="h-3.5 w-3.5" aria-hidden="true" />
             Reviewer demo accounts
           </span>
           <ChevronDown
-            className="h-3.5 w-3.5 text-[var(--muted)] transition-transform group-open:rotate-180"
+            className="h-3.5 w-3.5 text-(--muted) transition-transform group-open:rotate-180"
             aria-hidden="true"
           />
         </summary>
-        <div className="grid grid-cols-2 gap-1.5 border-t border-[rgba(82,59,45,0.08)] p-2">
+        <div className="grid grid-cols-2 gap-1.5 border-t border-[rgba(81,53,34,0.08)] p-2">
           {demoAccounts.map((account) => (
             <button
               key={account.email}
               type="button"
               onClick={() => fillDemo(account.email)}
-              className="rounded-lg px-2.5 py-2 text-left transition-colors hover:bg-[rgba(75,47,31,0.06)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
+              className="rounded-lg px-2.5 py-2 text-left transition-colors hover:bg-[rgba(81,53,34,0.06)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring)"
             >
-              <span className="block text-[0.7rem] font-semibold text-[var(--charcoal)]">
+              <span className="block text-[0.7rem] font-semibold text-(--charcoal)">
                 {account.role}
               </span>
-              <span className="mt-0.5 block truncate text-[0.64rem] text-[var(--muted)]">
+              <span className="mt-0.5 block truncate text-[0.64rem] text-(--muted)">
                 {account.email}
               </span>
             </button>
           ))}
         </div>
-        <p className="border-t border-[rgba(82,59,45,0.08)] px-3.5 py-2 text-[0.64rem] leading-relaxed text-[var(--muted)]">
+        <p className="border-t border-[rgba(81,53,34,0.08)] px-3.5 py-2 text-[0.64rem] leading-relaxed text-(--muted)">
           Demo password:{' '}
-          <span className="font-semibold text-[var(--charcoal)]">password</span>
+          <span className="font-semibold text-(--charcoal)">password</span>
         </p>
       </details>
 
-      <div className="mt-6 border-t border-[rgba(82,59,45,0.1)] pt-5">
-        <p className="text-center text-sm text-[var(--muted)]">
+      <div className="mt-6 border-t border-[rgba(81,53,34,0.1)] pt-5">
+        <p className="text-center text-sm text-(--muted)">
           New to ShareLab?{' '}
           <Link
             to="/register"
             search={{ redirect }}
-            className="inline-flex min-h-11 items-center rounded-sm px-1 font-semibold text-[var(--espresso)] underline decoration-[rgba(75,47,31,0.28)] underline-offset-4 transition-colors hover:text-[var(--deep-brown)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
+            className="inline-flex min-h-11 items-center rounded-sm px-1 font-semibold text-(--espresso) underline decoration-[rgba(81,53,34,0.28)] underline-offset-4 transition-colors hover:text-(--deep-brown) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring)"
           >
             Create an account
           </Link>

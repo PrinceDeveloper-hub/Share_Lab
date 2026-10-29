@@ -1,152 +1,251 @@
-import { GlassPanel } from '../../components/glass/GlassPanel'
-import { cn } from '../../lib/utils'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+import { Link } from '@tanstack/react-router'
+import {
+  BadgeCheck,
+  CalendarCheck,
+  ClipboardList,
+  FlaskConical,
+  Inbox,
+  ShieldAlert,
+  Timer,
+  Wrench,
+} from 'lucide-react'
+import { Button } from '../../components/ui/button'
+import {
+  EmptyState,
+  ErrorNotice,
+  LoadingRows,
+  PageHeader,
+  SectionCard,
+  StatGrid,
+  StatTile,
+  Tabs,
+} from '../../components/ui/workspace'
+import { BookingQueueCard } from '../bookings/BookingQueueCard'
+import { useBookingList } from '../../hooks/useBookings'
+import { useManagerDashboard, useManagerResources } from '../../hooks/useWorkspace'
+import { usePageMeta } from '../../hooks/usePageMeta'
+
+type QueueTab = 'pending' | 'waitlisted' | 'approved' | 'incidents'
+
+const tabLabels: Array<{ value: QueueTab; label: string }> = [
+  { value: 'pending', label: 'Needs a decision' },
+  { value: 'waitlisted', label: 'Waitlisted' },
+  { value: 'approved', label: 'Upcoming' },
+  { value: 'incidents', label: 'Incidents' },
+]
 
 export const ManagerDashboard = () => {
-  const [tab, setTab] = useState<'pending' | 'approved' | 'waitlisted' | 'all'>(
-    'pending',
-  )
+  usePageMeta({
+    title: 'Manager workspace — ShareLab',
+    description:
+      'Review requests, decisions, credentials, and incidents for the resources assigned to you.',
+  })
 
-  const requests = [
-    {
-      id: 1,
-      resource: 'Ultimaker S5 3D Printer',
-      user: 'Student User',
-      time: '2026-11-01 09:00-11:00',
-      purpose: '3D printing prototype',
-      priorityScore: 2,
-      priorityExplanation: '2 hours used in last 30 days',
-    },
-    {
-      id: 2,
-      resource: 'Keysight Oscilloscope',
-      user: 'Researcher User',
-      time: '2026-11-02 14:00-16:00',
-      purpose: 'Signal analysis',
-      priorityScore: 0,
-      priorityExplanation: '0 hours used in last 30 days - highest priority',
-    },
-  ]
+  const [tab, setTab] = useState<QueueTab>('pending')
+  const summaryQuery = useManagerDashboard()
+  const resourcesQuery = useManagerResources()
+  const requestsQuery = useBookingList({ perPage: 100 }, '/manager/requests')
+
+  const requests = useMemo(() => requestsQuery.data?.data ?? [], [requestsQuery.data])
+  const summary = summaryQuery.data?.data
+  const resources = resourcesQuery.data?.data ?? []
+
+  const counts = {
+    pending: requests.filter((booking) => booking.status === 'pending').length,
+    waitlisted: requests.filter((booking) => booking.status === 'waitlisted').length,
+    approved: requests.filter((booking) => booking.status === 'approved').length,
+    incidents: summary?.open_incidents ?? 0,
+  }
+
+  const visibleRequests = requests.filter((booking) => {
+    if (tab === 'incidents') return false
+    return booking.status === tab
+  })
 
   return (
-    <GlassPanel className="p-6 md:p-12 max-w-7xl mx-auto">
-      <h1 className="text-3xl font-bold text-charcoal mb-4">Request Queue</h1>
+    <div>
+      <PageHeader
+        eyebrow="Manager workspace"
+        title="Requests, handovers, and resource care"
+        description="You can act on the resources assigned to you. Every decision needs a reason and is visible to the person who requested the booking."
+        actions={
+          <>
+            <Button asChild variant="secondary">
+              <Link to="/incidents">
+                <ShieldAlert className="h-4 w-4" aria-hidden="true" />
+                Incident queue
+              </Link>
+            </Button>
+            <Button asChild>
+              <Link to="/credentials" search={{ tab: 'review' }}>
+                <BadgeCheck className="h-4 w-4" aria-hidden="true" />
+                Review credentials
+              </Link>
+            </Button>
+          </>
+        }
+      />
 
-      {/* Tab navigation */}
-      <div className="grid grid-cols-4 mb-6">
-        <button
-          onClick={() => setTab('pending')}
-          className={cn(
-            'flex-1 rounded-md border px-3 py-2 text-sm font-medium ',
-            tab === 'pending'
-              ? 'bg-espresso text-white'
-              : 'bg-soft-beige text-espresso hover:bg-[var(--taupe)] hover:text-white transition-colors',
-          )}
-        >
-          Pending (
-          {requests.filter((r) => (r.id === 1 ? r.priorityScore : 0)).length})
-        </button>
-        <button
-          onClick={() => setTab('approved')}
-          className={cn(
-            'flex-1 rounded-md border px-3 py-2 text-sm font-medium ',
-            tab === 'approved'
-              ? 'bg-espresso text-white'
-              : 'bg-soft-beige text-espresso hover:bg-[var(--taupe)] hover:text-white transition-colors',
-          )}
-        >
-          Approved
-        </button>
-        <button
-          onClick={() => setTab('waitlisted')}
-          className={cn(
-            'flex-1 rounded-md border px-3 py-2 text-sm font-medium ',
-            tab === 'waitlisted'
-              ? 'bg-espresso text-white'
-              : 'bg-soft-beige text-espresso hover:bg-[var(--taupe)] hover:text-white transition-colors',
-          )}
-        >
-          Waitlisted
-        </button>
-        <button
-          onClick={() => setTab('all')}
-          className={cn(
-            'flex-1 rounded-md border px-3 py-2 text-sm font-medium ',
-            tab === 'all'
-              ? 'bg-espresso text-white'
-              : 'bg-soft-beige text-espresso hover:bg-[var(--taupe)] hover:text-white transition-colors',
-          )}
-        >
-          All
-        </button>
-      </div>
-
-      {/* Requests table */}
-      <GlassPanel>
-        <div className="overflow-x-auto">
-          <table className="min-w-full">
-            <thead>
-              <tr className="border-b border-sand">
-                <th className="p-3 text-left text-sm font-medium text-charcoal">
-                  Resource
-                </th>
-                <th className="p-3 text-left text-sm font-medium text-charcoal">
-                  User
-                </th>
-                <th className="p-3 text-left text-sm font-medium text-charcoal">
-                  Time
-                </th>
-                <th className="p-3 text-left text-sm font-medium text-charcoal">
-                  Purpose
-                </th>
-                <th className="p-3 text-left text-sm font-medium text-charcoal">
-                  Priority
-                </th>
-                <th className="p-3 text-right text-sm font-medium text-charcoal">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {requests.map((request) => (
-                <tr key={request.id} className="border-b border-sand">
-                  <td className="p-3">
-                    <span>{request.resource}</span>
-                  </td>
-                  <td className="p-3">
-                    <span>{request.user}</span>
-                  </td>
-                  <td className="p-3">
-                    <span>{request.time}</span>
-                  </td>
-                  <td className="p-3">
-                    <span>{request.purpose}</span>
-                  </td>
-                  <td className="p-3 text-center">
-                    <span className="px-2 py-1 rounded text-xs bg-[var(--soft-beige)] text-[var(--muted)]">
-                      {request.priorityScore}
-                    </span>
-                  </td>
-                  <td className="p-3 text-right">
-                    <div className="flex gap-2">
-                      <button className="text-[var(--taupe)] text-sm hover:text-espresso transition-colors px-2 py-1 rounded">
-                        Approve
-                      </button>
-                      <button className="text-[var(--error)] text-sm hover:text-red-400 transition-colors px-2 py-1 rounded">
-                        Reject
-                      </button>
-                      <button className="text-[var(--warning)] text-sm hover:text-amber-400 transition-colors px-2 py-1 rounded">
-                        Waitlist
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {summaryQuery.isError ? (
+        <div className="mt-5">
+          <ErrorNotice
+            title="Your workspace summary could not be loaded"
+            message="The request queue below may still work. Refresh the page to try again."
+            onRetry={() => void summaryQuery.refetch()}
+          />
         </div>
-      </GlassPanel>
-    </GlassPanel>
+      ) : null}
+
+      <StatGrid>
+        <StatTile
+          label="Assigned resources"
+          value={summary?.assigned_resources ?? resources.length}
+          icon={FlaskConical}
+        />
+        <StatTile
+          label="Pending requests"
+          value={summary?.pending_requests ?? counts.pending}
+          icon={ClipboardList}
+        />
+        <StatTile
+          label="Bookings today"
+          value={summary?.bookings_today ?? '—'}
+          icon={CalendarCheck}
+        />
+        <StatTile
+          label="Open incidents"
+          value={summary?.open_incidents ?? '—'}
+          icon={Wrench}
+        />
+      </StatGrid>
+
+      <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_19rem]">
+        <section>
+          <Tabs
+            label="Request queue"
+            value={tab}
+            onChange={setTab}
+            tabs={tabLabels.map((item) => ({
+              ...item,
+              count: counts[item.value],
+            }))}
+          />
+
+          <div className="mt-5">
+            {tab === 'incidents' ? (
+              <EmptyState
+                icon={ShieldAlert}
+                title="Incident work lives in its own queue"
+                description="Open the incident queue to confirm system suggestions, investigate reports, and record resolutions. Open incidents are counted above."
+                action={
+                  <Button asChild>
+                    <Link to="/incidents">Open incident queue</Link>
+                  </Button>
+                }
+              />
+            ) : requestsQuery.isLoading ? (
+              <LoadingRows rows={3} label="Loading request queue" />
+            ) : requestsQuery.isError ? (
+              <ErrorNotice
+                title="The request queue could not be loaded"
+                message="Refresh the page to try again."
+                onRetry={() => void requestsQuery.refetch()}
+              />
+            ) : visibleRequests.length === 0 ? (
+              <EmptyState
+                icon={tab === 'pending' ? BadgeCheck : Inbox}
+                title={
+                  tab === 'pending'
+                    ? 'No requests waiting for a decision'
+                    : tab === 'waitlisted'
+                      ? 'Nobody is waiting for a slot'
+                      : 'No approved bookings are coming up'
+                }
+                description={
+                  tab === 'pending'
+                    ? 'New requests for your assigned resources will appear here.'
+                    : 'This view updates as bookings change state.'
+                }
+              />
+            ) : (
+              <div className="space-y-4">
+                {visibleRequests
+                  .slice()
+                  .sort((a, b) => {
+                    if (tab === 'pending') {
+                      return (b.priority_score ?? 0) - (a.priority_score ?? 0)
+                    }
+                    return new Date(a.start_at).getTime() - new Date(b.start_at).getTime()
+                  })
+                  .map((booking) => (
+                    <BookingQueueCard key={booking.id} booking={booking} showRequester />
+                  ))}
+              </div>
+            )}
+          </div>
+        </section>
+
+        <aside className="space-y-4">
+          <SectionCard>
+            <div className="flex items-center justify-between gap-2">
+              <h2 className="text-sm font-semibold text-(--charcoal)">Your resources</h2>
+              <span className="rounded-full bg-[rgba(81,53,34,0.07)] px-2 py-0.5 text-[0.65rem] font-semibold text-(--espresso)">
+                {resources.length}
+              </span>
+            </div>
+
+            {resourcesQuery.isLoading ? (
+              <div className="mt-4">
+                <LoadingRows rows={2} label="Loading assigned resources" />
+              </div>
+            ) : resources.length === 0 ? (
+              <p className="mt-3 text-sm leading-relaxed text-(--muted)">
+                No resources are assigned to you yet. A resource owner assigns managers.
+              </p>
+            ) : (
+              <ul className="mt-3 divide-y divide-(--border-subtle)">
+                {resources.map((resource) => (
+                  <li key={resource.id} className="py-3 first:pt-0 last:pb-0">
+                    <Link
+                      to="/resources/$resourceId"
+                      params={{ resourceId: String(resource.id) }}
+                      className="block rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring)"
+                    >
+                      <p className="text-sm font-semibold text-(--charcoal) hover:text-(--espresso)">
+                        {resource.name}
+                      </p>
+                      <p className="mt-0.5 text-[0.7rem] text-(--muted)">
+                        {resource.category} · {resource.location}
+                      </p>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </SectionCard>
+
+          <SectionCard>
+            <h2 className="text-sm font-semibold text-(--charcoal)">Manager boundaries</h2>
+            <ul className="mt-3 space-y-2.5 text-xs leading-relaxed text-(--muted)">
+              <li className="flex gap-2">
+                <Timer className="mt-0.5 h-3.5 w-3.5 shrink-0 text-(--taupe)" aria-hidden="true" />
+                You can decide and close handovers only for assigned resources.
+              </li>
+              <li className="flex gap-2">
+                <BadgeCheck className="mt-0.5 h-3.5 w-3.5 shrink-0 text-(--taupe)" aria-hidden="true" />
+                Credential reviews are limited to requirements on those resources.
+              </li>
+              <li className="flex gap-2">
+                <ShieldAlert className="mt-0.5 h-3.5 w-3.5 shrink-0 text-(--taupe)" aria-hidden="true" />
+                You cannot change resource rules, assign other managers, or override an owner.
+              </li>
+            </ul>
+          </SectionCard>
+        </aside>
+      </div>
+    </div>
   )
 }
+
 export default ManagerDashboard

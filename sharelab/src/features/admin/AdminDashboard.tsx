@@ -88,28 +88,28 @@ export const AdminDashboard = () => {
           <h2 className="text-xl font-semibold text-charcoal mb-6">Overview</h2>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <GlassPanel className="p-4 rounded-[8px]">
-              <p className="text-[var(--muted)] text-sm mb-2">Total Users</p>
+            <GlassPanel className="p-4 rounded-lg">
+              <p className="text-(--muted) text-sm mb-2">Total Users</p>
               <p className="text-3xl font-bold text-charcoal">
                 {overview.totalUsers}
               </p>
             </GlassPanel>
-            <GlassPanel className="p-4 rounded-[8px]">
-              <p className="text-[var(--muted)] text-sm mb-2">
+            <GlassPanel className="p-4 rounded-lg">
+              <p className="text-(--muted) text-sm mb-2">
                 Total Resources
               </p>
               <p className="text-3xl font-bold text-charcoal">
                 {overview.totalResources}
               </p>
             </GlassPanel>
-            <GlassPanel className="p-4 rounded-[8px]">
-              <p className="text-[var(--muted)] text-sm mb-2">Total Bookings</p>
+            <GlassPanel className="p-4 rounded-lg">
+              <p className="text-(--muted) text-sm mb-2">Total Bookings</p>
               <p className="text-3xl font-bold text-charcoal">
                 {overview.totalBookings}
               </p>
             </GlassPanel>
-            <GlassPanel className="p-4 rounded-[8px]">
-              <p className="text-[var(--muted)] text-sm mb-2">
+            <GlassPanel className="p-4 rounded-lg">
+              <p className="text-(--muted) text-sm mb-2">
                 Active Incidents
               </p>
               <p className="text-3xl font-bold text-error">
@@ -155,10 +155,10 @@ export const AdminDashboard = () => {
                         className={cn(
                           'px-2 py-1 rounded text-xs',
                           user.role === 'admin'
-                            ? 'bg-[var(--error)] text-white'
+                            ? 'bg-(--error) text-white'
                             : user.role === 'manager'
-                              ? 'bg-[var(--warning)] text-white'
-                              : 'bg-[var(--success)] text-white',
+                              ? 'bg-(--warning) text-white'
+                              : 'bg-(--success) text-white',
                         )}
                       >
                         {user.role}
@@ -169,18 +169,18 @@ export const AdminDashboard = () => {
                         className={cn(
                           'px-2 py-1 rounded text-xs',
                           user.status === 'active'
-                            ? 'bg-[var(--success)] text-[var(--charcoal)]'
-                            : 'bg-[var(--muted)] text-[var(--charcoal)]',
+                            ? 'bg-(--success) text-(--charcoal)'
+                            : 'bg-(--muted) text-(--charcoal)',
                         )}
                       >
                         {user.status}
                       </span>
                     </td>
                     <td className="p-3 text-right">
-                      <button className="text-[var(--taupe)] text-sm hover:text-espresso transition-colors">
+                      <button className="text-(--taupe) text-sm hover:text-espresso transition-colors">
                         Edit
                       </button>
-                      <button className="text-[var(--error)] text-sm hover:text-red-400 transition-colors">
+                      <button className="text-(--error) text-sm hover:text-red-400 transition-colors">
                         Delete
                       </button>
                     </td>
@@ -225,7 +225,7 @@ export const AdminDashboard = () => {
                   <tr key={resource.id} className="border-b border-sand">
                     <td className="p-3">{resource.name}</td>
                     <td className="p-3">{resource.owner}</td>
-                    <td className="p-3 text-[var(--taupe)] text-sm">
+                    <td className="p-3 text-(--taupe) text-sm">
                       {resource.category}
                     </td>
                     <td className="p-3">
@@ -233,15 +233,15 @@ export const AdminDashboard = () => {
                         className={cn(
                           'px-2 py-1 rounded text-xs',
                           resource.status === 'active'
-                            ? 'bg-[var(--success)] text-[var(--charcoal)]'
-                            : 'bg-[var(--muted)] text-[var(--charcoal)]',
+                            ? 'bg-(--success) text-(--charcoal)'
+                            : 'bg-(--muted) text-(--charcoal)',
                         )}
                       >
                         {resource.status}
                       </span>
                     </td>
                     <td className="p-3 text-right">
-                      <button className="text-[var(--taupe)] text-sm hover:text-espresso transition-colors">
+                      <button className="text-(--taupe) text-sm hover:text-espresso transition-colors">
                         View
                       </button>
                     </td>
@@ -284,17 +284,17 @@ export const AdminDashboard = () => {
               <tbody>
                 {auditEntries.map((entry) => (
                   <tr key={entry.id} className="border-b border-sand">
-                    <td className="p-3 text-[var(--muted)] text-sm">
+                    <td className="p-3 text-(--muted) text-sm">
                       {entry.timestamp}
                     </td>
                     <td className="p-3">{entry.actor}</td>
-                    <td className="p-3 text-[var(--taupe)] text-sm">
+                    <td className="p-3 text-(--taupe) text-sm">
                       {entry.action}
                     </td>
-                    <td className="p-3 text-[var(--muted)] text-sm">
+                    <td className="p-3 text-(--muted) text-sm">
                       {entry.booking}
                     </td>
-                    <td className="p-3 text-[var(--muted)] text-sm">
+                    <td className="p-3 text-(--muted) text-sm">
                       {entry.reason}
                     </td>
                   </tr>
@@ -313,7 +313,7 @@ export const AdminDashboard = () => {
             'flex-1 rounded-md border px-3 py-2 text-sm font-medium ',
             section === 'dashboard'
               ? 'bg-espresso text-white'
-              : 'bg-soft-beige text-espresso hover:bg-[var(--taupe)] hover:text-white transition-colors',
+              : 'bg-soft-beige text-espresso hover:bg-(--taupe) hover:text-white transition-colors',
           )}
         >
           Dashboard
@@ -324,7 +324,7 @@ export const AdminDashboard = () => {
             'flex-1 rounded-md border px-3 py-2 text-sm font-medium ',
             section === 'users'
               ? 'bg-espresso text-white'
-              : 'bg-soft-beige text-espresso hover:bg-[var(--taupe)] hover:text-white transition-colors',
+              : 'bg-soft-beige text-espresso hover:bg-(--taupe) hover:text-white transition-colors',
           )}
         >
           Users
@@ -335,7 +335,7 @@ export const AdminDashboard = () => {
             'flex-1 rounded-md border px-3 py-2 text-sm font-medium ',
             section === 'resources'
               ? 'bg-espresso text-white'
-              : 'bg-soft-beige text-espresso hover:bg-[var(--taupe)] hover:text-white transition-colors',
+              : 'bg-soft-beige text-espresso hover:bg-(--taupe) hover:text-white transition-colors',
           )}
         >
           Resources
@@ -346,7 +346,7 @@ export const AdminDashboard = () => {
             'flex-1 rounded-md border px-3 py-2 text-sm font-medium ',
             section === 'bookings'
               ? 'bg-espresso text-white'
-              : 'bg-soft-beige text-espresso hover:bg-[var(--taupe)] hover:text-white transition-colors',
+              : 'bg-soft-beige text-espresso hover:bg-(--taupe) hover:text-white transition-colors',
           )}
         >
           Bookings
@@ -357,7 +357,7 @@ export const AdminDashboard = () => {
             'flex-1 rounded-md border px-3 py-2 text-sm font-medium ',
             section === 'audit'
               ? 'bg-espresso text-white'
-              : 'bg-soft-beige text-espresso hover:bg-[var(--taupe)] hover:text-white transition-colors',
+              : 'bg-soft-beige text-espresso hover:bg-(--taupe) hover:text-white transition-colors',
           )}
         >
           Audit Log

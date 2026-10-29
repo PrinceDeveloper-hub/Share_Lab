@@ -14,6 +14,7 @@ class ConditionReport extends Model
         'condition',
         'notes',
         'checklist',
+        'file_path',
         'reported_by',
     ];
 

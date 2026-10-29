@@ -1,7 +1,17 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
+<<<<<<< HEAD
 import { fetchResource, fetchResources } from '../lib/resources'
 import type { Resource, ResourceListFilters } from '../lib/resources'
+=======
+import {
+  fetchResource,
+  fetchResourceAvailability,
+  fetchResourceEligibility,
+  fetchResources,
+} from '../lib/resources'
+import type { ResourceListFilters } from '../lib/resources'
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
 
 export const useDebouncedValue = <TValue>(value: TValue, delay = 300) => {
   const [debounced, setDebounced] = useState(value)
@@ -44,6 +54,7 @@ export const useResource = (resourceId: number) => {
   })
 }
 
+<<<<<<< HEAD
 /**
  * Booking responses only carry a resource id. This hook loads the catalogue
  * once and exposes a lookup so lists can show real resource names without
@@ -67,4 +78,22 @@ export const useResourceMap = () => {
     isLoading: query.isLoading,
     isError: query.isError,
   }
+=======
+export const useResourceAvailability = (resourceId: number, date: string) => {
+  return useQuery({
+    queryKey: ['resource', resourceId, 'availability', date],
+    queryFn: () => fetchResourceAvailability(resourceId, date),
+    enabled: Number.isFinite(resourceId) && resourceId > 0 && Boolean(date),
+    staleTime: 15_000,
+  })
+}
+
+export const useResourceEligibility = (resourceId: number, enabled = true) => {
+  return useQuery({
+    queryKey: ['resource', resourceId, 'eligibility'],
+    queryFn: () => fetchResourceEligibility(resourceId),
+    enabled: enabled && Number.isFinite(resourceId) && resourceId > 0,
+    staleTime: 15_000,
+  })
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
 }

@@ -24,11 +24,16 @@ export const SectionHeading = ({
   return (
     <div
       className={cn(
+<<<<<<< HEAD
         'flex flex-col gap-3',
+=======
+        'flex max-w-2xl flex-col gap-3.5',
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
         align === 'center' && 'mx-auto items-center text-center',
         className,
       )}
     >
+<<<<<<< HEAD
       <div className={cn('max-w-2xl', align === 'center' && 'mx-auto')}>
         {eyebrow ? (
           <span
@@ -64,6 +69,18 @@ export const SectionHeading = ({
       {actions ? (
         <div className="flex flex-wrap items-center gap-2">{actions}</div>
       ) : null}
+=======
+      {eyebrow ? (
+        <span className="eyebrow">
+          <span aria-hidden="true" className="h-px w-6 bg-(--bronze)" />
+          {eyebrow}
+        </span>
+      ) : null}
+      <h2 id={id} className="display-lg">
+        {title}
+      </h2>
+      {description ? <p className="lede text-[0.9375rem] sm:text-base">{description}</p> : null}
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
     </div>
   )
 }

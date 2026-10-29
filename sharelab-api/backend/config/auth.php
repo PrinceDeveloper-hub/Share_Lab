@@ -20,6 +20,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Login throttling
+    |--------------------------------------------------------------------------
+    |
+    | "attempts,minutes" used by the login and registration routes. The default
+    | stays strict in production; automated end-to-end suites can raise it for a
+    | local or CI database without weakening the shipped configuration.
+    |
+    */
+
+    'login_throttle' => env('LOGIN_THROTTLE', '10,1'),
+    'register_throttle' => env('REGISTER_THROTTLE', '10,1'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Authentication Guards
     |--------------------------------------------------------------------------
     |

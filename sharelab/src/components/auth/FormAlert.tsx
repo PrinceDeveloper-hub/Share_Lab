@@ -26,11 +26,19 @@ export const FormAlert = ({
       className={cn(
         'flex items-start gap-2.5 rounded-[var(--radius-sm)] border px-3.5 py-2.5 text-[0.8125rem] leading-relaxed',
         variant === 'error' &&
+<<<<<<< HEAD
           'border-[rgba(164,69,59,0.22)] bg-[var(--error-soft)] text-[var(--error)]',
         variant === 'success' &&
           'border-[rgba(63,107,79,0.22)] bg-[var(--success-soft)] text-[var(--success)]',
         variant === 'info' &&
           'border-[var(--border-subtle)] bg-[rgba(239,230,217,0.5)] text-[var(--muted)]',
+=======
+          'border-[rgba(169,72,60,0.2)] bg-[rgba(169,72,60,0.07)] text-(--error)',
+        variant === 'success' &&
+          'border-[rgba(53,107,76,0.2)] bg-[rgba(53,107,76,0.07)] text-(--success)',
+        variant === 'info' &&
+          'border-[rgba(81,53,34,0.12)] bg-[rgba(81,53,34,0.045)] text-(--muted)',
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
         className,
       )}
     >

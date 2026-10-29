@@ -2,164 +2,160 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Concerns\ApiResponses;
+use App\Http\Requests\BookingRequest;
+use App\Http\Requests\ConditionReportRequest;
+use App\Http\Requests\DecisionRequest;
+use App\Http\Requests\ExtendBookingRequest;
+use App\Http\Requests\IncidentRequest;
+use App\Http\Resources\BookingResource;
+use App\Http\Resources\IncidentResource;
+use App\Http\Resources\TimelineEntryResource;
+use App\Models\AuditLog;
 use App\Models\Booking;
 use App\Models\ConditionReport;
 use App\Models\Resource;
-use App\Models\User;
-use App\Enums\BookingStatus;
-use App\Services\BookingService;
+use App\Services\Booking\BookingService;
+use App\Services\Booking\PriorityScoreCalculator;
+use App\Services\Condition\ConditionReportService;
+use App\Services\Incident\IncidentService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use App\Http\Requests\ResourceCreateRequest; // For validation helpers
 
 class BookingController extends Controller
 {
-    /**
-     * Create a new booking request.
-     */
-    public function store(Request $request)
+    use ApiResponses;
+
+    public function __construct(
+        private readonly BookingService $bookings,
+        private readonly ConditionReportService $conditions,
+        private readonly IncidentService $incidents,
+    ) {
+    }
+
+    public function index(Request $request): JsonResponse
     {
-        $validated = $request->validate([
-            'resource_id' => ['required', 'exists:resources,id'],
-            'start_at' => ['required', 'datetime'],
-            'end_at' => ['required', 'datetime', 'after:start_at'],
-            'purpose' => ['nullable', 'string'],
+        $paginator = $this->bookings->paginateForUser($request->user(), $request->all());
+
+        return $this->paginated($paginator, BookingResource::class, 'Bookings retrieved successfully.');
+    }
+
+    public function managerIndex(Request $request): JsonResponse
+    {
+        $paginator = $this->bookings->paginateForManager($request->user(), $request->all());
+        $calculator = app(PriorityScoreCalculator::class);
+
+        $paginator->getCollection()->each(function (Booking $booking) use ($calculator): void {
+            if ($booking->status->value === 'pending') {
+                $booking->recommendation = $calculator->recommendation($booking);
+            }
+        });
+
+        return $this->paginated($paginator, BookingResource::class, 'Request queue retrieved successfully.');
+    }
+
+    public function ownerIndex(Request $request): JsonResponse
+    {
+        $paginator = $this->bookings->paginateForOwner($request->user(), $request->all());
+
+        return $this->paginated($paginator, BookingResource::class, 'Owned resource bookings retrieved successfully.');
+    }
+
+    public function store(BookingRequest $request): JsonResponse
+    {
+        $resource = Resource::query()->findOrFail($request->integer('resource_id'));
+        $this->authorize('create', [Booking::class, $resource]);
+
+        $booking = $this->bookings->request($request->user(), $request->validated());
+
+        return $this->resource(new BookingResource($booking), 'Booking request submitted successfully.', 201);
+    }
+
+    public function show(Request $request, Booking $booking): JsonResponse
+    {
+        $this->authorize('view', $booking);
+        $booking = $booking->fresh([
+            'resource.owner', 'resource.requirements', 'resource.managers', 'user',
+            'checkInReport', 'returnReport', 'incidents',
         ]);
 
-        $user = $request->user();
-        $resource = Resource::findOrFail($validated['resource_id']);
-
-        // 1. Check eligibility
-        $eligibility = BookingService::checkEligibility($user, $resource);
-        if (!$eligibility['qualifies']) {
-            return response()->json([
-                'data' => null,
-                'message' => $eligibility['message'],
-                'errors' => [],
-            ], 422);
+        $extra = [];
+        if ($request->user()->can('decide', $booking) && $booking->status->value === 'pending') {
+            $extra['recommendation'] = app(PriorityScoreCalculator::class)->recommendation($booking);
         }
 
-        // 2. Check duration and weekly cap
-        $durationCheck = BookingService::checkDurationAndCap($resource, $user, $validated['start_at'], $validated['end_at']);
-        if (!$durationCheck['qualifies']) {
-            return response()->json([
-                'data' => null,
-                'message' => $durationCheck['message'],
-                'errors' => [],
-                'hours_used' => $durationCheck['hours_used'],
-                'hours_cap' => $durationCheck['hours_cap'],
-            ], 422);
-        }
+        return $this->resource(new BookingResource($booking), 'Booking retrieved successfully.', 200, $extra);
+    }
 
-        // 3. Check for conflicts
-        $conflictCheck = BookingService::checkConflict($resource, $validated['start_at'], $validated['end_at']);
+    public function decision(DecisionRequest $request, Booking $booking): JsonResponse
+    {
+        $this->authorize('decide', $booking);
 
-        if ($conflictCheck['hasConflict']) {
-            // Create as waitlisted with position
-            $waitlisted = Booking::create([
-                'resource_id' => $resource->id,
-                'user_id' => $user->id,
-                'start_at' => $validated['start_at'],
-                'end_at' => $validated['end_at'],
-                'purpose' => $validated['purpose'],
-                'status' => BookingStatus::Waitlisted,
-                'waitlist_position' => 1, // Will be recalculated
-                'priority_score' => BookingService::calculatePriorityScore($user, $resource)['priority_score'],
-                'priority_explanation' => BookingService::calculatePriorityScore($user, $resource)['priority_explanation'],
-            ]);
-
-            // Determine the position (how many approved/checked_in bookings are ahead)
-            $position = Booking::where('resource_id', $resource->id)
-                ->where('status', BookingStatus::Approved)
-                ->orWhere('status', BookingStatus::CheckedIn)
-                ->count() + 1;
-
-            $waitlisted->waitlist_position = $position;
-            $waitlisted->save();
-
-            // Create audit log
-            AuditLog::record(
-                $user,
-                'booking_created',
-                Booking::class,
-                $waitlisted->id,
-                "Booking created as waitlisted #{$position} due to slot conflict"
-            );
-
-            // Notify the user
-            Notification::create([
-                'user_id' => $user->id,
-                'type' => 'booking_waitlisted',
-                'message' => "Slot taken. You are waitlisted #{$position}.",
-                'booking_id' => $waitlisted->id,
-            ]);
-
-            return response()->json([
-                'data' => new \App\Http\Resources\BookingResource($waitlisted),
-                'message' => "Slot taken. You are waitlisted #{$position}.",
-            ], 201);
-        }
-
-        // No conflict - create as pending for decision
-        $priority = BookingService::calculatePriorityScore($user, $resource);
-
-        $booking = Booking::create([
-            'resource_id' => $resource->id,
-            'user_id' => $user->id,
-            'start_at' => $validated['start_at'],
-            'end_at' => $validated['end_at'],
-            'purpose' => $validated['purpose'],
-            'status' => BookingStatus::Pending,
-            'priority_score' => $priority['priority_score'],
-            'priority_explanation' => $priority['priority_explanation'],
-        ]);
-
-        // Create audit log
-        AuditLog::record(
-            $user,
-            'booking_created',
-            Booking::class,
-            $booking->id,
-            "Booking request created and pending decision"
+        $booking = $this->bookings->decide(
+            $request->user(),
+            $booking,
+            (string) $request->input('decision'),
+            (string) $request->input('reason'),
         );
 
-        return response()->json([
-            'data' => new \App\Http\Resources\BookingResource($booking),
-            'message' => 'Booking request created successfully. Awaiting approval.',
-        ], 201);
+        return $this->resource(new BookingResource($booking), 'Decision recorded successfully.');
     }
 
-    /**
-     * Show user's bookings.
-     */
-    public function index(Request $request)
+    public function cancel(Request $request, Booking $booking): JsonResponse
     {
-        $user = $request->user();
+        $this->authorize('cancel', $booking);
 
-        $status = $request->input('status');
+        $validated = $request->validate(['reason' => ['nullable', 'string', 'max:1000']]);
+        $booking = $this->bookings->cancel($request->user(), $booking, $validated['reason'] ?? null);
 
+<<<<<<< HEAD
         $query = $user->bookings()
             ->with(['resource', 'checkInReport.reporter', 'returnReport.reporter']);
+=======
+        return $this->resource(new BookingResource($booking), 'Booking cancelled successfully.');
+    }
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
 
-        if ($status) {
-            $query->where('status', $status);
-        }
+    public function extend(ExtendBookingRequest $request, Booking $booking): JsonResponse
+    {
+        $this->authorize('extend', $booking);
 
-        $bookings = $query->latest('start_at')->paginate($request->input('per_page', 10));
+        $booking = $this->bookings->extend($request->user(), $booking, (string) $request->input('end_at'));
 
-        return response()->json([
-            'data' => new \App\Http\Resources\BookingResourceCollection($bookings),
-            'message' => 'Bookings retrieved successfully.',
-            'meta' => [
-                'page' => $bookings->currentPage(),
-                'per_page' => $bookings->perPage(),
-                'total' => $bookings->total(),
-                'last_page' => $bookings->lastPage(),
-            ],
-        ], 200);
+        return $this->resource(new BookingResource($booking), 'Booking extended successfully.');
     }
 
+    public function confirm(Request $request, Booking $booking): JsonResponse
+    {
+        $this->authorize('view', $booking);
+        $booking = $this->bookings->confirmOffer($request->user(), $booking);
+
+        return $this->resource(new BookingResource($booking), 'Waitlist offer confirmed.');
+    }
+
+    public function checkIn(ConditionReportRequest $request, Booking $booking): JsonResponse
+    {
+        $this->authorize('checkIn', $booking);
+
+        $data = $request->validated();
+        if ($request->hasFile('photo')) {
+            $data['file_path'] = $request->file('photo')->store('condition-reports/'.$booking->id, 'local');
+        }
+
+        $report = $this->conditions->checkIn($request->user(), $booking, $data);
+
+        return $this->ok([
+            'report' => [
+                'id' => $report->id,
+                'condition' => $report->condition,
+                'notes' => $report->notes,
+                'at' => $report->created_at?->toIso8601String(),
+            ],
+            'booking' => (new BookingResource($booking->fresh(['resource', 'user'])))->resolve(),
+        ], 'Checked in successfully.');
+    }
+
+<<<<<<< HEAD
     /**
      * List booking requests across the resources a manager is assigned to, or
      * every booking for an administrator. Used by the manager decision queue.
@@ -227,88 +223,49 @@ class BookingController extends Controller
      * Show a specific booking.
      */
     public function show(Booking $booking, Request $request)
+=======
+    public function returnItems(ConditionReportRequest $request, Booking $booking): JsonResponse
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
     {
-        // Check authorization
-        $canView = $request->user()->role->isAdmin() ||
-                   $request->user()->id === $booking->user_id ||
-                   $booking->resource->managers->contains($request->user()->id);
+        $this->authorize('returnItems', $booking);
 
-        if (!$canView) {
-            return response()->json([
-                'data' => null,
-                'message' => 'You do not have permission to view this booking.',
-                'errors' => [],
-            ], 403);
+        $data = $request->validated();
+        if ($request->hasFile('photo')) {
+            $data['file_path'] = $request->file('photo')->store('condition-reports/'.$booking->id, 'local');
         }
 
+<<<<<<< HEAD
         $booking->load(['resource', 'user', 'checkInReport.reporter', 'returnReport.reporter']);
 
         $bookingResource = new \App\Http\Resources\BookingResource($booking);
+=======
+        $report = $this->conditions->return($request->user(), $booking, $data);
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
 
-        // Add extra data for managers
-        if ($request->user()->role->isManager() || $request->user()->id === $booking->resource->owner_id) {
-            $bookingResource->additional = [
-                'priority_score' => $booking->priority_score,
-                'priority_explanation' => $booking->priority_explanation,
-                'recommendation' => BookingService::getRecommendation($booking),
-            ];
-        }
-
-        return response()->json([
-            'data' => $bookingResource,
-            'message' => 'Booking details retrieved successfully.',
-        ], 200);
+        return $this->ok([
+            'report' => [
+                'id' => $report->id,
+                'condition' => $report->condition,
+                'notes' => $report->notes,
+                'at' => $report->created_at?->toIso8601String(),
+            ],
+            'booking' => (new BookingResource($booking->fresh(['resource', 'user'])))->resolve(),
+        ], 'Return recorded successfully.');
     }
 
-    /**
-     * Decide on a booking (approve, reject, waitlist).
-     */
-    public function decision(Request $request, Booking $booking)
+    public function reportIncident(IncidentRequest $request, Booking $booking): JsonResponse
     {
-        $validated = $request->validate([
-            'decision' => ['required', 'in:approve,reject,waitlist'],
-            'reason' => ['required', 'string'],
-        ]);
+        $this->authorize('view', $booking);
+        $incident = $this->incidents->report($request->user(), $booking, $request->validated());
 
-        // Check authorization
-        if (!$request->user()->can('decide', $booking)) {
-            return response()->json([
-                'data' => null,
-                'message' => 'You are not authorized to make decisions on this booking.',
-                'errors' => [],
-            ], 403);
-        }
-
-        try {
-            $booking = BookingService::decide($booking, $validated['decision'], $validated['reason'], $request->user());
-
-            return response()->json([
-                'data' => new \App\Http\Resources\BookingResource($booking),
-                'message' => "Booking {$validated['decision']}d successfully.",
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'data' => null,
-                'message' => $e->getMessage(),
-                'errors' => [],
-            ], 422);
-        }
+        return $this->resource(new IncidentResource($incident), 'Incident reported successfully.', 201);
     }
 
-    /**
-     * Cancel a booking.
-     */
-    public function cancel(Request $request, Booking $booking)
+    public function timeline(Request $request, Booking $booking): JsonResponse
     {
-        // Check authorization
-        if (!$request->user()->can('cancel', $booking)) {
-            return response()->json([
-                'data' => null,
-                'message' => 'You are not authorized to cancel this booking.',
-                'errors' => [],
-            ], 403);
-        }
+        $this->authorize('view', $booking);
 
+<<<<<<< HEAD
         try {
             $booking = BookingService::cancel($booking, $request->user());
 
@@ -483,22 +440,22 @@ class BookingController extends Controller
         $auditLogs = $booking->auditLogs()
             ->with('actor')
             ->latest('created_at')
+=======
+        $entries = AuditLog::query()
+            ->with('actor:id,name,email,role')
+            ->where('booking_id', $booking->id)
+            ->oldest()
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
             ->get();
 
-        $timeline = $auditLogs->map(function ($log) {
-            return [
-                'id' => $log->id,
-                'action' => $log->action,
-                'actor_name' => $log->actor?->name ?? 'System',
-                'timestamp' => $log->created_at->toISOString(),
-                'reason' => $log->reason,
-                'meta' => $log->meta,
-            ];
-        });
+        return $this->ok(
+            TimelineEntryResource::collection($entries)->resolve(),
+            'Booking timeline retrieved successfully.',
+        );
+    }
 
-        return response()->json([
-            'data' => $timeline,
-            'message' => 'Timeline retrieved successfully.',
-        ], 200);
+    public function dashboard(Request $request): JsonResponse
+    {
+        return $this->ok($this->bookings->dashboard($request->user()), 'Dashboard summary retrieved successfully.');
     }
 }

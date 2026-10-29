@@ -144,6 +144,7 @@ export const HowItWorksPage = () => {
 
   return (
     <SiteLayout>
+<<<<<<< HEAD
       <div className="border-b border-[var(--border-subtle)]">
         <div className="page-shell py-8 sm:py-10 lg:py-12">
           <PageHeader
@@ -179,6 +180,80 @@ export const HowItWorksPage = () => {
                     <span className="text-[0.78rem] font-medium text-[var(--charcoal)]">
                       {step.phase}
                     </span>
+=======
+      <section className="relative overflow-hidden border-b border-(--border-subtle) bg-[rgba(255,252,247,0.46)]">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -left-40 -top-32 h-96 w-96 rounded-full bg-[radial-gradient(circle,rgba(198,165,138,0.22),transparent_70%)] blur-3xl"
+        />
+        <div className="page-shell relative py-10 sm:py-14 lg:py-20">
+          <nav aria-label="Breadcrumb" className="mb-6">
+            <ol className="flex items-center gap-1.5 text-xs font-medium text-(--muted)">
+              <li>
+                <Link to="/" className="transition-colors hover:text-(--espresso)">
+                  Home
+                </Link>
+              </li>
+              <li aria-hidden="true">
+                <CrumbChevron className="h-3.5 w-3.5" />
+              </li>
+              <li aria-current="page" className="text-(--charcoal)">
+                How It Works
+              </li>
+            </ol>
+          </nav>
+
+          <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:gap-16">
+            <div>
+              <span className="eyebrow">The ShareLab process</span>
+              <h1 className="mt-3 max-w-2xl text-[clamp(2.3rem,5vw,3.8rem)] font-semibold leading-[1.02] tracking-[-0.038em] text-(--charcoal)">
+                From first search to a clean return.
+              </h1>
+              <p className="mt-5 max-w-xl text-base leading-relaxed text-(--muted) sm:text-lg">
+                ShareLab is built around a six-step resource lifecycle. Every step has a visible
+                owner, a clear checkpoint, and a reason — so access stays fair and the handover
+                stays accountable.
+              </p>
+              <div className="mt-7 flex flex-wrap items-center gap-4">
+                <Button asChild size="lg">
+                  <Link to="/resources">
+                    Browse the catalogue
+                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  </Link>
+                </Button>
+                <span className="text-sm text-(--muted)">
+                  Requirements are verified, not assumed.
+                </span>
+              </div>
+            </div>
+
+            <div className="relative overflow-hidden rounded-(--radius-panel) border border-(--border-subtle) bg-(--cream) p-6 shadow-(--shadow-md) sm:p-8">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-(--muted)">
+                    Process at a glance
+                  </p>
+                  <p className="mt-2 text-2xl font-semibold tracking-tight text-(--charcoal)">
+                    Six checkpoints
+                  </p>
+                </div>
+                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-(--espresso) text-(--cream)">
+                  <CheckCircle2 className="h-5 w-5" aria-hidden="true" />
+                </span>
+              </div>
+
+              <ol className="mt-6 space-y-3">
+                {steps.map((step) => (
+                  <li
+                    key={step.number}
+                    className="flex items-center gap-3 border-b border-(--border-subtle) pb-3 last:border-0 last:pb-0"
+                  >
+                    <span className="font-display text-xs font-bold tracking-[0.14em] text-(--taupe)">
+                      {step.number}
+                    </span>
+                    <step.icon className="h-4 w-4 text-(--espresso)" aria-hidden="true" />
+                    <span className="text-sm font-medium text-(--charcoal)">{step.phase}</span>
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
                   </li>
                 ))}
               </ol>
@@ -204,18 +279,28 @@ export const HowItWorksPage = () => {
               key={step.number}
               className="grid grid-cols-[2.5rem_minmax(0,1fr)] gap-4 sm:grid-cols-[3.5rem_minmax(0,1fr)] sm:gap-6"
             >
+<<<<<<< HEAD
               <div className="relative flex justify-start">
                 <span className="relative z-10 flex h-10 w-10 items-center justify-center rounded-full border border-[var(--border-subtle)] bg-[var(--cream)] font-mono text-[0.75rem] font-medium text-[var(--espresso)]">
+=======
+              <div className="relative flex justify-center">
+                <span className="relative z-10 flex h-11 w-11 items-center justify-center rounded-full border border-[rgba(81,53,34,0.16)] bg-(--cream) font-display text-sm font-bold text-(--espresso) shadow-(--shadow-xs) sm:h-14 sm:w-14 sm:text-base">
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
                   {step.number}
                 </span>
                 {index < steps.length - 1 ? (
                   <span
                     aria-hidden="true"
+<<<<<<< HEAD
                     className="absolute left-5 top-10 h-[calc(100%-1.5rem)] w-px bg-[var(--border-subtle)]"
+=======
+                    className="absolute -bottom-4 top-11 w-px bg-[rgba(81,53,34,0.18)] sm:-bottom-6 sm:top-14"
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
                   />
                 ) : null}
               </div>
 
+<<<<<<< HEAD
               <div className="rounded-[var(--radius-lg)] border border-[var(--border-subtle)] bg-[var(--cream)] p-5">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="flex h-7 w-7 items-center justify-center rounded-[0.375rem] bg-[rgba(81,53,34,0.06)]">
@@ -235,6 +320,24 @@ export const HowItWorksPage = () => {
                   {step.description}
                 </p>
                 <p className="mt-3 rounded-[0.375rem] bg-[rgba(239,230,217,0.45)] px-3 py-2 text-[0.75rem] leading-relaxed text-[var(--muted)]">
+=======
+              <div className="rounded-(--radius-lg) border border-(--border-subtle) bg-(--surface) p-5 shadow-(--shadow-xs) sm:p-6">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[rgba(81,53,34,0.075)]">
+                    <step.icon className="h-4 w-4 text-(--espresso)" aria-hidden="true" />
+                  </span>
+                  <span className="text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-(--muted)">
+                    {step.phase}
+                  </span>
+                </div>
+                <h3 className="mt-3 text-lg font-semibold text-(--charcoal) sm:text-xl">
+                  {step.title}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-(--muted) sm:text-base">
+                  {step.description}
+                </p>
+                <p className="mt-3 rounded-xl bg-[rgba(233,217,198,0.32)] px-3.5 py-2.5 text-xs leading-relaxed text-(--muted) sm:text-sm">
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
                   {step.detail}
                 </p>
               </div>
@@ -244,8 +347,13 @@ export const HowItWorksPage = () => {
       </section>
 
       <section
+<<<<<<< HEAD
         aria-labelledby="safeguards-heading"
         className="border-y border-[var(--border-subtle)] bg-[rgba(239,230,217,0.45)] py-[var(--section-y)]"
+=======
+        aria-labelledby="important-notes"
+        className="border-y border-(--border-subtle) bg-[rgba(255,249,241,0.62)] py-16 sm:py-20"
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
       >
         <div className="page-shell">
           <SectionHeading
@@ -258,6 +366,7 @@ export const HowItWorksPage = () => {
           <div className="mt-8 grid gap-4 md:grid-cols-3">
             {safeguards.map((item) => (
               <div
+<<<<<<< HEAD
                 key={item.title}
                 className="flex flex-col rounded-[var(--radius-lg)] border border-[var(--border-subtle)] bg-[var(--cream)] p-5"
               >
@@ -273,10 +382,25 @@ export const HowItWorksPage = () => {
                 <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-[var(--muted)]">
                   {item.description}
                 </p>
+=======
+                key={note.title}
+                className="flex h-full flex-col gap-4 rounded-(--radius-lg) border border-(--border-subtle) bg-(--cream) p-6"
+              >
+                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[rgba(81,53,34,0.075)]">
+                  <note.icon className="h-5 w-5 text-(--espresso)" aria-hidden="true" />
+                </span>
+                <div>
+                  <h3 className="text-lg font-semibold text-(--charcoal)">{note.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-(--muted)">
+                    {note.description}
+                  </p>
+                </div>
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
               </div>
             ))}
           </div>
 
+<<<<<<< HEAD
           <p className="mt-5 rounded-[var(--radius-md)] border border-[rgba(156,107,36,0.22)] bg-[rgba(248,240,225,0.6)] px-4 py-3 text-[0.8125rem] leading-relaxed text-[var(--muted)]">
             <strong className="font-semibold text-[var(--charcoal)]">
               A note on availability:
@@ -285,6 +409,14 @@ export const HowItWorksPage = () => {
             guarantee an open slot. The server evaluates conflicts, eligibility,
             duration, and weekly caps when a request is submitted.
           </p>
+=======
+          <div className="mt-5 rounded-(--radius-lg) border border-[rgba(154,107,34,0.22)] bg-[rgba(154,107,34,0.06)] p-5 text-sm leading-relaxed text-(--muted)">
+            <strong className="font-semibold text-(--charcoal)">A note on availability:</strong>{' '}
+            a listing’s “Active” status means it is published — it does not guarantee an open slot.
+            The server evaluates conflicts, eligibility, duration, and weekly caps when a request is
+            submitted.
+          </div>
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
         </div>
       </section>
 
@@ -297,6 +429,13 @@ export const HowItWorksPage = () => {
               title="Answers to the practical ones"
               description="Based on the behaviour implemented in the ShareLab booking flow."
             />
+<<<<<<< HEAD
+=======
+            <p className="mt-6 text-sm leading-relaxed text-(--muted)">
+              Still deciding whether a resource fits? Start with its catalogue listing — the rules
+              and limits are shown before you request a time.
+            </p>
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
             <Button asChild variant="secondary" className="mt-5">
               <Link to="/resources">Open the catalogue</Link>
             </Button>
@@ -304,6 +443,7 @@ export const HowItWorksPage = () => {
 
           <div className="divide-y divide-[var(--border-subtle)] border-y border-[var(--border-subtle)]">
             {faqs.map((faq) => (
+<<<<<<< HEAD
               <details key={faq.question} className="group">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-4 [&::-webkit-details-marker]:hidden">
                   <span className="text-[0.875rem] font-medium text-[var(--charcoal)]">
@@ -317,12 +457,31 @@ export const HowItWorksPage = () => {
                 <p className="pb-4 text-[0.8125rem] leading-relaxed text-[var(--muted)]">
                   {faq.answer}
                 </p>
+=======
+              <details
+                key={faq.question}
+                className="group rounded-2xl border border-(--border-subtle) bg-(--surface) open:bg-(--cream)"
+              >
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 [&::-webkit-details-marker]:hidden">
+                  <span className="text-sm font-semibold text-(--charcoal) sm:text-base">
+                    {faq.question}
+                  </span>
+                  <Plus
+                    className="h-4 w-4 shrink-0 text-(--espresso) transition-transform duration-200 group-open:rotate-45"
+                    aria-hidden="true"
+                  />
+                </summary>
+                <div className="px-5 pb-5">
+                  <p className="text-sm leading-relaxed text-(--muted)">{faq.answer}</p>
+                </div>
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
               </details>
             ))}
           </div>
         </div>
       </section>
 
+<<<<<<< HEAD
       <Reveal className="page-shell pb-[var(--section-y)]">
         <div className="flex flex-col items-start justify-between gap-5 rounded-[var(--radius-xl)] bg-[var(--deep-brown)] px-6 py-9 sm:flex-row sm:items-center sm:px-10">
           <div>
@@ -332,6 +491,17 @@ export const HowItWorksPage = () => {
             <p className="mt-2 max-w-xl text-[0.875rem] leading-relaxed text-[rgba(248,245,239,0.64)]">
               Search the catalogue, review the requirements, and submit a
               request for a time that works for you.
+=======
+      <section className="page-shell pb-20">
+        <div className="flex flex-col items-start justify-between gap-6 rounded-(--radius-panel) border border-(--border-subtle) bg-[rgba(233,217,198,0.34)] px-6 py-8 sm:flex-row sm:items-center sm:px-8">
+          <div>
+            <h2 className="text-2xl font-semibold tracking-tight text-(--charcoal) sm:text-3xl">
+              Ready to start with a real listing?
+            </h2>
+            <p className="mt-2 max-w-xl text-sm leading-relaxed text-(--muted)">
+              Search the catalogue, review the requirements, and submit a request for a time that
+              works for you.
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
             </p>
           </div>
           <Button asChild variant="inverse" size="lg" className="shrink-0">

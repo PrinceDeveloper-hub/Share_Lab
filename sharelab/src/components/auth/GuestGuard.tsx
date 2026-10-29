@@ -10,14 +10,14 @@ export interface GuestGuardProps {
 }
 
 const SessionCheck = () => (
-  <div className="flex min-h-dvh items-center justify-center bg-[#f4eee5] px-6">
+  <div className="flex min-h-dvh items-center justify-center bg-(--ivory) px-6">
     <div
       role="status"
       aria-live="polite"
-      className="flex items-center gap-3 rounded-full border border-[rgba(82,59,45,0.14)] bg-[rgba(255,252,247,0.78)] px-5 py-3 text-sm font-medium text-[var(--muted)] shadow-[0_18px_50px_-32px_rgba(75,47,31,0.5)] backdrop-blur-xl"
+      className="flex items-center gap-3 rounded-full border border-[rgba(81,53,34,0.14)] bg-[rgba(255,252,247,0.78)] px-5 py-3 text-sm font-medium text-(--muted) shadow-[0_18px_50px_-32px_rgba(81,53,34,0.5)] backdrop-blur-xl"
     >
       <Loader2
-        className="h-4 w-4 animate-spin text-[var(--espresso)]"
+        className="h-4 w-4 animate-spin text-(--espresso)"
         aria-hidden="true"
       />
       Checking your session...

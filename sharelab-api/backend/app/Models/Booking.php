@@ -29,6 +29,8 @@ class Booking extends Model
         'end_at' => 'datetime',
         'status' => BookingStatus::class,
         'priority_score' => 'decimal:2',
+        'waitlist_position' => 'integer',
+        'confirm_by' => 'datetime',
         'is_late' => 'boolean',
     ];
 
@@ -77,6 +79,16 @@ class Booking extends Model
      */
     public function auditLogs(): HasMany
     {
-        return $this->hasMany(AuditLog::class, 'booking_id');
+        return $this->hasMany(AuditLog::class, 'booking_id')->oldest();
+    }
+
+    public function conditionReports(): HasMany
+    {
+        return $this->hasMany(ConditionReport::class);
+    }
+
+    public function isOffer(): bool
+    {
+        return $this->status === BookingStatus::Pending && $this->confirm_by !== null;
     }
 }

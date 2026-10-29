@@ -46,6 +46,21 @@ class User extends Authenticatable
         return $this->role === Role::Owner;
     }
 
+    public function isUser(): bool
+    {
+        return $this->role === Role::User;
+    }
+
+    public function hasRole(Role|string ...$roles): bool
+    {
+        $role = $this->role instanceof Role ? $this->role->value : (string) $this->role;
+
+        return in_array($role, array_map(
+            static fn (Role|string $item): string => $item instanceof Role ? $item->value : $item,
+            $roles,
+        ), true);
+    }
+
     /**
      * Get the bookings for the user.
      */

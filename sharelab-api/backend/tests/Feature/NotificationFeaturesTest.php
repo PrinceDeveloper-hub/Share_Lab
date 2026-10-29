@@ -2,59 +2,104 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use App\Models\User;
+use App\Enums\Role;
+use App\Models\Notification;
+use Carbon\CarbonImmutable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\Concerns\DomainFixtures;
+use Tests\TestCase;
 
 class NotificationFeaturesTest extends TestCase
 {
     use RefreshDatabase;
+    use DomainFixtures;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user1 = User::factory()->create(['email' => 'notif1@sharelab.test']);
-        $this->user2 = User::factory()->create(['email' => 'notif2@sharelab.test']);
+        CarbonImmutable::setTestNow('2026-03-02 09:00:00');
     }
 
-    /**
-     * Test getting notifications.
-     */
-    public function test_getting_notifications()
+    protected function tearDown(): void
     {
-        $this->actingAs($this->user1);
-
-        $response = $this->getJson('/api/notifications');
-
-        $response->assertStatus(200);
+        CarbonImmutable::setTestNow();
+        parent::tearDown();
     }
 
-    /**
-     * Test marking a notification as read.
-     */
-    public function test_marking_notification_as_read()
+    public function test_user_sees_only_their_own_notifications(): void
     {
-        $this->actingAs($this->user1);
+        $user = $this->makeUser(Role::User);
+        $other = $this->makeUser(Role::User);
 
-        // Mark notification as read
-        $response = $this->patchJson('/api/notifications/read', [
-            'notification_ids' => [], // Will be handled differently
+        Notification::query()->create([
+            'user_id' => $user->id,
+            'type' => 'booking_approved',
+            'message' => 'Your request was approved.',
+        ]);
+        Notification::query()->create([
+            'user_id' => $other->id,
+            'type' => 'booking_rejected',
+            'message' => 'Private message.',
         ]);
 
-        // This needs the notification ID
-        // For now, just test the endpoint exists
-        $this->assertTrue(true);
+        $this->actingAs($user)
+            ->getJson('/api/notifications')
+            ->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.message', 'Your request was approved.');
     }
 
-    /**
-     * Test marking all notifications as read.
-     */
-    public function test_marking_all_notifications_as_read()
+    public function test_user_can_mark_one_notification_as_read(): void
     {
-        $this->actingAs($this->user1);
+        $user = $this->makeUser(Role::User);
+        $notification = Notification::query()->create([
+            'user_id' => $user->id,
+            'type' => 'booking_approved',
+            'message' => 'Approved.',
+        ]);
 
-        $response = $this->postJson('/api/notifications/read-all');
+        $this->actingAs($user)
+            ->patchJson("/api/notifications/{$notification->id}/read")
+            ->assertOk()
+            ->assertJsonPath('data.read', true);
 
-        $response->assertStatus(200);
+        $this->assertTrue($notification->fresh()->read);
+    }
+
+    public function test_user_cannot_mark_someone_elses_notification_as_read(): void
+    {
+        $user = $this->makeUser(Role::User);
+        $other = $this->makeUser(Role::User);
+        $notification = Notification::query()->create([
+            'user_id' => $other->id,
+            'type' => 'booking_approved',
+            'message' => 'Approved.',
+        ]);
+
+        $this->actingAs($user)
+            ->patchJson("/api/notifications/{$notification->id}/read")
+            ->assertStatus(403);
+    }
+
+    public function test_unread_count_and_read_all_are_scoped_to_the_user(): void
+    {
+        $user = $this->makeUser(Role::User);
+        $other = $this->makeUser(Role::User);
+
+        Notification::query()->create(['user_id' => $user->id, 'type' => 'a', 'message' => 'One']);
+        Notification::query()->create(['user_id' => $user->id, 'type' => 'b', 'message' => 'Two']);
+        $otherNotification = Notification::query()->create(['user_id' => $other->id, 'type' => 'c', 'message' => 'Three']);
+
+        $this->actingAs($user)
+            ->getJson('/api/notifications/unread-count')
+            ->assertOk()
+            ->assertJsonPath('data.unread', 2);
+
+        $this->actingAs($user)
+            ->patchJson('/api/notifications/read-all')
+            ->assertOk()
+            ->assertJsonPath('data.updated', 2);
+
+        $this->assertFalse($otherNotification->fresh()->read);
     }
 }

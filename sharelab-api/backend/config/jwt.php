@@ -35,9 +35,9 @@ return [
     |
     */
 
-    'access_cookie' => env('JWT_ACCESS_COOKIE', 'sharelab_access'),
+    'access_cookie' => env('JWT_ACCESS_COOKIE', 'sl_access'),
 
-    'refresh_cookie' => env('JWT_REFRESH_COOKIE', 'sharelab_refresh'),
+    'refresh_cookie' => env('JWT_REFRESH_COOKIE', 'sl_refresh'),
 
     'access_cookie_path' => '/',
 

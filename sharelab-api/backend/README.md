@@ -52,12 +52,15 @@ php artisan migrate --seed
 ```
 
 This will create:
-- 5 accounts (user1@sharelab.test, user2@sharelab.test, manager@sharelab.test, owner@sharelab.test, admin@sharelab.test)
-- 6 resources with requirements and caps
-- Sample credentials (user2 has one pre-verified 3D Printer Training credential)
+- 5 accounts: `user1@sharelab.test`, `user2@sharelab.test`, `manager@sharelab.test`, `owner@sharelab.test`, `admin@sharelab.test`
+- 6 resources with requirements, caps and the manager assigned to each
+- Sample credentials across both student accounts (verified 3D Printer Training, pending Laser Cutter Certification)
 - Sample bookings in every status with audit entries
 
 Default password for all accounts: `password`
+
+Reseeding also deletes the earlier `user@user.com` style demo accounts and their
+records, so exactly these five accounts remain.
 
 ### 6. Start the Development Server
 

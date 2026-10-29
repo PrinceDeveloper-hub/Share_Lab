@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { Link, useRouter, useRouterState } from '@tanstack/react-router'
 import { Loader2, ShieldAlert } from 'lucide-react'
 import type { User } from '../../lib/api-client'
@@ -23,10 +23,14 @@ const AuthLoading = () => (
     role="status"
     aria-live="polite"
   >
+<<<<<<< HEAD
     <div className="flex items-center gap-3 rounded-full border border-[var(--border-subtle)] bg-[rgba(255,252,247,0.72)] px-5 py-3 text-sm font-medium text-[var(--muted)] backdrop-blur">
 >>>>>>> b141025564dd3364106212a52ca5484ec458a43d
+=======
+    <div className="flex items-center gap-3 rounded-full border border-(--border-subtle) bg-(--surface) px-5 py-3 text-sm font-medium text-(--muted) backdrop-blur">
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
       <Loader2
-        className="h-4 w-4 animate-spin text-[var(--espresso)]"
+        className="h-4 w-4 animate-spin text-(--espresso)"
         aria-hidden="true"
       />
 <<<<<<< HEAD
@@ -41,17 +45,23 @@ const AuthLoading = () => (
 const AccessDenied = () => (
   <div className="page-shell py-16 sm:py-20">
 <<<<<<< HEAD
+<<<<<<< HEAD
     <div className="mx-auto max-w-lg rounded-[var(--radius-lg)] border border-[var(--border-subtle)] bg-[var(--cream)] p-8 text-center">
       <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[var(--error-soft)]">
 =======
     <div className="mx-auto max-w-lg rounded-[1.5rem] border border-[rgba(180,77,66,0.2)] bg-[rgba(255,252,247,0.72)] p-8 text-center shadow-[var(--shadow-sm)]">
       <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[rgba(180,77,66,0.08)]">
 >>>>>>> b141025564dd3364106212a52ca5484ec458a43d
+=======
+    <div className="mx-auto max-w-lg rounded-3xl border border-[rgba(169,72,60,0.2)] bg-(--surface) p-8 text-center shadow-soft">
+      <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[rgba(169,72,60,0.08)]">
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
         <ShieldAlert
-          className="h-5 w-5 text-[var(--error)]"
+          className="h-5 w-5 text-(--error)"
           aria-hidden="true"
         />
       </span>
+<<<<<<< HEAD
 <<<<<<< HEAD
       <h1 className="mt-4 font-display text-[1.5rem] font-semibold text-[var(--charcoal)]">
         Access not available
@@ -63,6 +73,12 @@ const AccessDenied = () => (
       </h1>
       <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
 >>>>>>> b141025564dd3364106212a52ca5484ec458a43d
+=======
+      <h1 className="mt-4 text-2xl font-semibold text-(--charcoal)">
+        Access not available
+      </h1>
+      <p className="mt-2 text-sm leading-relaxed text-(--muted)">
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
         Your account does not have the role required for this page.
       </p>
       <div className="mt-6 flex flex-wrap justify-center gap-2">
@@ -83,15 +99,27 @@ export const RouteGuard = ({ children, roles }: RouteGuardProps) => {
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
   })
+  // Remember where the visitor was headed: after the first redirect the
+  // location becomes /login, and re-reading it would replace the intended
+  // destination with the login page itself.
+  const intendedPath = useRef(pathname)
 
   useEffect(() => {
     if (status !== 'anonymous') return
+<<<<<<< HEAD
 
     // The guard can still be mounted for one render after the redirect lands
     // on /login. Never point the redirect at the auth pages themselves.
     if (pathname === '/login' || pathname === '/register') return
 
     router.history.replace(`/login?redirect=${encodeURIComponent(pathname)}`)
+=======
+    if (pathname.startsWith('/login') || pathname.startsWith('/register')) return
+
+    router.history.replace(
+      `/login?redirect=${encodeURIComponent(intendedPath.current)}`,
+    )
+>>>>>>> 43b1f52d824350fc2b0aec2318922a7c11a585ec
   }, [pathname, router, status])
 
   if (status === 'loading') return <AuthLoading />

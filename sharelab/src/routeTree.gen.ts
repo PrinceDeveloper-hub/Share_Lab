@@ -14,9 +14,12 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as CredentialsRouteImport } from './routes/credentials'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
+import { Route as IncidentsRouteImport } from './routes/incidents'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ManagerRouteImport } from './routes/manager'
+import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as OwnerRouteImport } from './routes/owner'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminAuditRouteImport } from './routes/admin.audit'
@@ -50,6 +53,11 @@ const HowItWorksRoute = HowItWorksRouteImport.update({
   path: '/how-it-works',
   getParentRoute: () => rootRouteImport,
 } as any)
+const IncidentsRoute = IncidentsRouteImport.update({
+  id: '/incidents',
+  path: '/incidents',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -60,9 +68,19 @@ const ManagerRoute = ManagerRouteImport.update({
   path: '/manager',
   getParentRoute: () => rootRouteImport,
 } as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OwnerRoute = OwnerRouteImport.update({
   id: '/owner',
   path: '/owner',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RegisterRoute = RegisterRouteImport.update({
@@ -107,9 +125,12 @@ export interface FileRoutesByFullPath {
   '/credentials': typeof CredentialsRoute
   '/dashboard': typeof DashboardRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/incidents': typeof IncidentsRoute
   '/login': typeof LoginRoute
   '/manager': typeof ManagerRoute
+  '/notifications': typeof NotificationsRoute
   '/owner': typeof OwnerRoute
+  '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/admin/audit': typeof AdminAuditRoute
   '/my-bookings/$bookingId': typeof MyBookingsBookingIdRoute
@@ -124,9 +145,12 @@ export interface FileRoutesByTo {
   '/credentials': typeof CredentialsRoute
   '/dashboard': typeof DashboardRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/incidents': typeof IncidentsRoute
   '/login': typeof LoginRoute
   '/manager': typeof ManagerRoute
+  '/notifications': typeof NotificationsRoute
   '/owner': typeof OwnerRoute
+  '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/admin/audit': typeof AdminAuditRoute
   '/my-bookings/$bookingId': typeof MyBookingsBookingIdRoute
@@ -142,9 +166,12 @@ export interface FileRoutesById {
   '/credentials': typeof CredentialsRoute
   '/dashboard': typeof DashboardRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/incidents': typeof IncidentsRoute
   '/login': typeof LoginRoute
   '/manager': typeof ManagerRoute
+  '/notifications': typeof NotificationsRoute
   '/owner': typeof OwnerRoute
+  '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/admin/audit': typeof AdminAuditRoute
   '/my-bookings/$bookingId': typeof MyBookingsBookingIdRoute
@@ -161,9 +188,12 @@ export interface FileRouteTypes {
     | '/credentials'
     | '/dashboard'
     | '/how-it-works'
+    | '/incidents'
     | '/login'
     | '/manager'
+    | '/notifications'
     | '/owner'
+    | '/profile'
     | '/register'
     | '/admin/audit'
     | '/my-bookings/$bookingId'
@@ -178,9 +208,12 @@ export interface FileRouteTypes {
     | '/credentials'
     | '/dashboard'
     | '/how-it-works'
+    | '/incidents'
     | '/login'
     | '/manager'
+    | '/notifications'
     | '/owner'
+    | '/profile'
     | '/register'
     | '/admin/audit'
     | '/my-bookings/$bookingId'
@@ -195,9 +228,12 @@ export interface FileRouteTypes {
     | '/credentials'
     | '/dashboard'
     | '/how-it-works'
+    | '/incidents'
     | '/login'
     | '/manager'
+    | '/notifications'
     | '/owner'
+    | '/profile'
     | '/register'
     | '/admin/audit'
     | '/my-bookings/$bookingId'
@@ -213,9 +249,12 @@ export interface RootRouteChildren {
   CredentialsRoute: typeof CredentialsRoute
   DashboardRoute: typeof DashboardRoute
   HowItWorksRoute: typeof HowItWorksRoute
+  IncidentsRoute: typeof IncidentsRoute
   LoginRoute: typeof LoginRoute
   ManagerRoute: typeof ManagerRoute
+  NotificationsRoute: typeof NotificationsRoute
   OwnerRoute: typeof OwnerRoute
+  ProfileRoute: typeof ProfileRoute
   RegisterRoute: typeof RegisterRoute
   AdminAuditRoute: typeof AdminAuditRoute
   MyBookingsBookingIdRoute: typeof MyBookingsBookingIdRoute
@@ -262,6 +301,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HowItWorksRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/incidents': {
+      id: '/incidents'
+      path: '/incidents'
+      fullPath: '/incidents'
+      preLoaderRoute: typeof IncidentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -276,11 +322,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManagerRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/owner': {
       id: '/owner'
       path: '/owner'
       fullPath: '/owner'
       preLoaderRoute: typeof OwnerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/register': {
@@ -341,9 +401,12 @@ const rootRouteChildren: RootRouteChildren = {
   CredentialsRoute: CredentialsRoute,
   DashboardRoute: DashboardRoute,
   HowItWorksRoute: HowItWorksRoute,
+  IncidentsRoute: IncidentsRoute,
   LoginRoute: LoginRoute,
   ManagerRoute: ManagerRoute,
+  NotificationsRoute: NotificationsRoute,
   OwnerRoute: OwnerRoute,
+  ProfileRoute: ProfileRoute,
   RegisterRoute: RegisterRoute,
   AdminAuditRoute: AdminAuditRoute,
   MyBookingsBookingIdRoute: MyBookingsBookingIdRoute,

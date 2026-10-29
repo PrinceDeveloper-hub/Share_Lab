@@ -1,16 +1,22 @@
-import { wayfinder } from "@laravel/vite-plugin-wayfinder";
 import { defineConfig } from "vite";
 import laravel from "laravel-vite-plugin";
+import { wayfinder } from "@laravel/vite-plugin-wayfinder";
 
-export default defineConfig({
-    plugins: [
+export default defineConfig(() => {
+    // 1. Initialize with your standard frontend plugins
+    const plugins = [
         laravel({
             input: ["resources/css/app.css", "resources/js/app.js"],
             refresh: true,
         }),
+    ];
 
-        // This line checks if the VERCEL environment variable exists.
-        // If it does, it skips loading the wayfinder plugin entirely.
-        !process.env.VERCEL ? wayfinder() : null,
-    ].filter(Boolean), // Cleans up the array by removing the 'null' on Vercel
+    // 2. ONLY push the wayfinder plugin if we are NOT running a Vercel build
+    if (!process.env.VERCEL) {
+        plugins.push(wayfinder());
+    }
+
+    return {
+        plugins: plugins,
+    };
 });

@@ -20,7 +20,7 @@ class BookingPolicy
 
     public function create(User $user, Resource $resource): bool
     {
-        return in_array($user->role, [Role::User, Role::Manager, Role::Owner], true);
+        return in_array($user->role, [Role::User, Role::Manager, Role::Owner, Role::Admin], true);
     }
 
     public function decide(User $user, Booking $booking): bool

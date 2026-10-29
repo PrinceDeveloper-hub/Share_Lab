@@ -29,7 +29,7 @@ decision records a reason.
 
 Frontend (`cd sharelab`), pnpm only:
 - `pnpm dev` — Vite on port 3000; proxies `/api` and `/storage` to
-  `http://localhost:8000`
+  `https://sharelab-api.local` (override with `VITE_API_PROXY_TARGET`)
 - `pnpm build`, `pnpm preview`
 - `pnpm lint` (eslint), `pnpm check` (prettier --check), `pnpm format`
 - `pnpm generate-routes` (`tsr generate`); dev/build also regenerate
@@ -38,7 +38,8 @@ Frontend (`cd sharelab`), pnpm only:
 Backend (`cd sharelab-api`):
 - `composer install`, then `cp .env.example .env && php artisan key:generate`
 - `php artisan migrate --seed` (MariaDB database `sharelab`, utf8mb4)
-- `php artisan serve` → API at `http://127.0.0.1:8000/api`
+- Laragon serves the API at `https://sharelab-api.local` (document root
+  `sharelab-api/public`); `php artisan serve` on `:8000` is the fallback
 - `php artisan test` — PHPUnit; tests use DB `sharelab_test` (real MariaDB,
   not sqlite), array cache, array mailer
 - `vendor/bin/pint --parallel` (or `--test` to check only)

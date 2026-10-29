@@ -151,7 +151,8 @@ docker compose -f docker-compose.prod.yml exec db sh -c \
 7. Give the platform a 60 s start timeout: PHP extensions compile in the image
    build, but the entrypoint waits for the database before serving.
 
-Local equivalent: `docker compose up -d --build` (API on `localhost:8000`, DB on
+Local equivalent: `docker compose up -d --build` (API published on `localhost:8000`
+and reachable at `https://sharelab-api.local` through the local vhost, DB on
 `localhost:3307`, optional phpMyAdmin with `--profile tools` on `localhost:8081`).
 
 ## 5. Frontend on Vercel
@@ -165,11 +166,12 @@ Local equivalent: `docker compose up -d --build` (API on `localhost:8000`, DB on
 | Output Directory | `dist` |
 | Node Version | 22 |
 
-`sharelab/vercel.json` pins install/build/output, so only the rewrite needs
+`sharelab/vercel.json` pins install/build/output, so only the rewrites need
 editing:
 
 ```json
-{ "source": "/api/(.*)", "destination": "https://YOUR-API-HOST/api/$1" }
+{ "source": "/api/(.*)", "destination": "https://YOUR-API-HOST/api/$1" },
+{ "source": "/storage/(.*)", "destination": "https://YOUR-API-HOST/storage/$1" }
 ```
 
 Replace `https://YOUR-API-HOST` with the API origin — **no `/api` suffix, no
@@ -206,7 +208,8 @@ curl -s -o /dev/null -w '%{http_code}\n' \
 - [ ] Logout clears the cookies and `/api/me` returns 401.
 - [ ] Upload a 3 MB credential PDF: 201. Upload a 5 MB file: rejected with a
       validation error, not a proxy error.
-- [ ] Resource images resolve (`<APP_URL>/storage/resources/...`).
+- [ ] Resource images resolve (`<SPA origin>/storage/resources/...` through the
+      `/storage` rewrite, not a hardcoded `APP_URL`).
 - [ ] `docker compose -f docker-compose.prod.yml logs scheduler` shows the
       schedule running (`sharelab:expire-waitlist-offers` every minute).
 

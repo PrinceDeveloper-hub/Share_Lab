@@ -34,7 +34,7 @@ import {
   useSubmitCredential,
 } from '../../hooks/useCredentials'
 import { useResources } from '../../hooks/useResources'
-import { getApiErrorMessage } from '../../lib/api-client'
+import { getApiErrorMessage, resolveApiUrl } from '../../lib/api-client'
 import type { Credential } from '../../lib/credentials'
 import { cn } from '../../lib/utils'
 
@@ -269,7 +269,7 @@ export const CredentialsPage = ({ initialTab = 'mine' }: CredentialsPageProps) =
                         <div className="flex shrink-0 flex-wrap gap-2">
                           {credential?.file_url ? (
                             <Button asChild variant="ghost" size="sm">
-                              <a href={credential.file_url} target="_blank" rel="noreferrer">
+                              <a href={resolveApiUrl(credential.file_url)} target="_blank" rel="noreferrer">
                                 <Download className="h-3.5 w-3.5" aria-hidden="true" />
                                 File
                               </a>
@@ -445,7 +445,7 @@ export const CredentialsPage = ({ initialTab = 'mine' }: CredentialsPageProps) =
                     <div className="flex flex-wrap gap-2">
                       {credential.file_url ? (
                         <Button asChild variant="secondary" size="sm">
-                          <a href={credential.file_url} target="_blank" rel="noreferrer">
+                          <a href={resolveApiUrl(credential.file_url)} target="_blank" rel="noreferrer">
                             <Download className="h-3.5 w-3.5" aria-hidden="true" />
                             Open file
                           </a>

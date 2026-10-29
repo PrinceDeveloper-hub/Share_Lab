@@ -18,8 +18,17 @@ class UserCredentialResource extends JsonResource
             'status' => $status,
             'review_note' => $this->review_note,
             'verified_by' => $this->verified_by,
+            // Relative on purpose: the browser must request the file through
+            // the origin the SPA is served from (Vite proxy locally, `/api`
+            // rewrite in production), otherwise APP_URL pins a host the
+            // browser may not be able to reach or trust.
             'file_url' => $this->file_path
-                ? URL::temporarySignedRoute('credentials.download', now()->addMinutes(10), ['credential' => $this->id])
+                ? URL::temporarySignedRoute(
+                    'credentials.download',
+                    now()->addMinutes(10),
+                    ['credential' => $this->id],
+                    absolute: false,
+                )
                 : null,
             'user' => new UserResource($this->whenLoaded('user')),
             'created_at' => $this->created_at,

@@ -9,6 +9,10 @@
       "destination": "https://YOUR-API-HOST/api/$1"
     },
     {
+      "source": "/storage/(.*)",
+      "destination": "https://YOUR-API-HOST/storage/$1"
+    },
+    {
       "source": "/((?!api/|storage/).*)",
       "destination": "/index.html"
     }

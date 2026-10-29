@@ -1,16 +1,16 @@
 import { defineConfig, devices } from '@playwright/test'
-import path from 'node:path'
-
-const here = import.meta.dirname
 
 const WEB_PORT = 4180
 const WEB_URL = `http://localhost:${WEB_PORT}`
-const API_URL = 'http://127.0.0.1:8000'
 
 /**
- * End-to-end tests run against the real stack: the Laravel API (seeded
- * MariaDB) plus the Vite dev server, which proxies `/api` to it. Both servers
- * are started automatically unless one is already listening.
+ * End-to-end tests run against the real stack: the Laravel API served over
+ * HTTPS at https://sharelab-api.local (Laragon + seeded MariaDB) plus the Vite
+ * dev server, which proxies `/api` and `/storage` to it. Start the API before
+ * running the suite; only the web server is booted here.
+ *
+ * `ignoreHTTPSErrors` accepts the local self-signed certificate when a test
+ * navigates straight to the API origin.
  */
 export default defineConfig({
   testDir: './e2e',
@@ -22,6 +22,7 @@ export default defineConfig({
   reporter: [['list']],
   use: {
     baseURL: WEB_URL,
+    ignoreHTTPSErrors: true,
     trace: 'retain-on-failure',
     video: 'off',
     screenshot: 'only-on-failure',
@@ -36,15 +37,8 @@ export default defineConfig({
   ],
   webServer: [
     {
-      command: 'php artisan serve --host=127.0.0.1 --port=8000',
-      cwd: path.resolve(here, '../sharelab-api'),
-      url: `${API_URL}/api/resources`,
-      reuseExistingServer: true,
-      timeout: 90_000,
-    },
-    {
       command: `pnpm exec vite dev --port ${WEB_PORT} --strictPort`,
-      cwd: here,
+      cwd: import.meta.dirname,
       url: WEB_URL,
       reuseExistingServer: true,
       timeout: 120_000,

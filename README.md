@@ -384,15 +384,21 @@ composer install
 cp .env.example .env        # fill APP_KEY, JWT_SECRET and the DB_* values
 php artisan key:generate
 php artisan migrate --seed  # creates the five demo accounts
-php artisan serve           # http://127.0.0.1:8000
 ```
+
+The local API is served over HTTPS at **https://sharelab-api.local** by a
+Laragon vhost whose document root is `sharelab-api/public`. If you prefer the
+built-in server (`php artisan serve`, `http://127.0.0.1:8000`), start the
+frontend with `VITE_API_PROXY_TARGET=http://127.0.0.1:8000 pnpm dev` instead.
+Locally issued certificates are self-signed, so `curl` needs `-k` until the
+Laragon CA is trusted.
 
 Or run the same API in Docker together with MariaDB:
 
 ```bash
 cp .env.example .env        # repository root: APP_KEY, JWT_SECRET, DB_PASSWORD
 docker compose up -d --build
-curl http://localhost:8000/api/health
+curl -k https://sharelab-api.local/api/health   # proxied to the container's :8000
 ```
 
 ### 3. Configure the frontend
@@ -403,9 +409,9 @@ pnpm install
 pnpm dev                    # http://localhost:3000
 ```
 
-Vite proxies `/api` and `/storage` to `http://localhost:8000`, so the SPA calls
-relative URLs and the auth cookies stay first-party. No API URL needs to be
-configured for local work.
+Vite proxies `/api` and `/storage` to `https://sharelab-api.local`, so the SPA
+calls relative URLs and the auth cookies stay first-party. No API URL needs to
+be configured for local work; set `VITE_API_PROXY_TARGET` to proxy elsewhere.
 
 Deployment (Vercel + the API container) is documented in
 [DEPLOYMENT.md](DEPLOYMENT.md).

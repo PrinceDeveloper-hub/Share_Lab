@@ -52,7 +52,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```bash
 # 1. Ensure MariaDB is running with 'sharelab' database (utf8mb4)
 # 2. Set up backend: cd sharelab-api && cp .env.example .env && php artisan key:generate && php artisan migrate --seed
-# 3. Start API: cd sharelab-api && php artisan serve          # http://127.0.0.1:8000
+# 3. Serve the API: Laragon vhost → https://sharelab-api.local (root sharelab-api/public)
 # 4. Start frontend: cd sharelab && pnpm dev                # http://localhost:3000
 ```
 

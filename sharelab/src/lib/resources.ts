@@ -1,4 +1,4 @@
-import { api } from './api-client'
+import { api, resolveApiUrl } from './api-client'
 import type { ApiResponse, User } from './api-client'
 
 export interface ResourceOwner {
@@ -184,7 +184,7 @@ const fallbackImage = '/images/resources/laser-cutter.webp'
 export const getResourceImage = (
   resource: Pick<Resource, 'name' | 'category'> & { image_url?: string | null },
 ) => {
-  if (resource.image_url) return resource.image_url
+  if (resource.image_url) return resolveApiUrl(resource.image_url)
 
   const source = `${resource.category} ${resource.name}`
   return (

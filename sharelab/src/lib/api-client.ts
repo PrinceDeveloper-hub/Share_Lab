@@ -99,6 +99,20 @@ const isAuthEndpoint = (url: string) =>
 const defaultBaseURL =
   import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || '/api'
 
+const absoluteApiBase = /^https?:\/\//i.test(defaultBaseURL) ? defaultBaseURL : ''
+
+/**
+ * The API answers with root-relative asset paths (`/storage/...`, signed
+ * credential downloads). Those must resolve against the API origin: the same
+ * origin as the SPA by default (Vite proxy / Vercel rewrite), or the explicit
+ * VITE_API_URL host for a cross-origin build. Absolute URLs pass through.
+ */
+export const resolveApiUrl = (url: string): string => {
+  if (!url || /^[a-z][a-z0-9+.-]*:/i.test(url) || !absoluteApiBase) return url
+
+  return new URL(url, absoluteApiBase).toString()
+}
+
 /**
  * The API answers with `{ data, message, errors, meta }`. Anything else (an
  * HTML page from a misrouted request, an empty body, a proxy error) must fail

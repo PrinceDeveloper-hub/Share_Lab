@@ -65,11 +65,12 @@ records, so exactly these five accounts remain.
 
 ### 6. Start the Development Server
 
-```bash
-php artisan serve
-```
+Serve `public/` from a Laragon vhost; the local API is available at
+`https://sharelab-api.local/api`. The built-in server also works:
 
-API will be available at `http://127.0.0.1:8000/api`
+```bash
+php artisan serve   # http://127.0.0.1:8000/api
+```
 
 ## API Endpoints
 

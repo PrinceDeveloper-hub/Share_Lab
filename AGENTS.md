@@ -9,7 +9,7 @@ This file provides compact, high-signal guidance for OpenCode sessions. Every li
 
 | Action | Command |
 |---|---|
-| Start dev server | `pnpm dev` — Vite on port 3000; proxies `/api` and `/storage` to `http://localhost:8000` |
+| Start dev server | `pnpm dev` — Vite on port 3000; proxies `/api` and `/storage` to `https://sharelab-api.local` (override with `VITE_API_PROXY_TARGET`) |
 | Build for production | `pnpm build` |
 | Preview build | `pnpm preview` |
 | Lint | `pnpm lint` (eslint) |
@@ -28,7 +28,7 @@ This file provides compact, high-signal guidance for OpenCode sessions. Every li
 | Create env file | `cp .env.example .env` (or `copy .env.example .env` on Windows CMD) |
 | Generate app key | `php artisan key:generate` |
 | Run migrations & seed | `php artisan migrate --seed` (MariaDB database `sharelab`) |
-| Start dev server | `php artisan serve` — API at `http://127.0.0.1:8000/api` |
+| Start dev server | Laragon vhost — API at `https://sharelab-api.local/api` (root `sharelab-api/public`); `php artisan serve` on `:8000` is the fallback |
 | Run tests | `php artisan test` — uses DB `sharelab_test` (real MariaDB, not sqlite) |
 | Check PHP formatting | `vendor/bin/pint --parallel` (or `--test` to check only) |
 | Full dev environment | `composer dev` runs serve + queue:listen + pail + vite together |
@@ -43,7 +43,7 @@ This file provides compact, high-signal guidance for OpenCode sessions. Every li
 ## Architecture & Package Boundaries
 
 - **Monorepo structure:** `sharelab/` (React 19 + Vite 8 + TanStack Router/Query, Tailwind v4) + `sharelab-api/` (Laravel 11 JSON API)
-- **Frontend → Backend:** Vite dev server proxies `/api` and `/storage` to `http://localhost:8000`; production uses absolute `VITE_API_BASE_URL`
+- **Frontend → Backend:** Vite dev server proxies `/api` and `/storage` to `https://sharelab-api.local` (`secure: false` accepts the self-signed Laragon cert); production rewrites `/api` and `/storage` on Vercel or uses an absolute `VITE_API_URL`
 - **Auth:** JWT in HttpOnly cookies (`sharelab_access`, `sharelab_refresh`); frontend uses `withCredentials` and silently retries once via `POST /api/refresh` on 401, then emits `sharelab:auth-expired`
 - **API envelope:** `{ data, message, errors, meta }`; paginated lists add `page`, `per_page`, `total`, `last_page` in `meta`
 - **Routes:** File-based routes via TanStack Router. Run `pnpm generate-routes` after adding/renaming a route file in `sharelab/src/routes/`. The route tree lives in `sharelab/src/routeTree.gen.ts`.
@@ -211,7 +211,7 @@ Campus lab/makerspace booking app. No workspace root manifest — run commands f
 
 ### Frontend (`cd sharelab`)
 - `pnpm install`
-- `pnpm dev` (Vite :3000, proxies `/api` → `http://localhost:8000`)
+- `pnpm dev` (Vite :3000, proxies `/api` → `https://sharelab-api.local`)
 - `pnpm build` → `dist/`
 - `pnpm lint` (clean now)
 - `pnpm format` (Prettier write + ESLint fix) / `pnpm check` (Prettier check only)
@@ -221,7 +221,7 @@ Campus lab/makerspace booking app. No workspace root manifest — run commands f
 ### Backend (`cd sharelab-api`)
 - `composer install`
 - Setup: copy `.env.example` → `.env`, `php artisan key:generate`, `php artisan migrate --seed`
-- `php artisan serve` (:8000)
+- `php artisan serve` (:8000 fallback; local URL is `https://sharelab-api.local`)
 - Tests: `php artisan test` or `php artisan test --filter=<name>` / `vendor/bin/phpunit tests/Unit/BookingServiceTest.php` (**wipes configured dev DB** via `RefreshDatabase`, no separate test DB)
 - Lint: `vendor/bin/pint` / `vendor/bin/pint --test`
 - Reset: `php artisan migrate:fresh --seed`

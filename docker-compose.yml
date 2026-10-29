@@ -2,11 +2,12 @@ name: sharelab
 
 # Local development stack: the API container (nginx + PHP-FPM on port 8080)
 # plus MariaDB. The React SPA is not containerised here — run it with
-# `pnpm dev` in sharelab/, where Vite proxies /api to http://localhost:8000.
+# `pnpm dev` in sharelab/, where Vite proxies /api to https://sharelab-api.local
+# (the local vhost forwards to the published port below).
 #
 #   cp .env.example .env   # fill APP_KEY, JWT_SECRET, DB_PASSWORD
 #   docker compose up -d --build
-#   curl http://localhost:8000/api/health
+#   curl -k https://sharelab-api.local/api/health
 #
 # Production has its own file: docker-compose.prod.yml.
 
@@ -20,7 +21,7 @@ services:
     environment:
       APP_ENV: local
       APP_DEBUG: 'true'
-      APP_URL: ${APP_URL:-http://localhost:8000}
+      APP_URL: ${APP_URL:-https://sharelab-api.local}
       DB_CONNECTION: mysql
       DB_HOST: db
       DB_PORT: '3306'

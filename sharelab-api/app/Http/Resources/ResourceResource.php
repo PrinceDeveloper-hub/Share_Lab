@@ -29,6 +29,28 @@ class ResourceResource extends JsonResource
         );
     }
 
+    /**
+     * Local images are returned root-relative (`/storage/...`) so they are
+     * fetched from whichever origin the SPA uses — the Vite proxy in
+     * development, the `/storage` rewrite in production — instead of pinning
+     * APP_URL, which breaks as soon as the browser reaches the API through
+     * another host. Remote/object-storage URLs stay absolute.
+     */
+    private function imageUrl(string $imagePath): string
+    {
+        if (str_starts_with($imagePath, '/') || str_starts_with($imagePath, 'http')) {
+            return $imagePath;
+        }
+
+        $disk = (string) config('sharelab.images_disk');
+
+        if (config("filesystems.disks.{$disk}.driver") === 'local') {
+            return '/storage/'.ltrim($imagePath, '/');
+        }
+
+        return Storage::disk($disk)->url($imagePath);
+    }
+
     public function toArray($request): array
     {
         $imagePath = $this->image_path;
@@ -43,11 +65,7 @@ class ResourceResource extends JsonResource
             'max_hours_per_booking' => $this->max_hours_per_booking,
             'weekly_cap_hours' => $this->weekly_cap_hours,
             'availability_windows' => $this->availability_windows,
-            'image_url' => $imagePath
-                ? (str_starts_with($imagePath, '/') || str_starts_with($imagePath, 'http')
-                    ? $imagePath
-                    : Storage::disk((string) config('sharelab.images_disk'))->url($imagePath))
-                : null,
+            'image_url' => $imagePath ? $this->imageUrl($imagePath) : null,
             'status' => $this->status,
             'owner' => $this->whenLoaded('owner', fn () => $this->person($this->owner, $request)),
             'requirements' => ResourceRequirementResource::collection($this->whenLoaded('requirements')),

@@ -17,7 +17,7 @@ import { fileURLToPath } from 'node:url'
 
 const here = dirname(fileURLToPath(import.meta.url))
 const frontend = resolve(here, '..')
-const backend = resolve(frontend, '..', 'sharelab-api', 'backend')
+const backend = resolve(frontend, '..', 'sharelab-api')
 
 const steps = [
   { name: 'backend tests', cwd: backend, cmd: 'php', args: ['artisan', 'test'] },

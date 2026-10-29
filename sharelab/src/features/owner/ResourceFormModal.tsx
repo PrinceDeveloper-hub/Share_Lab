@@ -368,7 +368,7 @@ export const ResourceFormModal = ({
         <Field
           label="Resource image"
           htmlFor="resource-image"
-          hint="Optional JPG, PNG, or WEBP up to 5 MB. Existing images stay unless replaced."
+          hint="Optional JPG, PNG, or WEBP up to 4 MB. Existing images stay unless replaced."
           error={form.formState.errors.image?.message}
         >
           <input

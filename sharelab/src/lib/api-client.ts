@@ -92,7 +92,12 @@ type RetryableConfig = InternalAxiosRequestConfig & { _retry?: boolean }
 const isAuthEndpoint = (url: string) =>
   ['/login', '/register', '/refresh'].some((endpoint) => url.endsWith(endpoint))
 
-const defaultBaseURL = import.meta.env.VITE_API_BASE_URL || '/api'
+// On Vercel the SPA and /api share an origin: vercel.json rewrites /api/* to
+// the API container, so the relative default keeps the auth cookies first-party
+// (SameSite=Lax works). VITE_API_URL is for pointing a build straight at a
+// cross-origin API, e.g. VITE_API_URL=https://api.example.com/api.
+const defaultBaseURL =
+  import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || '/api'
 
 /**
  * The API answers with `{ data, message, errors, meta }`. Anything else (an
@@ -117,7 +122,7 @@ const unwrapEnvelope = <T>(
         : `a ${typeof body}`
 
   throw new Error(
-    `Unexpected API response from ${url ?? 'the API'}: expected a JSON envelope but received ${kind}. Check VITE_API_BASE_URL and that the API is reachable.`,
+    `Unexpected API response from ${url ?? 'the API'}: expected a JSON envelope but received ${kind}. Check the /api rewrite in vercel.json (or VITE_API_URL) and that the API is reachable.`,
   )
 }
 

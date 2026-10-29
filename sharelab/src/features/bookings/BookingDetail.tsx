@@ -845,7 +845,7 @@ export const BookingDetail = ({ bookingId }: { bookingId: string }) => {
           <Field
             label="Photo"
             htmlFor="condition-photo"
-            hint="Optional JPG, PNG, or WEBP up to 5 MB. Stored privately for the audit record."
+            hint="Optional JPG, PNG, or WEBP up to 4 MB. Stored privately for the audit record."
             error={activeConditionForm.formState.errors.photo?.message}
           >
             <input

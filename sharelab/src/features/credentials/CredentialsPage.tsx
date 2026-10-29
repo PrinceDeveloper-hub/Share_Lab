@@ -45,7 +45,7 @@ const submitSchema = z.object({
       message: 'Choose a certificate file.',
     })
     .refine((files) => files.length > 0, 'Choose a certificate file.')
-    .refine((files) => files[0].size <= 5 * 1024 * 1024, 'The file must be 5 MB or smaller.'),
+    .refine((files) => files[0].size <= 4 * 1024 * 1024, 'The file must be 4 MB or smaller.'),
 })
 
 type SubmitValues = z.infer<typeof submitSchema>
@@ -492,7 +492,7 @@ export const CredentialsPage = ({ initialTab = 'mine' }: CredentialsPageProps) =
           <Field
             label="Evidence file"
             htmlFor="credential-file"
-            hint="PDF, JPG, PNG, or WEBP. Maximum 5 MB."
+            hint="PDF, JPG, PNG, or WEBP. Maximum 4 MB."
             error={submitForm.formState.errors.file?.message}
           >
             <input
